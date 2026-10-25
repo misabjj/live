@@ -1,0 +1,26 @@
+{
+    "agents": [
+        "codex"
+    ],
+    "cloud": false,
+    "guidelines": true,
+    "packages": [
+        "spatie/guidelines-skills"
+    ],
+    "skills": [
+        "laravel-best-practices",
+        "configuring-horizon",
+        "configure-nightwatch",
+        "socialite-development",
+        "wayfinder-development",
+        "pest-testing",
+        "inertia-react-development",
+        "tailwindcss-development",
+        "echo-react-development",
+        "echo-development",
+        "spatie-javascript",
+        "spatie-laravel-php",
+        "spatie-security",
+        "spatie-version-control"
+    ]
+}

@@ -1,0 +1,194 @@
+@import 'tailwindcss';
+@import './theme.css';
+@import './typography.css';
+
+@plugin '@tailwindcss/typography';
+@plugin 'tailwindcss-react-aria-components';
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+@custom-variant label (& [data-label]);
+@custom-variant focus-input-within (&:has(input:focus));
+
+@utility scrollbar-hide {
+    /* For Webkit-based browsers (Chrome, Safari and Opera) */
+    &::-webkit-scrollbar {
+        display: none;
+        -webkit-appearance: none;
+    }
+
+    /* For IE, Edge and Firefox */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+@utility scrollbar-dark {
+    /* For Webkit-based browsers (Chrome, Safari and Opera) */
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(55, 65, 81, 0.1); /* gray-700 with opacity */
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(107, 114, 128, 0.6); /* gray-500 with opacity */
+        border-radius: 4px;
+        border: 1px solid rgba(55, 65, 81, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(107, 114, 128, 0.8); /* gray-500 with higher opacity */
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.6) rgba(55, 65, 81, 0.1);
+}
+
+@utility transition-inherit-all {
+    transition-property: inherit;
+    transition-duration: inherit;
+    transition-timing-function: inherit;
+}
+
+html,
+body {
+    scroll-behavior: smooth;
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-variant-ligatures: contextual;
+    font-variant-ligatures: contextual;
+    -webkit-font-kerning: normal;
+    font-kerning: normal;
+}
+
+/* Apply dark scrollbar globally */
+* {
+    scroll-behavior: smooth;
+    /* For Webkit-based browsers (Chrome, Safari and Opera) */
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(55, 65, 81, 0.1); /* gray-700 with opacity */
+        border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(107, 114, 128, 0.6); /* gray-500 with opacity */
+        border-radius: 4px;
+        border: 1px solid rgba(55, 65, 81, 0.1);
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background: rgba(107, 114, 128, 0.8); /* gray-500 with higher opacity */
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: rgba(107, 114, 128, 0.6) rgba(55, 65, 81, 0.1);
+}
+
+/* Hide the default expand arrow on Safari.  */
+details summary::-webkit-details-marker {
+    display: none;
+}
+
+/* Hide default arrows from number inputs. */
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* Firefox */
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+/* Hide the default clear button (X) from search inputs. */
+input[type='search']::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+}
+
+/* Donation overlay notification effects */
+@keyframes pulse-glow {
+    0%,
+    100% {
+        box-shadow:
+            0 0 5px var(--border-color),
+            0 0 10px var(--border-color),
+            0 0 15px var(--border-color);
+    }
+    50% {
+        box-shadow:
+            0 0 10px var(--border-color),
+            0 0 20px var(--border-color),
+            0 0 30px var(--border-color);
+    }
+}
+
+@keyframes bounce-in {
+    0% {
+        transform: scale(0.3) rotate(-10deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05) rotate(5deg);
+    }
+    70% {
+        transform: scale(0.9) rotate(-2deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+    10%,
+    30%,
+    50%,
+    70%,
+    90% {
+        transform: translateX(-2px);
+    }
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translateX(2px);
+    }
+}
+
+.donation-alert.animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.donation-alert.animate-bounce-in {
+    animation: bounce-in 0.6s ease-out;
+}
+
+.donation-alert.animate-shake {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Notification entrance effects */
+.notification-enter {
+    animation: bounce-in 0.6s ease-out;
+}
+
+.notification-attention {
+    animation: pulse-glow 2s ease-in-out infinite;
+}
