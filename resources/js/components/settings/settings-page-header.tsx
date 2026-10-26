@@ -1,4 +1,4 @@
-import { SectionHeader } from '@/components/untitled-ui/application/section-headers/section-headers';
+import { SectionHeader } from '@/components/ui/application/section-headers/section-headers';
 
 interface SettingsPageHeaderProps {
     title: string;

@@ -1,5 +1,5 @@
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Toggle } from '@/components/untitled-ui/base/toggle/toggle';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Toggle } from '@/components/ui/base/toggle/toggle';
 import { ReactNode } from 'react';
 import { FormSection, SettingsSection, SettingsSectionDivider } from './form-field';
 

@@ -1,21 +1,22 @@
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/untitled-ui/application/pagination/pagination';
-import { Table, TableCard } from '@/components/untitled-ui/application/table/table';
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { Dropdown } from '@/components/untitled-ui/base/dropdown/dropdown';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/ui/application/pagination/pagination';
+import { Table, TableCard } from '@/components/ui/application/table/table';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
+import { Input } from '@/components/ui/base/input/input';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import PanelLayout from '@/layouts/panel-layout';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { getInitials } from '@/lib/utils';
+import { useLang } from '@/hooks/use-lang';
 import { index, playDonationAlert } from '@/routes/donations';
 import { Pagination } from '@/types/pagination';
 import { router, useForm } from '@inertiajs/react';
 import { InfoCircle, Play, SearchLg } from '@untitledui/icons';
 import { useEffect, useRef, useState } from 'react';
-import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
+import { Heading as AriaHeading } from 'react-aria-components';
 
 interface Donation {
     id: number;
@@ -35,16 +36,8 @@ interface Props {
     };
 }
 
-const contentTypeMap: Record<'text' | 'audio', string> = {
-    text: 'Mensagem de texto',
-    audio: 'Áudio gravado',
-};
-
-function getContentTypeLabel(contentType: 'text' | 'audio'): string {
-    return contentTypeMap[contentType] || contentType;
-}
-
 function Page({ donations, filter }: Props) {
+    const { __ } = useLang();
     const isInitialMount = useRef(true);
     const audioRef = useRef<HTMLAudioElement>(null);
     const [selectedDonation, setSelectedDonation] = useState<Donation | null>(null);
@@ -72,7 +65,7 @@ function Page({ donations, filter }: Props) {
         if (audioRef.current && donation.content_path) {
             audioRef.current.src = donation.content_path;
             audioRef.current.play().catch((error) => {
-                console.error('Erro ao reproduzir áudio:', error);
+                console.error(__('pages.donations.audio_play_error'), error);
             });
         }
     };
@@ -101,8 +94,8 @@ function Page({ donations, filter }: Props) {
                 {/* Page header */}
                 <div className="relative flex flex-col gap-4">
                     <div className="flex flex-col gap-0.5 md:gap-1">
-                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">Doações</p>
-                        <p className="text-sm text-tertiary sm:text-md">Gerencie suas doações e alertas de streaming.</p>
+                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">{__('pages.donations.title')}</p>
+                        <p className="text-sm text-tertiary sm:text-md">{__('pages.donations.description')}</p>
                     </div>
                 </div>
             </div>
@@ -113,7 +106,7 @@ function Page({ donations, filter }: Props) {
                     <Input
                         className="lg:max-w-100"
                         size="sm"
-                        placeholder="Buscar por doador"
+                        placeholder={__('pages.donations.search')}
                         icon={SearchLg}
                         value={form.data.filter.donor_name}
                         onChange={handleSearchChange}
@@ -122,12 +115,12 @@ function Page({ donations, filter }: Props) {
 
                 {/* Donations table */}
                 <TableCard.Root className="lg:rounded-xl">
-                    <TableCard.Header title="Doações" badge={`${donations.total} total`} />
-                    <Table aria-label="Doações" selectionMode="none" className="bg-primary">
+                    <TableCard.Header title={__('pages.donations.title')} badge={__('pages.donations.total', { count: donations.total })} />
+                    <Table aria-label={__('pages.donations.title')} selectionMode="none" className="bg-primary">
                         <Table.Header>
-                            <Table.Head id="donor_name" label="Nome de usuário" isRowHeader className="w-full" />
-                            <Table.Head id="amount" label="Valor" />
-                            <Table.Head id="created_at" label="Data" />
+                            <Table.Head id="donor_name" label={__('pages.donations.donor')} isRowHeader className="w-full" />
+                            <Table.Head id="amount" label={__('pages.donations.amount')} />
+                            <Table.Head id="created_at" label={__('pages.donations.date')} />
                             <Table.Head id="actions" label="" className="text-right" />
                         </Table.Header>
 
@@ -152,12 +145,12 @@ function Page({ donations, filter }: Props) {
                                             <Dropdown.Popover>
                                                 <Dropdown.Menu>
                                                     <Dropdown.Item
-                                                        label="Informações"
+                                                        label={__('pages.donations.info')}
                                                         icon={InfoCircle}
                                                         onAction={() => handleOpenDonationInfo(donation)}
                                                     />
                                                     <Dropdown.Item
-                                                        label="Mostrar alerta"
+                                                        label={__('pages.donations.show_alert')}
                                                         icon={Play}
                                                         onAction={() => {
                                                             router.post(
@@ -191,8 +184,7 @@ function Page({ donations, filter }: Props) {
             </div>
 
             {/* Donation Info Modal */}
-            <AriaDialogTrigger isOpen={selectedDonation !== null} onOpenChange={(open) => !open && handleCloseDonationInfo()}>
-                <ModalOverlay isDismissable>
+            <ModalOverlay isOpen={selectedDonation !== null} onOpenChange={(open) => !open && handleCloseDonationInfo()} isDismissable>
                     <Modal className="sm:max-w-120">
                         <Dialog>
                             {selectedDonation && (
@@ -210,37 +202,37 @@ function Page({ donations, filter }: Props) {
                                         </div>
                                         <div className="z-10 flex flex-col gap-0.5">
                                             <AriaHeading slot="title" className="text-md font-semibold text-primary">
-                                                Informações da doação
+                                                {__('pages.donations.info')}
                                             </AriaHeading>
-                                            <p className="text-sm text-tertiary">Detalhes e conteúdo da doação</p>
+                                            <p className="text-sm text-tertiary">{__('pages.donations.info_description')}</p>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-col gap-4 px-4 pb-6 sm:px-6">
                                         <div className="space-y-3">
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm text-tertiary">Doador:</span>
+                                                <span className="text-sm text-tertiary">{__('pages.donations.donor_label')}</span>
                                                 <span className="text-sm font-medium text-primary">{selectedDonation.donor_name}</span>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm text-tertiary">Valor:</span>
+                                                <span className="text-sm text-tertiary">{__('pages.donations.amount_label')}</span>
                                                 <span className="text-sm font-medium text-primary">
                                                     {formatCurrency(selectedDonation.amount, selectedDonation.currency)}
                                                 </span>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm text-tertiary">Data:</span>
+                                                <span className="text-sm text-tertiary">{__('pages.donations.date_label')}</span>
                                                 <span className="text-sm font-medium text-primary">{formatDate(selectedDonation.created_at)}</span>
                                             </div>
                                             <div className="flex items-center justify-between">
-                                                <span className="text-sm text-tertiary">Tipo de conteúdo:</span>
+                                                <span className="text-sm text-tertiary">{__('pages.donations.content_type')}</span>
                                                 <span className="text-sm font-medium text-primary">
-                                                    {getContentTypeLabel(selectedDonation.content_type)}
+                                                    {__(selectedDonation.content_type === 'text' ? 'pages.donations.text_content' : 'pages.donations.audio_content')}
                                                 </span>
                                             </div>
                                             {selectedDonation.content_text && (
                                                 <div className="flex flex-col gap-1 border-t border-secondary pt-3">
-                                                    <span className="text-sm text-tertiary">Mensagem:</span>
+                                                    <span className="text-sm text-tertiary">{__('pages.donations.message')}</span>
                                                     <p className="text-sm text-secondary">{selectedDonation.content_text}</p>
                                                 </div>
                                             )}
@@ -249,7 +241,7 @@ function Page({ donations, filter }: Props) {
 
                                     <div className="flex flex-1 flex-col-reverse gap-3 p-4 *:grow sm:grid sm:grid-cols-2 sm:px-6 sm:pb-6">
                                         <Button type="button" color="secondary" size="lg" onClick={handleCloseDonationInfo}>
-                                            Fechar
+                                            {__('pages.donations.close')}
                                         </Button>
                                         {selectedDonation.content_type === 'audio' && selectedDonation.content_path && (
                                                 <Button
@@ -259,7 +251,7 @@ function Page({ donations, filter }: Props) {
                                                     onClick={() => handlePlayContent(selectedDonation)}
                                                     iconLeading={Play}
                                                 >
-                                                    Ouvir
+                                                    {__('pages.donations.listen')}
                                                 </Button>
                                             )}
                                     </div>
@@ -267,14 +259,13 @@ function Page({ donations, filter }: Props) {
                             )}
                         </Dialog>
                     </Modal>
-                </ModalOverlay>
-            </AriaDialogTrigger>
+            </ModalOverlay>
 
             {/* Hidden audio element for playback */}
             <audio
                 ref={audioRef}
                 onError={(e) => {
-                    console.error('Erro ao carregar áudio:', {
+                    console.error(__('pages.donations.audio_load_error'), {
                         error: e,
                         code: audioRef.current?.error?.code,
                         message: audioRef.current?.error?.message,
@@ -286,6 +277,6 @@ function Page({ donations, filter }: Props) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Doações" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.donations.title" />;
 
 export default Page;

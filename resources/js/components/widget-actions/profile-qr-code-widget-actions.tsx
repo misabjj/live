@@ -1,5 +1,5 @@
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Dropdown } from '@/components/untitled-ui/base/dropdown/dropdown';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
 import { useClipboard } from '@/hooks/use-clipboard';
 import { useToast } from '@/hooks/use-toast';
 import { profileQrCode } from '@/routes/settings';

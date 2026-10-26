@@ -141,7 +141,7 @@ function PaymentSettings() {
 
 ```tsx
 import { SettingsSection } from '@/components/form-fields';
-import { Toggle } from '@/components/untitled-ui/base/toggle';
+import { Toggle } from '@/components/ui/base/toggle';
 
 function PreferencesPage() {
     const [notifications, setNotifications] = useState(true);

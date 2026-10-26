@@ -1,9 +1,11 @@
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Button } from '@/components/ui/base/buttons/button';
+import { FeaturedIcon } from '@/components/ui/foundations/featured-icon/featured-icon';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { ArrowLeft, SearchLg } from '@untitledui/icons';
+import { useLang } from '@/hooks/use-lang';
 
 export default function Page() {
+    const { __ } = useLang();
     return (
         <section className="flex min-h-screen items-center justify-center overflow-hidden bg-primary px-4 py-12 md:px-8">
             <div className="mx-auto flex w-full max-w-90 flex-col gap-8 text-center">
@@ -24,17 +26,17 @@ export default function Page() {
                     </div>
 
                     <div className="z-10 flex flex-col gap-2 md:gap-3">
-                        <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">Página não encontrada</h1>
-                        <p className="text-md text-tertiary">A página que você está procurando não existe.</p>
+                        <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{__('pages.not_found.title')}</h1>
+                        <p className="text-md text-tertiary">{__('pages.not_found.description')}</p>
                     </div>
                 </div>
 
                 <div className="z-10 flex flex-col gap-4 sm:flex-row sm:justify-center">
                     <Button iconLeading={ArrowLeft} color="secondary" size="lg" onClick={() => window.history.back()}>
-                        Voltar
+                        {__('pages.not_found.back')}
                     </Button>
                     <Button size="lg" href="/">
-                        Ir para início
+                        {__('pages.not_found.home')}
                     </Button>
                 </div>
             </div>

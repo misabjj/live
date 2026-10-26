@@ -1,6 +1,7 @@
 import { MoneyFormField, NumberFormField, SettingsContainer, SettingsSectionDivider, ToggleFormField } from '@/components/form-fields';
 import { SettingsFormContainer, SettingsFormContent, SettingsFormFooter, SettingsPageHeader } from '@/components/settings';
 import SettingsLayout from '@/layouts/settings-layout';
+import { useLang } from '@/hooks/use-lang';
 import { update } from '@/routes/settings/donation-rules';
 import { useForm } from '@inertiajs/react';
 import { FormEvent, ReactNode } from 'react';
@@ -18,6 +19,7 @@ interface Props {
 }
 
 function Page({ rules }: Props) {
+    const { __ } = useLang();
     const form = useForm({
         accept_donor_audio: rules.accept_donor_audio,
         min_amount_text: rules.min_amount_text,
@@ -35,13 +37,13 @@ function Page({ rules }: Props) {
 
     return (
         <SettingsFormContainer onSubmit={handleSubmit}>
-            <SettingsPageHeader title="Regras de doação" description="Configure como você recebe doações." />
+            <SettingsPageHeader title={__('pages.settings.donation_rules.title')} description={__('pages.settings.donation_rules.description')} />
 
             <SettingsFormContent>
                 <SettingsContainer gap="lg">
                     <ToggleFormField
-                        title="Áudio do doador"
-                        description="Permite que doadores enviem mensagens com áudio gravado por eles"
+                        title={__('pages.settings.donation_rules.audio_title')}
+                        description={__('pages.settings.donation_rules.audio_description')}
                         value={form.data.accept_donor_audio}
                         onChange={(value) => form.setData('accept_donor_audio', value)}
                         error={form.errors.accept_donor_audio}
@@ -50,8 +52,8 @@ function Page({ rules }: Props) {
                     <SettingsSectionDivider />
 
                     <MoneyFormField
-                        title="Valor mínimo para texto"
-                        description="Configure o valor mínimo para doações em texto"
+                        title={__('pages.settings.donation_rules.min_text_title')}
+                        description={__('pages.settings.donation_rules.min_text_description')}
                         isRequired
                         name="min_amount_text"
                         value={form.data.min_amount_text}
@@ -60,8 +62,8 @@ function Page({ rules }: Props) {
                     />
 
                     <MoneyFormField
-                        title="Valor mínimo para áudio"
-                        description="Configure o valor mínimo para doações com áudio gravado"
+                        title={__('pages.settings.donation_rules.min_audio_title')}
+                        description={__('pages.settings.donation_rules.min_audio_description')}
                         isRequired
                         name="min_amount_audio"
                         value={form.data.min_amount_audio}
@@ -72,8 +74,8 @@ function Page({ rules }: Props) {
                     <SettingsSectionDivider />
 
                     <NumberFormField
-                        title="Limite de caracteres para texto"
-                        description="Configure o máximo de caracteres aceitos para mensagens de texto"
+                        title={__('pages.settings.donation_rules.max_text_title')}
+                        description={__('pages.settings.donation_rules.max_text_description')}
                         isRequired
                         name="max_characters_text"
                         value={form.data.max_characters_text}
@@ -84,8 +86,8 @@ function Page({ rules }: Props) {
                     />
 
                     <NumberFormField
-                        title="Duração máxima de áudio"
-                        description="Duração máxima do áudio enviado pelo doador (em segundos)"
+                        title={__('pages.settings.donation_rules.max_audio_title')}
+                        description={__('pages.settings.donation_rules.max_audio_description')}
                         isRequired
                         name="max_audio_duration"
                         value={form.data.max_audio_duration}

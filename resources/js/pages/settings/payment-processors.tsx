@@ -1,19 +1,20 @@
 import { MercadoPagoIcon } from '@/components/icons/mercado-pago-icon';
-import { FileUpload } from '@/components/untitled-ui/application/file-upload/file-upload-base';
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { SectionFooter } from '@/components/untitled-ui/application/section-footers/section-footer';
-import { SectionHeader } from '@/components/untitled-ui/application/section-headers/section-headers';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { Form } from '@/components/untitled-ui/base/form/form';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Toggle } from '@/components/untitled-ui/base/toggle/toggle';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { FileUpload } from '@/components/ui/application/file-upload/file-upload-base';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { SectionFooter } from '@/components/ui/application/section-footers/section-footer';
+import { SectionHeader } from '@/components/ui/application/section-headers/section-headers';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { Form } from '@/components/ui/base/form/form';
+import { Input } from '@/components/ui/base/input/input';
+import { Toggle } from '@/components/ui/base/toggle/toggle';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import SettingsLayout from '@/layouts/settings-layout';
 import { store, toggleStatus } from '@/routes/settings/payment-processors';
 import { router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
-import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
+import { Heading as AriaHeading } from 'react-aria-components';
+import { useLang } from '@/hooks/use-lang';
 
 type ProcessorStatus = {
     is_active: boolean;
@@ -105,25 +106,24 @@ const uploadFile = (file: File, onProgress: (progress: number) => void) => {
 };
 
 function Page({ processors }: PageProps) {
+    const { __ } = useLang();
     const [activeIntegration, setActiveIntegration] = useState<string | null>(null);
     const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 
     const allIntegrations = [
         {
-            name: 'Efi Bank',
+            name: __('pages.payment_processors.efi_bank'),
             type: 'efi_bank',
-            description: 'Receba pagamentos via PIX.',
+            description: __('pages.payment_processors.efi_bank_description'),
             logo: <EfiBankIcon />,
             processor: processors.efi_bank,
-            tutorialLink: 'https://youtu.be/e5MAcbZ7CQI?si=vwQwSruphVDRFqY4',
         },
         {
-            name: 'Mercado Pago',
+            name: __('pages.payment_processors.mercado_pago'),
             type: 'mercado_pago',
-            description: 'Aceite pagamentos via PIX com split automático.',
+            description: __('pages.payment_processors.mercado_pago_description'),
             logo: <MercadoPagoIcon className="h-12 w-12" />,
             processor: processors.mercado_pago,
-            tutorialLink: null,
         },
         // TODO: Enable Stripe integration
         // {
@@ -242,9 +242,9 @@ function Page({ processors }: PageProps) {
                 <SectionHeader.Root className="border-none pb-0">
                     <SectionHeader.Group>
                         <div className="flex flex-1 flex-col justify-center gap-0.5">
-                            <SectionHeader.Heading>Intermediadores de pagamento</SectionHeader.Heading>
+                    <SectionHeader.Heading>{__('pages.payment_processors.title')}</SectionHeader.Heading>
                             <SectionHeader.Subheading>
-                                Configure pelo menos um processador de pagamento para começar a receber doação!
+                                {__('pages.payment_processors.subtitle')}
                             </SectionHeader.Subheading>
                         </div>
                     </SectionHeader.Group>
@@ -274,17 +274,10 @@ function Page({ processors }: PageProps) {
                                 </div>
                                 <SectionFooter.Root isCard className="px-6 py-4">
                                     <SectionFooter.Actions className="flex w-full items-center justify-between">
-                                        {/* New Tutorial Button */}
-                                        <Button
-                                            color="link-color"
-                                            size="md"
-                                            onClick={() => integration.tutorialLink && window.open(integration.tutorialLink, '_blank')}
-                                            isDisabled={!integration.tutorialLink}
-                                        >
-                                            <span className="flex items-center gap-1">Tutorial</span>
-                                        </Button>
                                         <Button color="secondary" size="md" onClick={() => handleOpenSlideout(integration.name)}>
-                                            {integration.processor ? 'Reconfigurar' : 'Configurar'}
+                                            {integration.processor
+                                                ? __('pages.payment_processors.reconfigure')
+                                                : __('pages.payment_processors.configure')}
                                         </Button>
                                     </SectionFooter.Actions>
                                 </SectionFooter.Root>
@@ -296,8 +289,7 @@ function Page({ processors }: PageProps) {
 
             {/* TODO: Stripe Modal - Enable when Stripe integration is ready */}
             {/*
-            <AriaDialogTrigger isOpen={activeIntegration === 'Stripe'} onOpenChange={(open) => !open && handleCloseSlideout()}>
-                <ModalOverlay isDismissable>
+            <ModalOverlay isOpen={activeIntegration === 'Stripe'} onOpenChange={(open) => !open && handleCloseSlideout()} isDismissable>
                     <Modal className="sm:max-w-120">
                         <Dialog>
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
@@ -314,7 +306,7 @@ function Page({ processors }: PageProps) {
                                         <AriaHeading slot="title" className="text-md font-semibold text-primary">
                                             Stripe
                                         </AriaHeading>
-                                        <p className="text-sm text-tertiary">Configure sua integração com Stripe.</p>
+                                        <p className="text-sm text-tertiary">{__('pages.payment_processors.stripe_description')}</p>
                                     </div>
                                 </div>
                                 <Form onSubmit={handleSubmitStripe}>
@@ -324,7 +316,7 @@ function Page({ processors }: PageProps) {
                                             size="md"
                                             isRequired
                                             placeholder="sk_live_..."
-                                            label="Chave Secreta"
+                                            label={__('pages.payment_processors.secret_key')}
                                             hint={stripeForm.errors.secret_key || 'Sua chave secreta da API do Stripe'}
                                             value={stripeForm.data.secret_key}
                                             onChange={(value) => stripeForm.setData('secret_key', value)}
@@ -342,13 +334,11 @@ function Page({ processors }: PageProps) {
                                 </Form>
                         </Dialog>
                     </Modal>
-                </ModalOverlay>
-            </AriaDialogTrigger>
+            </ModalOverlay>
             */}
 
             {/* Mercado Pago Modal */}
-            <AriaDialogTrigger isOpen={activeIntegration === 'Mercado Pago'} onOpenChange={(open) => !open && handleCloseSlideout()}>
-                <ModalOverlay isDismissable>
+            <ModalOverlay isOpen={activeIntegration === 'Mercado Pago'} onOpenChange={(open) => !open && handleCloseSlideout()} isDismissable>
                     <Modal className="sm:max-w-120">
                         <Dialog>
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
@@ -365,7 +355,7 @@ function Page({ processors }: PageProps) {
                                         <AriaHeading slot="title" className="text-md font-semibold text-primary">
                                             Mercado Pago
                                         </AriaHeading>
-                                        <p className="text-sm text-tertiary">Configure sua integração com Mercado Pago e split de pagamentos.</p>
+                                        <p className="text-sm text-tertiary">{__('pages.payment_processors.mercado_pago_config_description')}</p>
                                     </div>
                                 </div>
                                 <Form onSubmit={handleSubmitMercadoPago}>
@@ -375,7 +365,7 @@ function Page({ processors }: PageProps) {
                                             size="md"
                                             isRequired
                                             placeholder="APP_USR-..."
-                                            label="Access Token"
+                                            label={__('pages.payment_processors.access_token')}
                                             hint={mercadoPagoForm.errors.access_token || 'Seu token de acesso da API do Mercado Pago'}
                                             value={mercadoPagoForm.data.access_token}
                                             onChange={(value) => mercadoPagoForm.setData('access_token', value)}
@@ -393,12 +383,10 @@ function Page({ processors }: PageProps) {
                                 </Form>
                         </Dialog>
                     </Modal>
-                </ModalOverlay>
-            </AriaDialogTrigger>
+            </ModalOverlay>
 
             {/* Efi Bank Modal */}
-            <AriaDialogTrigger isOpen={activeIntegration === 'Efi Bank'} onOpenChange={(open) => !open && handleCloseSlideout()}>
-                <ModalOverlay isDismissable>
+            <ModalOverlay isOpen={activeIntegration === 'Efi Bank'} onOpenChange={(open) => !open && handleCloseSlideout()} isDismissable>
                     <Modal className="sm:max-w-120">
                         <Dialog>
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
@@ -415,7 +403,7 @@ function Page({ processors }: PageProps) {
                                         <AriaHeading slot="title" className="text-md font-semibold text-primary">
                                             Efi Bank
                                         </AriaHeading>
-                                        <p className="text-sm text-tertiary">Configure sua integração com Efi Bank.</p>
+                                        <p className="text-sm text-tertiary">{__('pages.payment_processors.efi_bank_config_description')}</p>
                                     </div>
                                 </div>
                                 <Form onSubmit={handleSubmitEfiBank}>
@@ -424,8 +412,8 @@ function Page({ processors }: PageProps) {
                                             type="text"
                                             size="md"
                                             isRequired
-                                            placeholder="Client ID"
-                                            label="Client ID"
+                                            placeholder={__('pages.payment_processors.client_id')}
+                                            label={__('pages.payment_processors.client_id')}
                                             value={efiBankForm.data.client_id}
                                             onChange={(value) => efiBankForm.setData('client_id', value)}
                                             hint={efiBankForm.errors.client_id}
@@ -435,20 +423,20 @@ function Page({ processors }: PageProps) {
                                             type="text"
                                             size="md"
                                             isRequired
-                                            placeholder="Client Secret"
-                                            label="Client Secret"
+                                            placeholder={__('pages.payment_processors.client_secret')}
+                                            label={__('pages.payment_processors.client_secret')}
                                             value={efiBankForm.data.client_secret}
                                             onChange={(value) => efiBankForm.setData('client_secret', value)}
                                             hint={efiBankForm.errors.client_secret}
                                             isInvalid={!!efiBankForm.errors.client_secret}
                                         />
                                         <div className="flex flex-col gap-2">
-                                            <label className="text-sm font-medium text-secondary">Certificado</label>
+                                            <label className="text-sm font-medium text-secondary">{__('pages.payment_processors.certificate')}</label>
                                             <FileUpload.Root>
                                                 <FileUpload.DropZone
                                                     onDropFiles={handleDropFiles}
                                                     accept=".p12"
-                                                    hint="Arquivo .p12"
+                                                    hint={__('pages.payment_processors.certificate_hint')}
                                                     allowsMultiple={false}
                                                 />
                                                 {uploadedFiles.length > 0 && (
@@ -480,8 +468,7 @@ function Page({ processors }: PageProps) {
                                 </Form>
                         </Dialog>
                     </Modal>
-                </ModalOverlay>
-            </AriaDialogTrigger>
+            </ModalOverlay>
         </>
     );
 }

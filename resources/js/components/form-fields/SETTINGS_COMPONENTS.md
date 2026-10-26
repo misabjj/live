@@ -133,8 +133,8 @@ Flexible section for arbitrary content that doesn't fit other patterns.
 **Example - Row layout:**
 
 ```tsx
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Button } from '@/components/ui/base/buttons/button';
 
 <SettingsCustomSection title="Profile URL" description="Share your profile" row>
     <Input value={profileUrl} isDisabled />
@@ -148,8 +148,8 @@ import { Button } from '@/components/untitled-ui/base/buttons/button';
 
 ```tsx
 import { SettingsContainer, SettingsSwitchSection, SettingsButtonSection, SettingsCustomSection } from '@/components/form-fields';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Button } from '@/components/ui/base/buttons/button';
 import { Copy01 } from '@untitledui/icons';
 
 export default function SettingsPage() {

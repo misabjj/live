@@ -1,4 +1,4 @@
-import { InputBase, InputBaseProps, TextFieldContext } from '@/components/untitled-ui/base/input/input';
+import { InputBase, InputBaseProps, TextFieldContext } from '@/components/ui/base/input/input';
 import { forwardRef, useContext } from 'react';
 import { NumericFormat, NumericFormatProps } from 'react-number-format';
 

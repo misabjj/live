@@ -8,6 +8,7 @@ import {
 } from '@/components/settings';
 import { DonationAlertWidgetActions } from '@/components/widget-actions/donation-alert-widget-actions';
 import { DonationAlert } from '@/components/widgets/donation-alert';
+import { useLang } from '@/hooks/use-lang';
 import PanelLayout from '@/layouts/panel-layout';
 import { update } from '@/routes/settings/donation-alert';
 import { useForm } from '@inertiajs/react';
@@ -30,6 +31,7 @@ interface Props {
 }
 
 function Page({ configuration, widget }: Props) {
+    const { __ } = useLang();
     const form = useForm({
         primary_color: configuration.primary_color,
         secondary_color: configuration.secondary_color,
@@ -49,14 +51,14 @@ function Page({ configuration, widget }: Props) {
             form={
                 <SettingsFormContainer onSubmit={handleSubmit}>
                     <SettingsPageHeader
-                        title="Personalizar alertas"
-                        description="Configure a aparência dos alertas de doação que aparecerão na sua live."
+                        title={__('pages.settings.donation_alert.title')}
+                        description={__('pages.settings.donation_alert.description')}
                     />
 
                     <SettingsFormContent>
                         <FormSection>
                             <ColorFormField
-                                title="Cor principal do gradiente"
+                                title={__('pages.settings.donation_alert.primary_color')}
                                 value={form.data.primary_color}
                                 onChange={(color) => form.setData('primary_color', color)}
                                 error={form.errors.primary_color}
@@ -65,7 +67,7 @@ function Page({ configuration, widget }: Props) {
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor secundária do gradiente"
+                                title={__('pages.settings.donation_alert.secondary_color')}
                                 value={form.data.secondary_color}
                                 onChange={(color) => form.setData('secondary_color', color)}
                                 error={form.errors.secondary_color}
@@ -74,7 +76,7 @@ function Page({ configuration, widget }: Props) {
 
                         <FormSection withDivider={false}>
                             <ColorFormField
-                                title="Cor da mensagem"
+                                title={__('pages.settings.donation_alert.message_color')}
                                 value={form.data.message_color}
                                 onChange={(color) => form.setData('message_color', color)}
                                 error={form.errors.message_color}
@@ -83,18 +85,18 @@ function Page({ configuration, widget }: Props) {
                     </SettingsFormContent>
 
                     <SettingsFormFooter
-                        submitLabel="Salvar"
+                        submitLabel={__('pages.settings.donation_alert.save')}
                         isDirty={form.isDirty}
                         isProcessing={form.processing}
                         actions={widget && <DonationAlertWidgetActions widgetId={widget.id} widgetUrl={widget.url} hidePersonalize />}
                     />
                 </SettingsFormContainer>
             }
-            preview={<DonationAlert donorName="João" amount={25} currency="BRL" message="Parabéns pela live!" configuration={form.data} />}
+            preview={<DonationAlert donorName={__('pages.settings.donation_alert.preview_donor')} amount={25} currency="BRL" message={__('pages.settings.donation_alert.preview_message')} configuration={form.data} />}
         />
     );
 }
 
-Page.layout = (page: ReactNode) => <PanelLayout title="Personalizar alertas" children={page} />;
+Page.layout = (page: ReactNode) => <PanelLayout title="pages.settings.donation_alert.title" children={page} />;
 
 export default Page;

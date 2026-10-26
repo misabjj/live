@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -28,8 +29,20 @@ class SetLocale
         }
 
         // Add locale data to all Inertia responses
+        $translations = [];
+
+        foreach (File::allFiles(lang_path(app()->getLocale())) as $file) {
+            if ($file->getExtension() !== 'php') {
+                continue;
+            }
+
+            $key = str_replace(['/', '\\'], '.', substr($file->getRelativePathname(), 0, -4));
+            data_set($translations, $key, require $file->getPathname());
+        }
+
         Inertia::share([
             'locale' => app()->getLocale(),
+            'lang' => $translations,
         ]);
 
         return $next($request);

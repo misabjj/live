@@ -1,11 +1,11 @@
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { useAuth } from '@/hooks/use-auth';
 import { GraduationHat02 } from '@untitledui/icons';
 import { useEffect, useState } from 'react';
-import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
+import { Heading as AriaHeading } from 'react-aria-components';
 
 /**
  * Mark onboarding as dismissed in localStorage for a specific user
@@ -61,8 +61,7 @@ export function OnboardingDialog() {
     }
 
     return (
-        <AriaDialogTrigger isOpen={isOpen} onOpenChange={(open) => !open && handleClose()}>
-            <ModalOverlay isDismissable>
+        <ModalOverlay isOpen={isOpen} onOpenChange={(open) => !open && handleClose()} isDismissable>
                 <Modal className="sm:max-w-120">
                     <Dialog>
                             {/* Close Button */}
@@ -105,7 +104,6 @@ export function OnboardingDialog() {
                             </div>
                     </Dialog>
                 </Modal>
-            </ModalOverlay>
-        </AriaDialogTrigger>
+        </ModalOverlay>
     );
 }

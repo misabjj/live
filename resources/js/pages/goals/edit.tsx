@@ -8,6 +8,7 @@ import {
 } from '@/components/settings';
 import { Goal } from '@/components/widgets/goal';
 import { useAuth } from '@/hooks/use-auth';
+import { useLang } from '@/hooks/use-lang';
 import PanelLayout from '@/layouts/panel-layout';
 import { update } from '@/routes/goals';
 import { useForm } from '@inertiajs/react';
@@ -31,6 +32,7 @@ interface Props {
 
 function Page({ goal }: Props) {
     const { user } = useAuth();
+    const { __ } = useLang();
 
     const form = useForm({
         title: goal.title,
@@ -55,12 +57,12 @@ function Page({ goal }: Props) {
         <TwoColumnFormPreviewLayout
             form={
                 <SettingsFormContainer onSubmit={handleSubmit}>
-                    <SettingsPageHeader title="Editar meta" description="Atualize os detalhes da sua meta de arrecadação." />
+                    <SettingsPageHeader title={__('pages.goals.edit_title')} description={__('pages.goals.edit_description')} />
 
                     <SettingsFormContent>
                         <FormSection>
                             <TextFormField
-                                title="Título da meta"
+                                title={__('pages.goals.field_title')}
                                 isRequired
                                 name="title"
                                 value={form.data.title}
@@ -71,7 +73,7 @@ function Page({ goal }: Props) {
 
                         <FormSection>
                             <MoneyFormField
-                                title="Valor meta"
+                                title={__('pages.goals.target_amount')}
                                 isRequired
                                 name="target_amount"
                                 value={form.data.target_amount}
@@ -82,7 +84,7 @@ function Page({ goal }: Props) {
 
                         <FormSection>
                             <MoneyFormField
-                                title="Valor arrecadado"
+                                title={__('pages.goals.raised_amount')}
                                 name="raised_amount"
                                 value={form.data.raised_amount}
                                 onChange={(value) => form.setData('raised_amount', value)}
@@ -92,19 +94,19 @@ function Page({ goal }: Props) {
 
                         <FormSection>
                             <DateFormField
-                                title="Data de encerramento"
+                                title={__('pages.goals.closes_at')}
                                 isRequired
                                 value={form.data.closes_at}
                                 onChange={(value) => form.setData('closes_at', value)}
                                 error={form.errors.closes_at}
-                                ariaLabel="Selecionar data"
+                                ariaLabel={__('pages.goals.select_date')}
                             />
                         </FormSection>
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor de fundo"
-                                description="Cor de fundo da barra (aparece por baixo da barra de progresso)"
+                                title={__('pages.goals.background_color')}
+                                description={__('pages.goals.background_color_description')}
                                 value={form.data.background_color}
                                 onChange={(color) => form.setData('background_color', color)}
                                 error={form.errors.background_color}
@@ -113,8 +115,8 @@ function Page({ goal }: Props) {
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor da barra de progresso"
-                                description="Cor da barra de progresso da meta"
+                                title={__('pages.goals.progress_bar_color')}
+                                description={__('pages.goals.progress_bar_color_description')}
                                 value={form.data.progress_bar_color}
                                 onChange={(color) => form.setData('progress_bar_color', color)}
                                 error={form.errors.progress_bar_color}
@@ -123,8 +125,8 @@ function Page({ goal }: Props) {
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor do texto"
-                                description="Cor do texto principal"
+                                title={__('pages.goals.text_color')}
+                                description={__('pages.goals.text_color_description')}
                                 value={form.data.text_color}
                                 onChange={(color) => form.setData('text_color', color)}
                                 error={form.errors.text_color}
@@ -133,8 +135,8 @@ function Page({ goal }: Props) {
 
                         <FormSection withDivider={false}>
                             <ToggleFormField
-                                title="Exibir link do perfil"
-                                description="Mostrar link para o seu perfil na meta"
+                                title={__('pages.goals.show_profile_link')}
+                                description={__('pages.goals.show_profile_link_description')}
                                 value={form.data.show_profile_link}
                                 onChange={(value) => form.setData('show_profile_link', value)}
                                 toggleSize="md"
@@ -142,7 +144,7 @@ function Page({ goal }: Props) {
                         </FormSection>
                     </SettingsFormContent>
 
-                    <SettingsFormFooter submitLabel="Atualizar" isDirty={form.isDirty} isProcessing={form.processing} />
+                    <SettingsFormFooter submitLabel={__('pages.goals.update')} isDirty={form.isDirty} isProcessing={form.processing} />
                 </SettingsFormContainer>
             }
             preview={
@@ -163,6 +165,6 @@ function Page({ goal }: Props) {
     );
 }
 
-Page.layout = (page: ReactNode) => <PanelLayout children={page} title="Editar meta" />;
+Page.layout = (page: ReactNode) => <PanelLayout children={page} title="pages.goals.edit_title" />;
 
 export default Page;

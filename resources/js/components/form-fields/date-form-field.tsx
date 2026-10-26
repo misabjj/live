@@ -1,4 +1,4 @@
-import { DatePicker } from '@/components/untitled-ui/application/date-picker/date-picker';
+import { DatePicker } from '@/components/ui/application/date-picker/date-picker';
 import { parseDate } from '@internationalized/date';
 import { useMemo } from 'react';
 import type { DateValue } from 'react-aria-components';

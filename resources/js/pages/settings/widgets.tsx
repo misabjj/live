@@ -1,9 +1,10 @@
-import { SectionFooter } from '@/components/untitled-ui/application/section-footers/section-footer';
-import { SectionHeader } from '@/components/untitled-ui/application/section-headers/section-headers';
-import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
+import { SectionFooter } from '@/components/ui/application/section-footers/section-footer';
+import { SectionHeader } from '@/components/ui/application/section-headers/section-headers';
+import { FeaturedIcon } from '@/components/ui/foundations/featured-icon/featured-icon';
 import { DonationAlertWidgetActions } from '@/components/widget-actions/donation-alert-widget-actions';
 import { GoalWidgetActions } from '@/components/widget-actions/goal-widget-actions';
 import { ProfileQrCodeWidgetActions } from '@/components/widget-actions/profile-qr-code-widget-actions';
+import { useLang } from '@/hooks/use-lang';
 import SettingsLayout from '@/layouts/settings-layout';
 import { BellRinging04, QrCode01, Target04 } from '@untitledui/icons';
 import React from 'react';
@@ -18,25 +19,20 @@ interface Props {
     widgets: Widget[];
 }
 
-const widgetConfig: Record<string, { label: string; description: string; icon: React.FC<{ className?: string }> }> = {
+const widgetConfig: Record<string, { icon: React.FC<{ className?: string }> }> = {
     profile_qr_code: {
-        label: 'QR code do perfil',
-        description: 'QR code para compartilhar seu perfil',
         icon: QrCode01,
     },
     donation_alert: {
-        label: 'Alerta de doação',
-        description: 'Widget de alerta para doações no OBS',
         icon: BellRinging04,
     },
     goal: {
-        label: 'Meta',
-        description: 'Widget de meta de doação',
         icon: Target04,
     },
 };
 
 function Page({ widgets }: Props) {
+    const { __ } = useLang();
     const renderWidgetActions = (widget: Widget) => {
         switch (widget.type) {
             case 'profile_qr_code':
@@ -55,8 +51,8 @@ function Page({ widgets }: Props) {
             <SectionHeader.Root className="border-none pb-0">
                 <SectionHeader.Group>
                     <div className="flex flex-1 flex-col justify-center gap-0.5">
-                        <SectionHeader.Heading>Widgets</SectionHeader.Heading>
-                        <SectionHeader.Subheading>Gerencie os links dos seus widgets para uso em OBS e outras ferramentas.</SectionHeader.Subheading>
+                        <SectionHeader.Heading>{__('pages.widgets.title')}</SectionHeader.Heading>
+                        <SectionHeader.Subheading>{__('pages.widgets.subtitle')}</SectionHeader.Subheading>
                     </div>
                 </SectionHeader.Group>
             </SectionHeader.Root>
@@ -73,10 +69,12 @@ function Page({ widgets }: Props) {
                                     <div className="flex gap-2">
                                         <div className="flex flex-1 items-center gap-3">
                                             <FeaturedIcon icon={Icon} size="lg" color="gray" theme="modern-neue" />
-                                            <p className="text-md font-medium text-primary lg:text-md lg:font-semibold">{config.label}</p>
+                                            <p className="text-md font-medium text-primary lg:text-md lg:font-semibold">
+                                                {__('pages.widgets.types.' + widget.type + '.label')}
+                                            </p>
                                         </div>
                                     </div>
-                                    <p className="text-sm text-tertiary">{config.description}</p>
+                                    <p className="text-sm text-tertiary">{__('pages.widgets.types.' + widget.type + '.description')}</p>
                                 </div>
                                 <SectionFooter.Root isCard className="px-6 py-4">
                                     <SectionFooter.Actions className="flex w-full justify-end">{renderWidgetActions(widget)}</SectionFooter.Actions>

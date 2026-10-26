@@ -1,4 +1,4 @@
-import { InputBase, TextField } from '@/components/untitled-ui/base/input/input';
+import { InputBase, TextField } from '@/components/ui/base/input/input';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 
 export interface NumberFormFieldProps extends Omit<FormFieldProps, 'children'> {

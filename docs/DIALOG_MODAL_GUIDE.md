@@ -13,11 +13,11 @@ Este guia mostra como criar modais elegantes e consistentes usando os componente
 Um modal completo é composto por várias camadas:
 
 ```tsx
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Form } from '@/components/untitled-ui/base/form/form';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Form } from '@/components/ui/base/form/form';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
 import { useState } from 'react';
 
@@ -313,7 +313,7 @@ O padrão decorativo atrás do ícone cria um efeito visual elegante:
 ### Com Upload de Arquivo
 
 ```tsx
-import { FileUpload } from '@/components/untitled-ui/application/file-upload/file-upload-base';
+import { FileUpload } from '@/components/ui/application/file-upload/file-upload-base';
 
 const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 

@@ -1,12 +1,13 @@
 import { ConfirmDialog } from '@/components/confirm-dialog';
-import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/untitled-ui/application/pagination/pagination';
-import { Table, TableCard } from '@/components/untitled-ui/application/table/table';
-import { BadgeWithDot } from '@/components/untitled-ui/base/badges/badges';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Dropdown } from '@/components/untitled-ui/base/dropdown/dropdown';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/ui/application/pagination/pagination';
+import { Table, TableCard } from '@/components/ui/application/table/table';
+import { BadgeWithDot } from '@/components/ui/base/badges/badges';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
+import { Input } from '@/components/ui/base/input/input';
 import { GoalWidgetActions } from '@/components/widget-actions/goal-widget-actions';
 import { useConfirm } from '@/hooks/use-confirm';
+import { useLang } from '@/hooks/use-lang';
 import PanelLayout from '@/layouts/panel-layout';
 import { formatCurrency, formatDate } from '@/lib/formatters';
 import { create, destroy, edit, index, toggleStatus } from '@/routes/goals';
@@ -38,6 +39,7 @@ interface Props {
 }
 
 function Page({ goals, filter, widget }: Props) {
+    const { __ } = useLang();
     const isInitialMount = useRef(true);
     const { isOpen, options, confirm, handleConfirm, handleCancel } = useConfirm();
     const form = useForm({
@@ -65,10 +67,10 @@ function Page({ goals, filter, widget }: Props) {
     const handleDeleteGoal = (goalId: string) => {
         setTimeout(async () => {
             const confirmed = await confirm({
-                title: 'Deletar meta',
-                description: 'Tem certeza que deseja deletar esta meta? Esta ação não pode ser desfeita.',
-                confirmLabel: 'Deletar',
-                cancelLabel: 'Cancelar',
+                title: __('pages.goals.delete_confirmation_title'),
+                description: __('pages.goals.delete_confirmation_description'),
+                confirmLabel: __('pages.goals.delete'),
+                cancelLabel: __('pages.goals.cancel'),
                 variant: 'danger',
             });
             if (confirmed) {
@@ -81,10 +83,12 @@ function Page({ goals, filter, widget }: Props) {
         setTimeout(async () => {
             const isActivating = !goal.is_active;
             const confirmed = await confirm({
-                title: isActivating ? 'Ativar meta' : 'Desativar meta',
-                description: isActivating ? 'Tem certeza que deseja ativar esta meta?' : 'Tem certeza que deseja desativar esta meta?',
-                confirmLabel: isActivating ? 'Ativar' : 'Desativar',
-                cancelLabel: 'Cancelar',
+                title: __('pages.goals.toggle_confirmation_title'),
+                description: isActivating
+                    ? __('pages.goals.activate_confirmation_description')
+                    : __('pages.goals.deactivate_confirmation_description'),
+                confirmLabel: isActivating ? __('pages.goals.activate') : __('pages.goals.deactivate'),
+                cancelLabel: __('pages.goals.cancel'),
                 variant: 'danger',
             });
             if (confirmed) {
@@ -121,13 +125,13 @@ function Page({ goals, filter, widget }: Props) {
                         <div className="flex flex-col gap-0.5 md:gap-1">
                             <div className="flex flex-wrap items-center justify-between gap-4">
                                 <div className="flex flex-col gap-0.5 md:gap-1">
-                                    <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">Metas</p>
-                                    <p className="text-sm text-tertiary sm:text-md">Gerencie suas metas de arrecadação.</p>
+                                    <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">{__('pages.goals.title')}</p>
+                                    <p className="text-sm text-tertiary sm:text-md">{__('pages.goals.description')}</p>
                                 </div>
                                 <div className="flex shrink-0 items-center gap-2">
                                     <Link href={create()}>
                                         <Button size="md" iconLeading={Plus}>
-                                            Nova meta
+                                            {__('pages.goals.create_title')}
                                         </Button>
                                     </Link>
                                     {widget && <GoalWidgetActions widgetId={widget.id} widgetUrl={widget.url} hidePersonalize />}
@@ -142,7 +146,7 @@ function Page({ goals, filter, widget }: Props) {
                         <Input
                             className="lg:max-w-100"
                             size="sm"
-                            placeholder="Buscar por título"
+                            placeholder={__('pages.goals.search')}
                             icon={SearchLg}
                             value={form.data.filter.title}
                             onChange={(value) => handleSearchChange(value)}
@@ -150,14 +154,14 @@ function Page({ goals, filter, widget }: Props) {
                     </div>
 
                     <TableCard.Root className="lg:rounded-xl">
-                        <TableCard.Header title="Metas" badge={`${goals.total} total`} />
-                        <Table aria-label="Metas" selectionMode="none" className="bg-primary">
+                        <TableCard.Header title={__('pages.goals.title')} badge={__('pages.goals.total', { count: goals.total })} />
+                        <Table aria-label={__('pages.goals.title')} selectionMode="none" className="bg-primary">
                             <Table.Header>
-                                <Table.Head id="title" label="Título" isRowHeader className="w-full" />
-                                <Table.Head id="raised_amount" label="Arrecadado" />
-                                <Table.Head id="target_amount" label="Meta" />
-                                <Table.Head id="is_active" label="Status" />
-                                <Table.Head id="created_at" label="Criado em" />
+                                <Table.Head id="title" label={__('pages.goals.field_title')} isRowHeader className="w-full" />
+                                <Table.Head id="raised_amount" label={__('pages.goals.raised')} />
+                                <Table.Head id="target_amount" label={__('pages.goals.target')} />
+                                <Table.Head id="is_active" label={__('pages.goals.status')} />
+                                <Table.Head id="created_at" label={__('pages.goals.created_at')} />
                                 <Table.Head id="actions" label="" className="text-right" />
                             </Table.Header>
 
@@ -175,7 +179,7 @@ function Page({ goals, filter, widget }: Props) {
                                         </Table.Cell>
                                         <Table.Cell>
                                             <BadgeWithDot size="sm" color={goal.is_active ? 'success' : 'gray'}>
-                                                {goal.is_active ? 'Ativa' : 'Inativa'}
+                                                {goal.is_active ? __('pages.goals.active') : __('pages.goals.inactive')}
                                             </BadgeWithDot>
                                         </Table.Cell>
                                         <Table.Cell className="text-sm whitespace-nowrap text-tertiary">{formatDate(goal.created_at)}</Table.Cell>
@@ -184,14 +188,14 @@ function Page({ goals, filter, widget }: Props) {
                                                 <Dropdown.DotsButton />
                                                 <Dropdown.Popover>
                                                     <Dropdown.Menu>
-                                                        <Dropdown.Item label="Editar" icon={Edit03} onAction={() => handleEditGoal(goal.id)} />
+                                                        <Dropdown.Item label={__('pages.goals.edit')} icon={Edit03} onAction={() => handleEditGoal(goal.id)} />
                                                         <Dropdown.Item
-                                                            label={goal.is_active ? 'Desativar' : 'Ativar'}
+                                                            label={goal.is_active ? __('pages.goals.deactivate') : __('pages.goals.activate')}
                                                             icon={goal.is_active ? XCircle : CheckCircle}
                                                             onAction={() => handleToggleGoalStatus(goal)}
                                                         />
                                                         <Dropdown.Separator />
-                                                        <Dropdown.Item label="Deletar" icon={Trash02} onAction={() => handleDeleteGoal(goal.id)} />
+                                                        <Dropdown.Item label={__('pages.goals.delete')} icon={Trash02} onAction={() => handleDeleteGoal(goal.id)} />
                                                     </Dropdown.Menu>
                                                 </Dropdown.Popover>
                                             </Dropdown.Root>
@@ -220,6 +224,6 @@ function Page({ goals, filter, widget }: Props) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Metas" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.goals.title" />;
 
 export default Page;

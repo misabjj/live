@@ -1,5 +1,6 @@
-import * as Alerts from '@/components/untitled-ui/application/alerts/alerts';
+import * as Alerts from '@/components/ui/application/alerts/alerts';
 import { Head } from '@inertiajs/react';
+import { useLang } from '@/hooks/use-lang';
 
 interface Props {
     streamer: {
@@ -10,17 +11,17 @@ interface Props {
 }
 
 export default function Page({ streamer, reason }: Props) {
-    const descriptions = {
-        no_payment_processors: 'Este streamer ainda não configurou nenhum método de pagamento. Entre em contato diretamente com o streamer.',
-        not_accepting_donations: 'Este streamer não está aceitando doações no momento.',
-    };
+    const { __ } = useLang();
+    const description = reason === 'no_payment_processors'
+        ? __('pages.donations_unavailable.no_processors')
+        : __('pages.donations_unavailable.not_accepting');
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-primary_alt px-4 py-12">
             <Head title={`@${streamer.handle}`} />
 
             <div className="w-full max-w-md">
-                <Alerts.AlertFloating color="error" title="Doações não disponíveis" description={descriptions[reason]} />
+                <Alerts.AlertFloating color="error" title={__('pages.donations_unavailable.title')} description={description} />
             </div>
         </div>
     );

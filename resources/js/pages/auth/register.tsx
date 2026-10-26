@@ -1,29 +1,31 @@
 import { Head, Form as InertiaForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { store as submitRegistration } from '@/actions/App/Http/Controllers/Auth/RegisterController';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { SocialButton } from '@/components/untitled-ui/base/buttons/social-button';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { Button } from '@/components/ui/base/buttons/button';
+import { SocialButton } from '@/components/ui/base/buttons/social-button';
+import { Input } from '@/components/ui/base/input/input';
 import { login } from '@/routes';
 import oauth from '@/routes/oauth';
 import { cx } from '@/utils/cx';
+import { useLang } from '@/hooks/use-lang';
 
 interface RegisterProps {
     status?: string;
 }
 
 export default function Page({ status }: RegisterProps) {
+    const { __ } = useLang();
     const [password, setPassword] = useState('');
 
     return (
         <>
-            <Head title="Registrar" />
+            <Head title={__('auth.register.title')} />
             <section className="flex min-h-screen items-center justify-center overflow-hidden bg-primary px-4 py-12 md:px-8">
                 <div className="mx-auto flex w-full flex-col gap-8 sm:max-w-90">
                     <div className="flex flex-col items-center gap-6 text-center">
                         <div className="z-10 flex flex-col gap-2 md:gap-3">
-                            <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">Criar uma conta</h1>
-                            <p className="text-md text-tertiary">Comece agora</p>
+                            <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{__('auth.register.title')}</h1>
+                            <p className="text-md text-tertiary">{__('auth.register.subtitle')}</p>
                         </div>
                     </div>
 
@@ -46,10 +48,10 @@ export default function Page({ status }: RegisterProps) {
                                     <Input
                                         isRequired
                                         hideRequiredIndicator
-                                        label="Nome de exibição"
+                                        label={__('auth.register.fields.display_name.label')}
                                         type="text"
                                         name="display_name"
-                                        placeholder="Digite seu nome de exibição"
+                                        placeholder={__('auth.register.fields.display_name.placeholder')}
                                         size="md"
                                         isInvalid={!!errors.display_name}
                                         hint={errors.display_name}
@@ -57,10 +59,10 @@ export default function Page({ status }: RegisterProps) {
                                     <Input
                                         isRequired
                                         hideRequiredIndicator
-                                        label="Email"
+                                        label={__('auth.register.fields.email.label')}
                                         type="email"
                                         name="email"
-                                        placeholder="Digite seu email"
+                                        placeholder={__('auth.register.fields.email.placeholder')}
                                         size="md"
                                         isInvalid={!!errors.email}
                                         hint={errors.email}
@@ -68,13 +70,13 @@ export default function Page({ status }: RegisterProps) {
                                     <Input
                                         isRequired
                                         hideRequiredIndicator
-                                        label="Senha"
+                                        label={__('auth.register.fields.password.label')}
                                         type="password"
                                         name="password"
                                         value={password}
                                         onChange={setPassword}
                                         size="md"
-                                        placeholder="Crie uma senha"
+                                        placeholder={__('auth.register.fields.password.placeholder')}
                                         minLength={8}
                                         pattern='.*[!@#$%^&*\\(\\),.?":\\{\\}\\|<>].*'
                                         isInvalid={!!errors.password}
@@ -83,10 +85,10 @@ export default function Page({ status }: RegisterProps) {
                                     <Input
                                         isRequired
                                         hideRequiredIndicator
-                                        label="Confirmar senha"
+                                        label={__('auth.register.fields.password_confirmation.label')}
                                         type="password"
                                         name="password_confirmation"
-                                        placeholder="Confirme sua senha"
+                                        placeholder={__('auth.register.fields.password_confirmation.placeholder')}
                                         size="md"
                                         isInvalid={!!errors.password_confirmation}
                                         hint={errors.password_confirmation}
@@ -109,14 +111,14 @@ export default function Page({ status }: RegisterProps) {
                                                     />
                                                 </svg>
                                             </div>
-                                            <p className="text-sm text-tertiary">Deve ter pelo menos 8 caracteres</p>
+                                            <p className="text-sm text-tertiary">{__('auth.register.password_requirement')}</p>
                                         </span>
                                     </div>
                                 </div>
 
                                 <div className="z-10 flex flex-col gap-4">
                                     <Button type="submit" size="lg" isDisabled={processing}>
-                                        {processing ? 'Criando conta...' : 'Começar'}
+                                        {processing ? __('auth.register.buttons.processing') : __('auth.register.buttons.register')}
                                     </Button>
                                     <SocialButton social="google" theme="color" href={oauth.redirect.url('google')}>
                                         Cadastrar com Google
@@ -127,7 +129,7 @@ export default function Page({ status }: RegisterProps) {
                     </InertiaForm>
 
                     <div className="flex justify-center gap-1 text-center">
-                        <span className="text-sm text-tertiary">Já tem uma conta?</span>
+                        <span className="text-sm text-tertiary">{__('auth.register.signin_prompt')}</span>
                         <Button href={login.url()} color="link-color" size="md">
                             Entrar
                         </Button>

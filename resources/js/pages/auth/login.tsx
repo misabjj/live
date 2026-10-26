@@ -1,18 +1,19 @@
 import { store as submitLogin } from '@/actions/App/Http/Controllers/Auth/LoginController';
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { SocialButton } from '@/components/untitled-ui/base/buttons/social-button';
-import { Checkbox } from '@/components/untitled-ui/base/checkbox/checkbox';
-import { Form } from '@/components/untitled-ui/base/form/form';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { PinInput } from '@/components/untitled-ui/base/input/pin-input';
-import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
-import { Illustration } from '@/components/untitled-ui/shared-assets/illustrations';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { SocialButton } from '@/components/ui/base/buttons/social-button';
+import { Checkbox } from '@/components/ui/base/checkbox/checkbox';
+import { Form } from '@/components/ui/base/form/form';
+import { Input } from '@/components/ui/base/input/input';
+import { PinInput } from '@/components/ui/base/input/pin-input';
+import { FeaturedIcon } from '@/components/ui/foundations/featured-icon/featured-icon';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
+import { Illustration } from '@/components/ui/shared-assets/illustrations';
 import { register } from '@/routes';
 import oauth from '@/routes/oauth';
 import { request as requestPassword } from '@/routes/password';
+import { useLang } from '@/hooks/use-lang';
 import { Head, useForm } from '@inertiajs/react';
 import { LogIn03, Shield01 } from '@untitledui/icons';
 import { FormEventHandler, useEffect, useState } from 'react';
@@ -23,6 +24,7 @@ interface LoginProps {
 }
 
 export default function Page({ status, two_factor_required }: LoginProps) {
+    const { __ } = useLang();
     const [show2FADialog, setShow2FADialog] = useState(false);
 
     const {
@@ -70,7 +72,7 @@ export default function Page({ status, two_factor_required }: LoginProps) {
 
     return (
         <>
-            <Head title="Login" />
+            <Head title={__('auth.login.title')} />
             <section className="flex min-h-screen items-center justify-center overflow-hidden bg-primary px-4 py-12 md:px-8">
                 <div className="mx-auto flex w-full flex-col gap-8 sm:max-w-90">
                     <div className="flex flex-col items-center gap-8 text-center">
@@ -90,8 +92,8 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                         </div>
 
                         <div className="z-10 flex flex-col gap-2 md:gap-3">
-                            <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">Faça login em sua conta</h1>
-                            <p className="text-md text-tertiary">Bem-vindo de volta! Insira seus dados.</p>
+                            <h1 className="text-display-xs font-semibold text-primary md:text-display-sm">{__('auth.login.title')}</h1>
+                            <p className="text-md text-tertiary">{__('auth.login.subtitle')}</p>
                         </div>
                     </div>
 
@@ -106,12 +108,12 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                             <Input
                                 isRequired
                                 hideRequiredIndicator
-                                label="Email"
+                                label={__('auth.login.fields.email.label')}
                                 type="email"
                                 name="email"
                                 value={data.email}
                                 onChange={(value) => setData('email', value)}
-                                placeholder="Digite seu email"
+                                placeholder={__('auth.login.fields.email.placeholder')}
                                 size="md"
                                 isInvalid={!!errors.email}
                                 hint={errors.email}
@@ -119,13 +121,13 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                             <Input
                                 isRequired
                                 hideRequiredIndicator
-                                label="Senha"
+                                label={__('auth.login.fields.password.label')}
                                 type="password"
                                 name="password"
                                 value={data.password}
                                 onChange={(value) => setData('password', value)}
                                 size="md"
-                                placeholder="Digite sua senha"
+                                placeholder={__('auth.login.fields.password.placeholder')}
                                 isInvalid={!!errors.password}
                                 hint={errors.password}
                             />
@@ -133,7 +135,7 @@ export default function Page({ status, two_factor_required }: LoginProps) {
 
                         <div className="flex items-center">
                             <Checkbox
-                                label="Lembrar de mim"
+                                label={__('auth.login.fields.remember.label')}
                                 name="remember"
                                 isSelected={data.remember}
                                 onChange={(isSelected) => setData('remember', isSelected)}
@@ -146,7 +148,7 @@ export default function Page({ status, two_factor_required }: LoginProps) {
 
                         <div className="flex flex-col gap-4">
                             <Button type="submit" size="lg" isDisabled={processing}>
-                                {processing ? 'Entrando...' : 'Entrar'}
+                                {processing ? __('auth.login.buttons.processing') : __('auth.login.buttons.login')}
                             </Button>
                             <SocialButton social="google" theme="color" href={oauth.redirect.url('google')}>
                                 Continuar com Google
@@ -155,7 +157,7 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                     </Form>
 
                     <div className="z-10 flex justify-center gap-1 text-center">
-                        <span className="text-sm text-tertiary">Não tem uma conta?</span>
+                        <span className="text-sm text-tertiary">{__('auth.login.signup_prompt')}</span>
                         <Button color="link-color" size="md" href={register.url()}>
                             Registre-se
                         </Button>
@@ -186,15 +188,15 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                                             />
                                         </div>
                                         <div className="z-10 flex flex-col gap-0.5">
-                                            <h2 className="text-md font-semibold text-primary">Verificação em duas etapas</h2>
-                                            <p className="mb-4 text-sm text-tertiary">Digite o código de 6 dígitos do seu aplicativo autenticador</p>
+                                            <h2 className="text-md font-semibold text-primary">{__('auth.login.two_factor.title')}</h2>
+                                            <p className="mb-4 text-sm text-tertiary">{__('auth.login.two_factor.subtitle')}</p>
                                         </div>
                                     </div>
 
                                     <Form className="contents" onSubmit={submit}>
                                         <div className="z-10 flex flex-col gap-4 px-4 sm:px-6">
                                             <div className="flex flex-col gap-2">
-                                                <PinInput.Label>Código de verificação</PinInput.Label>
+                                                <PinInput.Label>{__('auth.login.two_factor.code_label')}</PinInput.Label>
                                                 <PinInput size="sm" disabled={processing} className="mx-auto">
                                                     <PinInput.Group
                                                         maxLength={6}
@@ -225,7 +227,7 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                                                 Cancelar
                                             </Button>
                                             <Button type="submit" color="primary" size="lg" disabled={processing || data.otp_code.length !== 6}>
-                                                {processing ? 'Verificando...' : 'Verificar'}
+                                                {processing ? __('auth.login.two_factor.processing') : __('auth.login.two_factor.verify')}
                                             </Button>
                                         </div>
                                     </Form>

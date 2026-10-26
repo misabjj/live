@@ -23,9 +23,9 @@ Use este padrão quando você precisa:
 ## Estrutura Básica
 
 ```tsx
-import { SectionFooter } from '@/components/untitled-ui/application/section-footers/section-footer';
-import { SectionHeader } from '@/components/untitled-ui/application/section-headers/section-headers';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { SectionFooter } from '@/components/ui/application/section-footers/section-footer';
+import { SectionHeader } from '@/components/ui/application/section-headers/section-headers';
+import { Button } from '@/components/ui/base/buttons/button';
 import SettingsLayout from '@/layouts/settings-layout';
 import { router } from '@inertiajs/react';
 import { ReactNode } from 'react';
@@ -129,7 +129,7 @@ export default Page;
 Use quando você precisa ativar/desativar itens e configurá-los.
 
 ```tsx
-import { Toggle } from '@/components/untitled-ui/base/toggle/toggle';
+import { Toggle } from '@/components/ui/base/toggle/toggle';
 
 // No card
 <div className="flex gap-2">
@@ -170,7 +170,7 @@ import { Toggle } from '@/components/untitled-ui/base/toggle/toggle';
 Use quando você tem múltiplas ações e quer economizar espaço.
 
 ```tsx
-import { Dropdown } from '@/components/untitled-ui/base/dropdown/dropdown';
+import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
 import { Copy01, Settings01, Trash01 } from '@untitledui/icons';
 
 <SectionFooter.Actions className="flex w-full justify-end">
@@ -210,11 +210,11 @@ import { Copy01, Settings01, Trash01 } from '@untitledui/icons';
 Use para formulários de configuração rápida.
 
 ```tsx
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { Form } from '@/components/untitled-ui/base/form/form';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { Form } from '@/components/ui/base/form/form';
+import { Input } from '@/components/ui/base/input/input';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { useForm } from '@inertiajs/react';
 import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
 import { useState } from 'react';
@@ -344,7 +344,7 @@ function Page({ items }: PageProps) {
 ### Modal com Upload de Arquivo
 
 ```tsx
-import { FileUpload } from '@/components/untitled-ui/application/file-upload/file-upload-base';
+import { FileUpload } from '@/components/ui/application/file-upload/file-upload-base';
 
 const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
 

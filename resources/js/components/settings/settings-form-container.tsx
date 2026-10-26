@@ -1,4 +1,4 @@
-import { Form } from '@/components/untitled-ui/base/form/form';
+import { Form } from '@/components/ui/base/form/form';
 import { FormEvent, ReactNode } from 'react';
 
 interface SettingsFormContainerProps {

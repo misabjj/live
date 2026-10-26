@@ -5,14 +5,16 @@ import { ReactNode, useRef, useState } from 'react'; // Added useRef
 
 import { SettingsButtonSection, SettingsContainer, SettingsCustomSection, SettingsSwitchSection } from '@/components/form-fields';
 import { SettingsPageHeader } from '@/components/settings';
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
 import { useClipboard } from '@/hooks/use-clipboard';
+import { useLang } from '@/hooks/use-lang';
 import { useToast } from '@/hooks/use-toast';
 import PanelLayout from '@/layouts/panel-layout';
 import { markAsPlayed, playDonation, skipDonationAlert, toggleAcceptingDonations, toggleAutoplay } from '@/routes/controls';
 import { index as widgets } from '@/routes/settings/widgets';
+import { Heading as AriaHeading } from 'react-aria-components';
 
 interface Donation {
     id: string;
@@ -55,6 +57,7 @@ interface Props {
 }
 
 function Page({ queue_paused, accepting_donations, profile_url, unplayed_donations, donation_alert_widget_token }: Props) {
+    const { __ } = useLang();
     const { copy } = useClipboard();
     const toast = useToast();
     const [isQueueSlideoutOpen, setIsQueueSlideoutOpen] = useState(false);
@@ -116,28 +119,28 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
         if (audioRef.current && donation.content_path) {
             audioRef.current.src = donation.content_path;
             audioRef.current.play().catch((error) => {
-                console.error('Erro ao reproduzir áudio local:', error);
-                toast.error('Erro ao reproduzir áudio.');
+                console.error(__('pages.controls.audio_error'), error);
+                toast.error(__('pages.controls.audio_error'));
             });
         } else {
-            toast.info('Esta doação não possui conteúdo de áudio.');
+            toast.info(__('pages.controls.no_audio'));
         }
     };
 
     const handleCopyProfileUrl = async () => {
         await copy(profile_url);
-        toast.success('Link copiado com sucesso!');
+        toast.success(__('pages.controls.profile_link_copied'));
     };
 
     return (
         <SettingsContainer gap="lg">
-            <SettingsPageHeader title="Controles" description="Gerencie as configurações de doações e compartilhe seu perfil." />
+            <SettingsPageHeader title={__('pages.controls.title')} description={__('pages.controls.description')} />
 
             <SettingsContainer gap="md">
                 {/* Autoplay Toggle */}
                 <SettingsSwitchSection
-                    title="Reprodução automática"
-                    description="Reproduza alertas automaticamente quando uma doação for recebida"
+                    title={__('pages.controls.autoplay_title')}
+                    description={__('pages.controls.autoplay_description')}
                     value={!queue_paused}
                     onChange={handleToggleAutoplay}
                     withDivider={true}
@@ -145,8 +148,8 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
 
                 {/* Accepting Donations Toggle */}
                 <SettingsSwitchSection
-                    title="Receber doações"
-                    description="Permita que outras pessoas façam doações para você"
+                    title={__('pages.controls.accept_donations_title')}
+                    description={__('pages.controls.accept_donations_description')}
                     value={accepting_donations}
                     onChange={handleToggleAcceptingDonations}
                     withDivider={true}
@@ -154,37 +157,38 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
 
                 {/* Queue Management */}
                 <SettingsButtonSection
-                    title="Gerenciar fila"
-                    description="Gerencie a fila de alertas e pule para o próximo"
-                    buttonText="Fila"
+                    title={__('pages.controls.queue_title')}
+                    description={__('pages.controls.queue_description')}
+                    buttonText={__('pages.controls.queue_button')}
                     onClick={() => setIsQueueSlideoutOpen(true)}
                     buttonSize="md"
                     withDivider={true}
                 />
 
                 {/* Handle & Share */}
-                <SettingsCustomSection title="Seu perfil" description="Compartilhe seu link de doação" row>
-                    <Input value={profile_url} isDisabled />
+                <SettingsCustomSection title={__('pages.controls.profile_title')} description={__('pages.controls.profile_description')} row>
+                    <Input aria-label={__('pages.controls.profile_link')} value={profile_url} isDisabled />
                     <Button onClick={handleCopyProfileUrl} iconLeading={Copy01} />
                 </SettingsCustomSection>
 
                 {/* Widget Link */}
                 <SettingsButtonSection
-                    title="Widgets"
-                    description="Gerencie os links dos seus widgets para uso em OBS e outras ferramentas"
-                    buttonText="Acessar widgets"
+                    title={__('pages.widgets.title')}
+                    description={__('pages.widgets.subtitle')}
+                    buttonText={__('pages.controls.widgets_button')}
                     onClick={() => router.visit(widgets())}
                     buttonSize="md"
                     withDivider={false}
                 />
             </SettingsContainer>
 
-            <SlideoutMenu.Trigger isOpen={isQueueSlideoutOpen} onOpenChange={setIsQueueSlideoutOpen}>
-                <SlideoutMenu isDismissable>
+            <SlideoutMenu isOpen={isQueueSlideoutOpen} onOpenChange={setIsQueueSlideoutOpen} isDismissable>
                     <SlideoutMenu.Header onClose={() => setIsQueueSlideoutOpen(false)}>
                         <div className="flex flex-col gap-1">
-                            <h2 className="text-lg font-semibold text-primary">Fila de alertas</h2>
-                            <p className="text-sm text-secondary">Gerencie a fila de alertas de doações</p>
+                            <AriaHeading slot="title" className="text-lg font-semibold text-primary">
+                                Fila de alertas
+                            </AriaHeading>
+                            <p className="text-sm text-secondary">{__('pages.controls.queue_dialog_description')}</p>
                         </div>
                     </SlideoutMenu.Header>
 
@@ -192,17 +196,19 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
                         <div className="flex flex-col gap-4">
                             <div className="flex items-center justify-between">
                                 <p className="text-sm font-semibold text-primary">
-                                    {donations.length} {donations.length === 1 ? 'alerta na fila' : 'alertas na fila'}
+                                    {donations.length === 1
+                                        ? __('pages.controls.queue_count_singular', { count: donations.length })
+                                        : __('pages.controls.queue_count_plural', { count: donations.length })}
                                 </p>
 
                                 <Button size="sm" iconLeading={SkipForward} onClick={handleSkipAlert} isDisabled={isProcessing}>
-                                    Pular
+                                    {__('pages.controls.skip')}
                                 </Button>
                             </div>
 
                             {donations.length === 0 ? (
                                 <div className="rounded-lg border border-border-secondary bg-secondary p-8 text-center">
-                                    <p className="text-sm text-secondary">Nenhum alerta na fila</p>
+                                    <p className="text-sm text-secondary">{__('pages.controls.queue_empty')}</p>
                                 </div>
                             ) : (
                                 <div className="flex flex-col gap-3">
@@ -236,7 +242,7 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
                                                     onClick={() => handlePlayDonation(donation.id)}
                                                     isDisabled={isProcessing}
                                                 >
-                                                    Reproduzir na stream
+                                                    {__('pages.controls.skip_stream')}
                                                 </Button>
                                                 <Button
                                                     size="sm"
@@ -245,7 +251,7 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
                                                     onClick={() => handleListen(donation)}
                                                     isDisabled={isProcessing || !donation.content_path || donation.content_type === 'text'}
                                                 >
-                                                    Ouvir
+                                                    {__('pages.controls.listen')}
                                                 </Button>
                                             </div>
                                         </div>
@@ -254,15 +260,14 @@ function Page({ queue_paused, accepting_donations, profile_url, unplayed_donatio
                             )}
                         </div>
                     </SlideoutMenu.Content>
-                </SlideoutMenu>
-            </SlideoutMenu.Trigger>
+            </SlideoutMenu>
 
             {/* Hidden audio element for playback */}
-            <audio ref={audioRef} className="hidden" onError={(e) => console.error('Erro ao carregar áudio:', e)} />
+            <audio ref={audioRef} className="hidden" onError={(e) => console.error(__('pages.controls.audio_load_error'), e)} />
         </SettingsContainer>
     );
 }
 
-Page.layout = (page: ReactNode) => <PanelLayout children={page} title="Controles" />;
+Page.layout = (page: ReactNode) => <PanelLayout children={page} title="pages.controls.title" />;
 
 export default Page;

@@ -1,4 +1,4 @@
-import { QRCode } from '@/components/untitled-ui/shared-assets/qr-code';
+import { QRCode } from '@/components/ui/shared-assets/qr-code';
 import { cx } from '@/utils/cx';
 import type { Options as QRCodeStylingOptions } from 'qr-code-styling';
 import { useMemo } from 'react';

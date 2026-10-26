@@ -1,5 +1,5 @@
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { FileTrigger } from '@/components/untitled-ui/base/file-upload-trigger/file-upload-trigger';
+import { Button } from '@/components/ui/base/buttons/button';
+import { FileTrigger } from '@/components/ui/base/file-upload-trigger/file-upload-trigger';
 import { cx } from '@/utils/cx';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 

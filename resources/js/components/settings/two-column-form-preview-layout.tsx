@@ -1,4 +1,5 @@
-import { Label } from '@/components/untitled-ui/base/input/label';
+import { Label } from '@/components/ui/base/input/label';
+import { useLang } from '@/hooks/use-lang';
 import { ReactNode } from 'react';
 
 interface TwoColumnFormPreviewLayoutProps {
@@ -27,9 +28,10 @@ interface TwoColumnFormPreviewLayoutProps {
  * - Form appears first, preview appears below
  */
 export function TwoColumnFormPreviewLayout({ form, preview }: TwoColumnFormPreviewLayoutProps) {
+    const { __ } = useLang();
     const wrappedPreview = (
         <>
-            <Label className="mb-3 block text-sm font-semibold text-secondary">Visualização</Label>
+            <Label className="mb-3 block text-sm font-semibold text-secondary">{__('pages.settings.preview')}</Label>
             <div className="flex min-h-[320px] flex-col items-center justify-center rounded-lg bg-secondary p-6">{preview}</div>
         </>
     );

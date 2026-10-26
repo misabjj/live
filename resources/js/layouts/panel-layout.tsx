@@ -1,8 +1,9 @@
 import { OnboardingDialog } from '@/components/onboarding/onboarding-dialog';
-import type { MobileNavigationHeaderRef } from '@/components/untitled-ui/application/app-navigation/base-components/mobile-header';
-import type { NavItemType } from '@/components/untitled-ui/application/app-navigation/config';
-import { SidebarNavigationSimple } from '@/components/untitled-ui/application/app-navigation/sidebar-navigation/sidebar-simple';
+import type { MobileNavigationHeaderRef } from '@/components/ui/application/app-navigation/base-components/mobile-header';
+import type { NavItemType } from '@/components/ui/application/app-navigation/config';
+import { SidebarNavigationSimple } from '@/components/ui/application/app-navigation/sidebar-navigation/sidebar-simple';
 import { Head, usePage } from '@inertiajs/react';
+import { useLang } from '@/hooks/use-lang';
 import {
     BarChartSquare02,
     CoinsStacked01,
@@ -99,6 +100,7 @@ const transformNavigationItems = (items: BackendNavigationItem[]): NavItemType[]
 
 export default ({ children, title }: PanelLayoutProps) => {
     const page = usePage<PagePropsWithNavigation>();
+    const { __ } = useLang();
     const sidebarItems = transformNavigationItems(page.props.navigation.main);
     const currentUrl = page.url;
     const mobileNavigationRef = useRef<MobileNavigationHeaderRef>(null);
@@ -109,7 +111,7 @@ export default ({ children, title }: PanelLayoutProps) => {
 
     return (
         <div className="flex flex-col bg-primary lg:flex-row">
-            {title && <Head title={title} />}
+            {title && <Head title={__(title)} />}
 
             {/* Onboarding Dialog for new users */}
             <OnboardingDialog />

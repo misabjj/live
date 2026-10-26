@@ -1,7 +1,8 @@
-import { BadgeGroup } from '@/components/untitled-ui/base/badges/badge-groups';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Header } from '@/components/untitled-ui/marketing/header-navigation/header';
-import { SectionDivider } from '@/components/untitled-ui/shared-assets/section-divider';
+import { BadgeGroup } from '@/components/ui/base/badges/badge-groups';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Header } from '@/components/ui/marketing/header-navigation/header';
+import { SectionDivider } from '@/components/ui/shared-assets/section-divider';
+import { useLang } from '@/hooks/use-lang';
 import { ArrowRight } from '@untitledui/icons';
 import { type ComponentProps, type FC } from 'react';
 
@@ -41,6 +42,7 @@ export const BackgroundStripes = () => {
 };
 
 const Hero = () => {
+    const { __ } = useLang();
     return (
         <div className="bg-primary">
             <HeaderPrimary />
@@ -55,34 +57,34 @@ const Hero = () => {
                                 <BadgeGroup
                                     className="hidden md:flex"
                                     size="lg"
-                                    addonText="Atualização"
+                                    addonText={__('pages.tax.update')}
                                     iconTrailing={ArrowRight}
                                     theme="light"
                                     color="brand"
                                 >
-                                    Taxa reduzida e novas customizações
+                                    {__('pages.tax.announcement')}
                                 </BadgeGroup>
                                 <BadgeGroup
                                     className="md:hidden"
                                     size="md"
-                                    addonText="Atualização"
+                                    addonText={__('pages.tax.update')}
                                     iconTrailing={ArrowRight}
                                     theme="light"
                                     color="brand"
                                 >
-                                    Taxa reduzida e novas customizações
+                                    {__('pages.tax.announcement')}
                                 </BadgeGroup>
                             </a>
 
                             <h1 className="mt-4 text-display-md font-semibold text-brand-primary md:text-display-lg lg:text-display-xl">
-                                Chega de ficar aguardando por saques!
+                                {__('pages.tax.hero_title')}
                             </h1>
                             <p className="mt-4 max-w-3xl text-lg text-brand-secondary md:mt-6 md:text-xl">
-                                Receba seus donates diretamente no seu banco, sem saques e com as vozes de IA com mais qualidade.
+                                {__('pages.tax.hero_description')}
                             </p>
                             <div className="relative z-1 mt-8 flex w-full flex-col-reverse items-stretch gap-3 sm:w-auto sm:flex-row sm:items-start md:mt-12">
                                 <Button size="xl" href="/register" >
-                                    Começar agora mesmo!
+                                    {__('pages.tax.start_now')}
                                 </Button>
                             </div>
                         </div>
@@ -103,6 +105,7 @@ interface PaymentTransparencyProps {
 }
 
 const PaymentTransparency = ({ platformFeePercentage }: PaymentTransparencyProps) => {
+    const { __ } = useLang();
     const donationAmount = 100;
     const platformFee = platformFeePercentage;
     const processingFee = 1.19;
@@ -114,9 +117,9 @@ const PaymentTransparency = ({ platformFeePercentage }: PaymentTransparencyProps
             <div className="mx-auto max-w-container px-4 md:px-8">
                 <div className="flex flex-col gap-8 rounded-2xl bg-secondary p-6 sm:p-8 md:gap-16 md:rounded-none md:bg-transparent md:p-0">
                     <div className="flex w-full flex-col self-center text-center md:max-w-3xl">
-                        <h2 className="text-display-sm font-semibold text-primary md:text-display-md lg:text-display-lg">Tenha liberdade ✌️</h2>
+                        <h2 className="text-display-sm font-semibold text-primary md:text-display-md lg:text-display-lg">{__('pages.tax.transparency_title')}</h2>
                         <p className="mt-4 text-base text-tertiary sm:mt-5 sm:text-lg md:mt-6 md:text-xl lg:mt-8">
-                            Receba seu dinheiro instantaneamente no seu banco. Sem esperas, sem complicações, totalmente transparente.
+                            {__('pages.tax.transparency_description')}
                         </p>
                     </div>
 
@@ -124,19 +127,19 @@ const PaymentTransparency = ({ platformFeePercentage }: PaymentTransparencyProps
                         {[
                             {
                                 title: `R$ ${donationAmount.toFixed(2)}`,
-                                subtitle: 'Viewers enviam',
+                                subtitle: __('pages.tax.viewers_send'),
                             },
                             {
                                 title: `${processingFee}%`,
-                                subtitle: 'Intermediador recebe',
+                                subtitle: __('pages.tax.processor_receives'),
                             },
                             {
                                 title: `${platformFee}%`,
-                                subtitle: 'Nós recebemos',
+                                subtitle: __('pages.tax.we_receive'),
                             },
                             {
                                 title: `R$ ${youReceive.toFixed(2)}`,
-                                subtitle: 'Você recebe',
+                                subtitle: __('pages.tax.you_receive'),
                             },
                         ].map((item, index) => (
                             <div key={index} className="flex flex-1 flex-col-reverse gap-2 text-center sm:gap-2 md:gap-3">
@@ -154,18 +157,19 @@ const PaymentTransparency = ({ platformFeePercentage }: PaymentTransparencyProps
 };
 
 export const CTA = () => {
+    const { __ } = useLang();
     return (
         <section className="bg-brand-section py-16 md:py-24">
             <div className="mx-auto max-w-container px-4 md:px-8">
                 <div className="flex flex-col justify-center text-center">
-                    <h2 className="text-display-sm font-semibold text-primary_on-brand md:text-display-md">Vamos começar algo incrível 🤍</h2>
+                    <h2 className="text-display-sm font-semibold text-primary_on-brand md:text-display-md">{__('pages.tax.cta_title')}</h2>
                     <p className="mt-4 text-lg text-tertiary_on-brand md:mt-5 md:text-xl">
-                        Junte-se aos streamers que já estão crescendo com o Live.
-                        <br className="hidden md:flex" /> Aproveite também nosso suporte 24h
+                        {__('pages.tax.cta_description')}
+                        <br className="hidden md:flex" /> {__('pages.tax.cta_support')}
                     </p>
                     <div className="mt-8 flex flex-col-reverse gap-3 self-stretch md:mt-8 md:flex-row md:self-center">
                         <Button size="xl" href="/register" >
-                            Começar agora mesmo
+                            {__('pages.tax.start_now')}
                         </Button>
                     </div>
                 </div>
@@ -175,6 +179,7 @@ export const CTA = () => {
 };
 
 export const Footer = () => {
+    const { __ } = useLang();
     return (
         <footer className="dark-mode bg-primary py-12 md:pt-16">
             <div className="mx-auto max-w-container px-4 md:px-8">
@@ -186,11 +191,11 @@ export const Footer = () => {
                         <ul className="grid grid-cols-2 gap-x-8 gap-y-3 sm:grid-cols-[repeat(6,max-content)]">
                             {[
                                 {
-                                    label: 'Página inicial',
+                                    label: __('pages.tax.home'),
                                     href: '/',
                                 },
                                 {
-                                    label: 'Nossa taxa',
+                                    label: __('pages.tax.our_fee'),
                                     href: '#',
                                 },
                             ].map((item) => (
@@ -204,7 +209,7 @@ export const Footer = () => {
                     </nav>
                 </div>
                 <div className="mt-12 flex flex-col-reverse items-center justify-between gap-4 border-t border-secondary pt-8 md:mt-16 md:flex-row md:gap-6">
-                    <p className="text-md text-quaternary">© 2025 Live. Todos os direitos reservados.</p>
+                    <p className="text-md text-quaternary">{__('pages.tax.copyright')}</p>
                 </div>
             </div>
         </footer>

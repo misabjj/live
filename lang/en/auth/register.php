@@ -3,6 +3,8 @@
 return [
     'title' => 'Create account',
     'subtitle' => 'Sign up to get started on our platform.',
+    'password_requirement' => 'Must be at least 8 characters long',
+    'signin_prompt' => 'Already have an account?',
     'fields' => [
         'display_name' => [
             'label' => 'Display name',
@@ -23,6 +25,7 @@ return [
     ],
     'buttons' => [
         'register' => 'Create account',
+        'processing' => 'Creating account...',
         'login' => 'Already have an account? Sign in',
     ],
 ];

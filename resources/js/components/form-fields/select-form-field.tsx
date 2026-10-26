@@ -1,4 +1,4 @@
-import { NativeSelect } from '@/components/untitled-ui/base/select/select-native';
+import { NativeSelect } from '@/components/ui/base/select/select-native';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 
 export interface SelectOption {

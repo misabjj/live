@@ -4,6 +4,7 @@ return [
     'verify_email' => [
         'title' => 'Verificar e-mail',
         'subtitle' => 'Por favor, verifique seu endereço de e-mail clicando no link que acabamos de enviar para você.',
+    'sent' => 'Um novo link de verificação foi enviado para o e-mail informado durante o cadastro.',
         'buttons' => [
             'resend' => 'Reenviar e-mail de verificação',
             'logout' => 'Sair',

@@ -1,5 +1,6 @@
-import { SectionFooter } from '@/components/untitled-ui/application/section-footers/section-footer';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { SectionFooter } from '@/components/ui/application/section-footers/section-footer';
+import { Button } from '@/components/ui/base/buttons/button';
+import { useLang } from '@/hooks/use-lang';
 import { ReactNode } from 'react';
 
 interface SettingsFormFooterProps {
@@ -9,13 +10,14 @@ interface SettingsFormFooterProps {
     actions?: ReactNode;
 }
 
-export function SettingsFormFooter({ submitLabel = 'Salvar', isDirty = true, isProcessing = false, actions }: SettingsFormFooterProps) {
+export function SettingsFormFooter({ submitLabel, isDirty = true, isProcessing = false, actions }: SettingsFormFooterProps) {
+    const { __ } = useLang();
     return (
         <SectionFooter.Root className="-mt-1 lg:mt-0">
             <SectionFooter.Actions className="flex items-center justify-end gap-2">
                 {actions}
                 <Button type="submit" color="primary" size="md" isDisabled={!isDirty || isProcessing}>
-                    {submitLabel}
+                    {submitLabel ?? __('pages.settings.save')}
                 </Button>
             </SectionFooter.Actions>
         </SectionFooter.Root>

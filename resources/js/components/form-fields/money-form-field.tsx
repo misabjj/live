@@ -1,5 +1,5 @@
 import { MoneyInput } from '@/components/money-input';
-import { TextField } from '@/components/untitled-ui/base/input/input';
+import { TextField } from '@/components/ui/base/input/input';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 
 export interface MoneyFormFieldProps extends Omit<FormFieldProps, 'children'> {

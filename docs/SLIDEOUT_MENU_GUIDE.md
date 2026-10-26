@@ -19,7 +19,7 @@ Um SlideoutMenu é um painel lateral que desliza da direita da tela, sobrepondo 
 ## Anatomia de um SlideoutMenu
 
 ```tsx
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
 import { useState } from 'react';
 
 <SlideoutMenu.Trigger isOpen={isOpen} onOpenChange={setIsOpen}>
@@ -123,8 +123,8 @@ Rodapé fixo com ações.
 ## Estrutura Básica
 
 ```tsx
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
+import { Button } from '@/components/ui/base/buttons/button';
 import { useState } from 'react';
 
 function Page() {
@@ -180,8 +180,8 @@ function Page() {
 Exibir uma lista de itens com ações individuais.
 
 ```tsx
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
+import { Button } from '@/components/ui/base/buttons/button';
 
 <SlideoutMenu.Trigger isOpen={isOpen} onOpenChange={setIsOpen}>
     <SlideoutMenu isDismissable>
@@ -254,10 +254,10 @@ import { Button } from '@/components/untitled-ui/base/buttons/button';
 Slideout com formulário para edição ou criação.
 
 ```tsx
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Form } from '@/components/untitled-ui/base/form/form';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Form } from '@/components/ui/base/form/form';
 import { useForm } from '@inertiajs/react';
 
 function Page() {
@@ -686,8 +686,8 @@ Para customizar a largura, você precisaria modificar o componente base do Slide
 Exemplo baseado em `controls.tsx`:
 
 ```tsx
-import { SlideoutMenu } from '@/components/untitled-ui/application/slideout-menus/slideout-menu';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { SlideoutMenu } from '@/components/ui/application/slideout-menus/slideout-menu';
+import { Button } from '@/components/ui/base/buttons/button';
 import { router } from '@inertiajs/react';
 import { useEchoPublic } from '@laravel/echo-react';
 import { PlayCircle, SkipForward } from '@untitledui/icons';

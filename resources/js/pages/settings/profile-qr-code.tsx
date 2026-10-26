@@ -8,6 +8,7 @@ import {
 } from '@/components/settings';
 import { ProfileQrCodeWidgetActions } from '@/components/widget-actions/profile-qr-code-widget-actions';
 import { ProfileQrCode as ProfileQrCodeComponent } from '@/components/widgets/profile-qr-code';
+import { useLang } from '@/hooks/use-lang';
 import PanelLayout from '@/layouts/panel-layout';
 import { store } from '@/routes/settings/profile-qr-code';
 import { useForm } from '@inertiajs/react';
@@ -48,6 +49,7 @@ interface Props {
 }
 
 function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, widget }: Props) {
+    const { __ } = useLang();
     const form = useForm({
         gradient_color_1: profile_qr_code.gradient_color_1,
         gradient_color_2: profile_qr_code.gradient_color_2,
@@ -71,13 +73,13 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
         <TwoColumnFormPreviewLayout
             form={
                 <SettingsFormContainer onSubmit={handleSubmit}>
-                    <SettingsPageHeader title="QR code de doação" description="Crie e personalize seu QR code para facilitar as doações." />
+                    <SettingsPageHeader title={__('pages.settings.profile_qr_code.title')} description={__('pages.settings.profile_qr_code.description')} />
 
                     <SettingsFormContent>
                         {/* QR Code Colors Section */}
                         <FormSection>
                             <ColorFormField
-                                title="Cor principal do gradiente"
+                                title={__('pages.settings.profile_qr_code.primary_gradient')}
                                 value={form.data.gradient_color_1}
                                 onChange={(color) => form.setData('gradient_color_1', color)}
                                 error={form.errors.gradient_color_1}
@@ -86,7 +88,7 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor secundária do gradiente"
+                                title={__('pages.settings.profile_qr_code.secondary_gradient')}
                                 value={form.data.gradient_color_2}
                                 onChange={(color) => form.setData('gradient_color_2', color)}
                                 error={form.errors.gradient_color_2}
@@ -95,7 +97,7 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
 
                         <FormSection>
                             <SelectFormField
-                                title="Tipo de gradiente"
+                                title={__('pages.settings.profile_qr_code.gradient_type')}
                                 name="gradient_type"
                                 value={form.data.gradient_type}
                                 onChange={(value) => form.setData('gradient_type', value as 'linear' | 'radial')}
@@ -106,7 +108,7 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
 
                         <FormSection>
                             <SelectFormField
-                                title="Estilo dos pontos"
+                                title={__('pages.settings.profile_qr_code.dots_type')}
                                 name="dots_type"
                                 value={form.data.dots_type}
                                 onChange={(value) => form.setData('dots_type', value)}
@@ -118,7 +120,7 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
                         {/* Card Styling Section */}
                         <FormSection>
                             <ColorFormField
-                                title="Cor do texto"
+                                title={__('pages.settings.profile_qr_code.text_color')}
                                 value={form.data.text_color}
                                 onChange={(color) => form.setData('text_color', color)}
                                 error={form.errors.text_color}
@@ -127,7 +129,7 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
 
                         <FormSection>
                             <ColorFormField
-                                title="Cor de fundo"
+                                title={__('pages.settings.profile_qr_code.background_color')}
                                 value={form.data.background_color}
                                 onChange={(color) => form.setData('background_color', color)}
                                 error={form.errors.background_color}
@@ -136,19 +138,19 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
 
                         <FormSection withDivider={false}>
                             <TextFormField
-                                title="Mensagem"
+                                title={__('pages.settings.profile_qr_code.message')}
                                 name="message"
-                                description="Mensagem opcional para exibir abaixo do código QR"
+                                description={__('pages.settings.profile_qr_code.message_description')}
                                 value={form.data.message}
                                 onChange={(value) => form.setData('message', value)}
                                 error={form.errors.message}
-                                placeholder="Digite sua mensagem..."
+                                placeholder={__('pages.settings.profile_qr_code.message_placeholder')}
                             />
                         </FormSection>
                     </SettingsFormContent>
 
                     <SettingsFormFooter
-                        submitLabel="Salvar"
+                        submitLabel={__('pages.settings.profile_qr_code.save')}
                         isDirty={form.isDirty}
                         isProcessing={form.processing}
                         actions={widget && <ProfileQrCodeWidgetActions widgetId={widget.id} widgetUrl={widget.url} hidePersonalize />}
@@ -172,6 +174,6 @@ function Page({ user, profile_qr_code, gradient_type_options, dot_type_options, 
     );
 }
 
-Page.layout = (page: ReactNode) => <PanelLayout title="QR code" children={page} />;
+Page.layout = (page: ReactNode) => <PanelLayout title="pages.settings.profile_qr_code.title" children={page} />;
 
 export default Page;

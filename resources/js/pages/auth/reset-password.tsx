@@ -1,9 +1,10 @@
 import { Head, Form as InertiaForm } from '@inertiajs/react';
 
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Label } from '@/components/untitled-ui/base/input/label';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Label } from '@/components/ui/base/input/label';
 import { store } from '@/routes/password';
+import { useLang } from '@/hooks/use-lang';
 
 interface ResetPasswordProps {
     token: string;
@@ -11,15 +12,16 @@ interface ResetPasswordProps {
 }
 
 export default function ResetPassword({ token, email }: ResetPasswordProps) {
+    const { __ } = useLang();
     return (
         <div className="bg-background flex min-h-screen items-center justify-center px-4">
-            <Head title="Reset password" />
+            <Head title={__('auth.reset-password.title')} />
 
             <div className="w-full max-w-md">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <h1 className="text-2xl font-bold">Reset password</h1>
-                        <p className="text-muted-foreground text-sm">Please enter your new password below</p>
+                        <h1 className="text-2xl font-bold">{__('auth.reset-password.title')}</h1>
+                        <p className="text-muted-foreground text-sm">{__('auth.reset-password.subtitle')}</p>
                     </div>
 
                     <InertiaForm
@@ -32,33 +34,33 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                             <>
                                 <input type="hidden" name="token" value={token} />
                                 <div className="space-y-2">
-                                    <Label htmlFor="email">Email</Label>
+                                    <Label htmlFor="email">{__('auth.reset-password.fields.email.label')}</Label>
                                     <Input id="email" type="email" name="email" autoComplete="email" defaultValue={email} isReadOnly />
                                     {errors.email && <p className="text-destructive text-sm font-medium">{errors.email}</p>}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">{__('auth.reset-password.fields.password.label')}</Label>
                                     <Input
                                         id="password"
                                         type="password"
                                         name="password"
                                         autoComplete="new-password"
                                         autoFocus
-                                        placeholder="Password"
+                                        placeholder={__('auth.reset-password.fields.password.placeholder')}
                                         isDisabled={processing}
                                     />
                                     {errors.password && <p className="text-destructive text-sm font-medium">{errors.password}</p>}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="password_confirmation">Confirm password</Label>
+                                    <Label htmlFor="password_confirmation">{__('auth.reset-password.fields.password_confirmation.label')}</Label>
                                     <Input
                                         id="password_confirmation"
                                         type="password"
                                         name="password_confirmation"
                                         autoComplete="new-password"
-                                        placeholder="Confirm password"
+                                        placeholder={__('auth.reset-password.fields.password_confirmation.placeholder')}
                                         isDisabled={processing}
                                     />
                                     {errors.password_confirmation && (
@@ -74,7 +76,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
                                     isDisabled={processing}
                                     isLoading={processing}
                                 >
-                                    Reset password
+                                    {__('auth.reset-password.buttons.reset')}
                                 </Button>
                             </>
                         )}

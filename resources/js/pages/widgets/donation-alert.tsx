@@ -42,10 +42,22 @@ interface PreparedAudio {
 const queue: Donation[] = [];
 
 let activeAudio: HTMLAudioElement | null = null;
-const notificationAudio = new Audio('/audio/notifications/donation-alert.mp3');
-const notificationReady = preloadAudio(notificationAudio).catch((error) => {
-    console.error('Unable to preload donation notification.', error);
-});
+let notificationAudio: HTMLAudioElement | null = null;
+let notificationReady: Promise<void> | null = null;
+
+function getNotificationAudio(): { element: HTMLAudioElement; ready: Promise<void> } {
+    const element = notificationAudio ?? new Audio('/audio/notifications/donation-alert.mp3');
+    const ready =
+        notificationReady ??
+        preloadAudio(element).catch((error) => {
+            console.error('Unable to preload donation notification.', error);
+        });
+
+    notificationAudio = element;
+    notificationReady = ready;
+
+    return { element, ready };
+}
 
 function preloadAudio(element: HTMLAudioElement): Promise<void> {
     element.preload = 'auto';
@@ -158,12 +170,13 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
     }
 
     async function playAlert(donation: Donation) {
+        const { element: alertNotificationAudio, ready: notificationReady } = getNotificationAudio();
         const [preparedAudio] = await Promise.all([prepareAlertAudio(donation), notificationReady]);
 
         setCurrentAlert(donation);
         markAlertAsPlayed(donation);
 
-        await playAudio(notificationAudio);
+        await playAudio(alertNotificationAudio);
 
         if (preparedAudio) {
             await playAudio(preparedAudio.element);

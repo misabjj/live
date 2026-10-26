@@ -182,3 +182,11 @@ Use Wayfinder to generate TypeScript functions for Laravel routes. Import from `
 - Always activate the `spatie-security` skill when configuring security, reviewing authentication, or setting up servers and databases.
 
 </laravel-boost-guidelines>
+
+## Local Development with Yerd
+
+- Use Yerd to serve this Laravel project locally. The linked site is `live.test`, with the web root set to `public/` and PHP 8.5. Manage site links, HTTPS, PHP versions, and local services through Yerd rather than Valet, Docker, or Podman.
+- Route Reverb through Yerd on the same HTTPS origin: `yerd proxy add live /app http://127.0.0.1:8081`, then secure the site with `yerd secure live`. Set server-side `REVERB_HOST=127.0.0.1`, `REVERB_PORT=8081`, `REVERB_SCHEME=http`; set browser-side `VITE_REVERB_HOST=live.test`, `VITE_REVERB_PORT=443`, `VITE_REVERB_SCHEME=https`. This lets browsers on `https://live.test` connect to `wss://live.test/app` while Reverb listens locally over HTTP. The proxy and secure commands are per-machine Yerd setup; check `yerd proxy list` before adding the route.
+- Use Yerd's managed Redis service for both cache and queues. Ensure Redis is running on `127.0.0.1:6379` before starting the app; configure local `.env` with `CACHE_STORE=redis`, `QUEUE_CONNECTION=redis`, `REDIS_HOST=127.0.0.1`, and `REDIS_PORT=6379`.
+- Start the development processes with `composer dev`. This starts Laravel, the queue listener for `default,alert,audio-processing`, Pail, Reverb, and Vite together. Avoid starting a second Vite or queue listener separately while this command is running.
+- Use the `yerd` CLI for service and site status (`yerd services`, `yerd sites`, `yerd status`). If `yerd` is not on `PATH`, enable Yerd's Terminal CLI in its settings; do not hardcode a per-developer installation path into project files.

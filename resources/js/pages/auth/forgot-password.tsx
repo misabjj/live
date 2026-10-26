@@ -1,10 +1,10 @@
 import { Head, Form as InertiaForm } from '@inertiajs/react';
 import { ArrowLeft, Key01 } from '@untitledui/icons';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Label } from '@/components/untitled-ui/base/input/label';
-import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Label } from '@/components/ui/base/input/label';
+import { FeaturedIcon } from '@/components/ui/foundations/featured-icon/featured-icon';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { useLang } from '@/hooks/use-lang';
 import { login } from '@/routes';
 import { email } from '@/routes/password';

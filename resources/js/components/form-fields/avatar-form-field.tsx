@@ -1,6 +1,6 @@
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { FileTrigger } from '@/components/untitled-ui/base/file-upload-trigger/file-upload-trigger';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Button } from '@/components/ui/base/buttons/button';
+import { FileTrigger } from '@/components/ui/base/file-upload-trigger/file-upload-trigger';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 
 export interface AvatarFormFieldProps extends Omit<FormFieldProps, 'children'> {

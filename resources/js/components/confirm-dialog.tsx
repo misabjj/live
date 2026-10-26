@@ -1,11 +1,11 @@
-import { Dialog, Modal, ModalOverlay } from '@/components/untitled-ui/application/modals/modal';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { CloseButton } from '@/components/untitled-ui/base/buttons/close-button';
-import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Dialog, Modal, ModalOverlay } from '@/components/ui/application/modals/modal';
+import { Button } from '@/components/ui/base/buttons/button';
+import { CloseButton } from '@/components/ui/base/buttons/close-button';
+import { FeaturedIcon } from '@/components/ui/foundations/featured-icon/featured-icon';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import type { ConfirmOptions } from '@/hooks/use-confirm';
 import { Trash01 } from '@untitledui/icons';
-import { DialogTrigger as AriaDialogTrigger, Heading as AriaHeading } from 'react-aria-components';
+import { Heading as AriaHeading } from 'react-aria-components';
 
 interface ConfirmDialogProps {
     isOpen: boolean;
@@ -22,8 +22,7 @@ export function ConfirmDialog({ isOpen, options, onConfirm, onCancel }: ConfirmD
     const cancelLabel = options.cancelLabel ?? 'Cancelar';
 
     return (
-        <AriaDialogTrigger isOpen={isOpen} onOpenChange={(open) => !open && onCancel()}>
-            <ModalOverlay isDismissable>
+        <ModalOverlay isOpen={isOpen} onOpenChange={(open) => !open && onCancel()} isDismissable>
                 <Modal className="sm:max-w-136">
                     <Dialog>
                             <CloseButton onClick={onCancel} theme="light" size="lg" className="absolute top-3 right-3 z-20" />
@@ -55,7 +54,6 @@ export function ConfirmDialog({ isOpen, options, onConfirm, onCancel }: ConfirmD
                             </div>
                     </Dialog>
                 </Modal>
-            </ModalOverlay>
-        </AriaDialogTrigger>
+        </ModalOverlay>
     );
 }

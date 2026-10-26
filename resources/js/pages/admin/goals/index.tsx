@@ -1,10 +1,11 @@
-import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/untitled-ui/application/pagination/pagination';
-import { Table, TableCard } from '@/components/untitled-ui/application/table/table';
-import { Badge } from '@/components/untitled-ui/base/badges/badges';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/ui/application/pagination/pagination';
+import { Table, TableCard } from '@/components/ui/application/table/table';
+import { Badge } from '@/components/ui/base/badges/badges';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
 import PanelLayout from '@/layouts/panel-layout';
 import { formatCurrency, formatDate } from '@/lib/formatters';
+import { useLang } from '@/hooks/use-lang';
 import { dashboard } from '@/routes';
 import { index } from '@/routes/admin/goals';
 import { Pagination } from '@/types/pagination';
@@ -37,6 +38,7 @@ interface Props {
 }
 
 function Page({ goals, filter }: Props) {
+    const { __ } = useLang();
     const isInitialMount = useRef(true);
     const form = useForm({
         filter: {
@@ -74,13 +76,13 @@ function Page({ goals, filter }: Props) {
                 <div className="relative flex flex-col gap-4">
                     <div className="flex lg:hidden">
                         <Button href={dashboard.url()} color="link-gray" size="md" iconLeading={ArrowLeft}>
-                            Voltar
+                            {__('pages.admin.back')}
                         </Button>
                     </div>
 
                     <div className="flex flex-col gap-0.5 md:gap-1">
-                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">Todas as Metas (Admin)</p>
-                        <p className="text-sm text-tertiary sm:text-md">Visualize todas as metas da plataforma.</p>
+                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">{__('pages.admin.goals.title')}</p>
+                        <p className="text-sm text-tertiary sm:text-md">{__('pages.admin.goals.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -91,7 +93,7 @@ function Page({ goals, filter }: Props) {
                     <Input
                         className="lg:max-w-100"
                         size="sm"
-                        placeholder="Buscar por título"
+                        placeholder={__('pages.admin.goals.search')}
                         icon={SearchLg}
                         value={form.data.filter.title}
                         onChange={handleSearchChange}
@@ -100,14 +102,14 @@ function Page({ goals, filter }: Props) {
 
                 {/* Goals table */}
                 <TableCard.Root className="lg:rounded-xl">
-                    <TableCard.Header title="Metas" badge={`${goals.total} total`} />
-                    <Table aria-label="Metas" selectionMode="none" className="bg-primary">
+                    <TableCard.Header title={__('pages.admin.goals.table_title')} badge={__('pages.admin.total', { count: goals.total })} />
+                    <Table aria-label={__('pages.admin.goals.table_title')} selectionMode="none" className="bg-primary">
                         <Table.Header>
-                            <Table.Head id="title" label="Título" isRowHeader className="w-full" />
-                            <Table.Head id="user" label="Streamer" />
-                            <Table.Head id="progress" label="Progresso" />
-                            <Table.Head id="status" label="Status" />
-                            <Table.Head id="created_at" label="Data de Criação" />
+                            <Table.Head id="title" label={__('pages.admin.goals.goal')} isRowHeader className="w-full" />
+                            <Table.Head id="user" label={__('pages.admin.goals.streamer')} />
+                            <Table.Head id="progress" label={__('pages.admin.goals.progress')} />
+                            <Table.Head id="status" label={__('pages.admin.goals.status')} />
+                            <Table.Head id="created_at" label={__('pages.admin.goals.created_at')} />
                         </Table.Header>
 
                         <Table.Body items={goals.data}>
@@ -116,7 +118,7 @@ function Page({ goals, filter }: Props) {
                                     <Table.Cell>
                                         <div>
                                             <p className="text-sm font-medium text-primary">{goal.title}</p>
-                                            {goal.closes_at && <p className="text-xs text-tertiary">Encerra em: {formatDate(goal.closes_at)}</p>}
+                                            {goal.closes_at && <p className="text-xs text-tertiary">{__('pages.admin.goals.closes_at', { date: formatDate(goal.closes_at) })}</p>}
                                         </div>
                                     </Table.Cell>
                                     <Table.Cell>
@@ -135,7 +137,7 @@ function Page({ goals, filter }: Props) {
                                     </Table.Cell>
                                     <Table.Cell>
                                         <Badge color={goal.is_active ? 'success' : 'gray'} size="sm">
-                                            {goal.is_active ? 'Ativa' : 'Inativa'}
+                                            {goal.is_active ? __('pages.admin.goals.active') : __('pages.admin.goals.inactive')}
                                         </Badge>
                                     </Table.Cell>
                                     <Table.Cell className="text-sm whitespace-nowrap text-tertiary">{formatDate(goal.created_at)}</Table.Cell>
@@ -159,6 +161,6 @@ function Page({ goals, filter }: Props) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Todas as Metas" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.admin.goals.title" />;
 
 export default Page;

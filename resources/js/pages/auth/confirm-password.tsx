@@ -1,22 +1,22 @@
 import { Head, Form as InertiaForm } from '@inertiajs/react';
 
 import { store as submitPasswordConfirmation } from '@/actions/App/Http/Controllers/Auth/ConfirmablePasswordController';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Label } from '@/components/untitled-ui/base/input/label';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Label } from '@/components/ui/base/input/label';
+import { useLang } from '@/hooks/use-lang';
 
 export default function ConfirmPassword() {
+    const { __ } = useLang();
     return (
         <div className="bg-background flex min-h-screen items-center justify-center px-4">
-            <Head title="Confirm password" />
+            <Head title={__('auth.confirm-password.confirm_password.title')} />
 
             <div className="w-full max-w-md">
                 <div className="space-y-6">
                     <div className="space-y-2">
-                        <h1 className="text-2xl font-bold">Confirm your password</h1>
-                        <p className="text-muted-foreground text-sm">
-                            This is a secure area of the application. Please confirm your password before continuing.
-                        </p>
+                        <h1 className="text-2xl font-bold">{__('auth.confirm-password.confirm_password.title')}</h1>
+                        <p className="text-muted-foreground text-sm">{__('auth.confirm-password.confirm_password.subtitle')}</p>
                     </div>
 
                     <InertiaForm
@@ -28,12 +28,12 @@ export default function ConfirmPassword() {
                         {({ errors, processing }) => (
                             <>
                                 <div className="space-y-2">
-                                    <Label htmlFor="password">Password</Label>
+                                    <Label htmlFor="password">{__('auth.confirm-password.confirm_password.fields.password.label')}</Label>
                                     <Input
                                         id="password"
                                         type="password"
                                         name="password"
-                                        placeholder="Password"
+                                        placeholder={__('auth.confirm-password.confirm_password.fields.password.placeholder')}
                                         autoComplete="current-password"
                                         autoFocus
                                         isDisabled={processing}
@@ -42,7 +42,7 @@ export default function ConfirmPassword() {
                                 </div>
 
                                 <Button type="submit" color="primary" size="md" className="w-full" isDisabled={processing} isLoading={processing}>
-                                    Confirm password
+                                    {__('auth.confirm-password.confirm_password.buttons.confirm')}
                                 </Button>
                             </>
                         )}

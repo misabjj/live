@@ -1,8 +1,9 @@
 import { AvatarFormField, ColorFormField, FormSection, ImageFormField, TextFormField } from '@/components/form-fields';
 import { SettingsFormContainer, SettingsFormContent, SettingsFormFooter, SettingsPageHeader } from '@/components/settings';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Button } from '@/components/ui/base/buttons/button';
 import SettingsLayout from '@/layouts/settings-layout';
 import { getInitials } from '@/lib/utils';
+import { useLang } from '@/hooks/use-lang';
 import { show as showDonationPage } from '@/routes/donate';
 import { destroy as destroyBackgroundImage, store as storeBackgroundImage } from '@/routes/settings/background-image';
 import { update } from '@/routes/settings/profile';
@@ -25,6 +26,7 @@ interface Props {
 }
 
 function Page({ user }: Props) {
+    const { __ } = useLang();
     const form = useForm({
         display_name: user.display_name,
         handle: user.handle,
@@ -69,12 +71,12 @@ function Page({ user }: Props) {
 
     return (
         <SettingsFormContainer onSubmit={handleSubmit}>
-            <SettingsPageHeader title="Perfil" description="Atualize seu perfil aqui." />
+            <SettingsPageHeader title={__('pages.settings.profile.title')} description={__('pages.settings.profile.description')} />
 
             <SettingsFormContent>
                 <FormSection>
                     <TextFormField
-                        title="Nome de exibição"
+                        title={__('pages.settings.profile.display_name')}
                         isRequired
                         name="display_name"
                         value={form.data.display_name}
@@ -85,8 +87,8 @@ function Page({ user }: Props) {
 
                 <FormSection>
                     <TextFormField
-                        title="Handle"
-                        description="Seu nome de usuário único (@handle)"
+                        title={__('pages.settings.profile.handle')}
+                        description={__('pages.settings.profile.handle_description')}
                         isRequired
                         name="handle"
                         value={form.data.handle}
@@ -100,7 +102,7 @@ function Page({ user }: Props) {
                                     size="sm"
                                     onClick={() => window.open(showDonationPage.url(user.handle), '_blank')}
                                 >
-                                    Ver perfil
+                                    {__('pages.settings.profile.view')}
                                 </Button>
                             </>
                         }
@@ -109,41 +111,41 @@ function Page({ user }: Props) {
 
                 <FormSection>
                     <AvatarFormField
-                        title="Foto de perfil"
-                        description="Esta será exibida no seu perfil."
+                        title={__('pages.settings.profile.profile_photo')}
+                        description={__('pages.settings.profile.profile_photo_description')}
                         isRequired
                         src={user.profile_photo}
                         initials={getInitials(user.display_name)}
                         onUpload={handleAvatarUpload}
                         onDelete={handleDeleteAvatar}
                         error={form.errors.profile_photo}
-                        uploadButtonText="Atualizar"
-                        deleteButtonText="Deletar"
+                        uploadButtonText={__('pages.settings.profile.update')}
+                        deleteButtonText={__('pages.settings.profile.delete')}
                     />
                 </FormSection>
 
                 <FormSection>
                     <ImageFormField
-                        title="Imagem de fundo"
-                        description="Esta será exibida no fundo do seu perfil."
+                        title={__('pages.settings.profile.background_image')}
+                        description={__('pages.settings.profile.background_image_description')}
                         src={user.background_image}
                         onUpload={handleBackgroundUpload}
                         onDelete={handleDeleteBackground}
                         error={form.errors.background_image}
-                        uploadButtonText="Atualizar"
-                        deleteButtonText="Deletar"
-                        previewAlt="Prévia do fundo"
+                        uploadButtonText={__('pages.settings.profile.update')}
+                        deleteButtonText={__('pages.settings.profile.delete')}
+                        previewAlt={__('pages.settings.profile.background_preview')}
                     />
                 </FormSection>
 
                 <FormSection withDivider={false}>
                     <ColorFormField
-                        title="Cor de fundo"
-                        description="Selecione ou personalize sua cor de fundo."
+                        title={__('pages.settings.profile.background_color')}
+                        description={__('pages.settings.profile.background_color_description')}
                         value={form.data.background_color ?? '#ffffff'}
                         onChange={(color) => form.setData('background_color', color)}
                         onDelete={handleDeleteBackgroundColor}
-                        deleteButtonText="Remover"
+                        deleteButtonText={__('pages.settings.profile.remove')}
                         error={form.errors.background_color}
                     />
                 </FormSection>

@@ -1,11 +1,12 @@
-import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/untitled-ui/application/pagination/pagination';
-import { Table, TableCard } from '@/components/untitled-ui/application/table/table';
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Dropdown } from '@/components/untitled-ui/base/dropdown/dropdown';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/ui/application/pagination/pagination';
+import { Table, TableCard } from '@/components/ui/application/table/table';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
+import { Input } from '@/components/ui/base/input/input';
 import PanelLayout from '@/layouts/panel-layout';
 import { formatCurrency, formatDate } from '@/lib/formatters';
+import { useLang } from '@/hooks/use-lang';
 import { getInitials } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index, playDonationAlert } from '@/routes/admin/donations';
@@ -36,6 +37,7 @@ interface Props {
 }
 
 function Page({ donations, filter }: Props) {
+    const { __ } = useLang();
     const isInitialMount = useRef(true);
     const form = useForm({
         filter: {
@@ -73,13 +75,13 @@ function Page({ donations, filter }: Props) {
                 <div className="relative flex flex-col gap-4">
                     <div className="flex lg:hidden">
                         <Button href={dashboard.url()} color="link-gray" size="md" iconLeading={ArrowLeft}>
-                            Voltar
+                            {__('pages.admin.back')}
                         </Button>
                     </div>
 
                     <div className="flex flex-col gap-0.5 md:gap-1">
-                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">Todas as Doações (Admin)</p>
-                        <p className="text-sm text-tertiary sm:text-md">Visualize todas as doações da plataforma.</p>
+                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">{__('pages.admin.donations.title')}</p>
+                        <p className="text-sm text-tertiary sm:text-md">{__('pages.admin.donations.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -90,7 +92,7 @@ function Page({ donations, filter }: Props) {
                     <Input
                         className="lg:max-w-100"
                         size="sm"
-                        placeholder="Buscar por doador"
+                        placeholder={__('pages.admin.donations.search')}
                         icon={SearchLg}
                         value={form.data.filter.donor_name}
                         onChange={handleSearchChange}
@@ -99,14 +101,14 @@ function Page({ donations, filter }: Props) {
 
                 {/* Donations table */}
                 <TableCard.Root className="lg:rounded-xl">
-                    <TableCard.Header title="Doações" badge={`${donations.total} total`} />
-                    <Table aria-label="Doações" selectionMode="none" className="bg-primary">
+                    <TableCard.Header title={__('pages.admin.donations.table_title')} badge={__('pages.admin.total', { count: donations.total })} />
+                    <Table aria-label={__('pages.admin.donations.table_title')} selectionMode="none" className="bg-primary">
                         <Table.Header>
                             <Table.Head id="id" label="ID" />
-                            <Table.Head id="donor_name" label="Nome de usuário" isRowHeader />
-                            <Table.Head id="streamer" label="Streamer" className="w-full" />
-                            <Table.Head id="amount" label="Valor" />
-                            <Table.Head id="created_at" label="Data" />
+                            <Table.Head id="donor_name" label={__('pages.admin.donations.donor')} isRowHeader />
+                            <Table.Head id="streamer" label={__('pages.admin.donations.streamer')} className="w-full" />
+                            <Table.Head id="amount" label={__('pages.admin.donations.amount')} />
+                            <Table.Head id="created_at" label={__('pages.admin.donations.date')} />
                             <Table.Head id="actions" label="" className="text-right" />
                         </Table.Header>
 
@@ -147,7 +149,7 @@ function Page({ donations, filter }: Props) {
                                             <Dropdown.Popover>
                                                 <Dropdown.Menu>
                                                     <Dropdown.Item
-                                                        label="Mostrar alerta"
+                                                        label={__('pages.admin.donations.show_alert')}
                                                         icon={AlertCircle}
                                                         onAction={() => {
                                                             router.post(
@@ -183,6 +185,6 @@ function Page({ donations, filter }: Props) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Todas as Doações" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.admin.donations.title" />;
 
 export default Page;

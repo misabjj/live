@@ -1,6 +1,6 @@
-import { SectionLabel } from '@/components/untitled-ui/application/section-headers/section-label';
-import { HintText } from '@/components/untitled-ui/base/input/hint-text';
-import { Label } from '@/components/untitled-ui/base/input/label';
+import { SectionLabel } from '@/components/ui/application/section-headers/section-label';
+import { HintText } from '@/components/ui/base/input/hint-text';
+import { Label } from '@/components/ui/base/input/label';
 import { cx } from '@/utils/cx';
 import { ReactNode } from 'react';
 

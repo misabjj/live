@@ -1,7 +1,8 @@
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Badge } from '@/components/untitled-ui/base/badges/badges';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Badge } from '@/components/ui/base/badges/badges';
+import { Button } from '@/components/ui/base/buttons/button';
 import { useClipboard } from '@/hooks/use-clipboard';
+import { useLang } from '@/hooks/use-lang';
 import { show } from '@/routes/donate';
 import { ArrowPathIcon, CheckIcon, ClipboardDocumentIcon, CreditCardIcon, QrCodeIcon } from '@heroicons/react/24/outline';
 import { Head } from '@inertiajs/react';
@@ -40,6 +41,7 @@ interface Props {
 }
 
 export default function Page({ donation }: Props) {
+    const { __ } = useLang();
     const { copied, copy } = useClipboard();
     const [timeLeft, setTimeLeft] = useState(Math.floor(donation.expires_at || 0));
     const qrCodeRef = useRef<HTMLDivElement>(null);
@@ -118,7 +120,7 @@ export default function Page({ donation }: Props) {
 
     return (
         <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
-            <Head title={`Checkout - ${donation.streamer.name}`} />
+            <Head title={__('pages.donations.checkout_title', { name: donation.streamer.name })} />
 
             <div className="w-full max-w-md">
                 {/* Streamer Profile */}
@@ -143,12 +145,12 @@ export default function Page({ donation }: Props) {
                             {isCardPayment ? (
                                 <>
                                     <CreditCardIcon className="h-5 w-5 text-gray-500" />
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Pagamento com Cartão</span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">{__('pages.donations.card_payment')}</span>
                                 </>
                             ) : (
                                 <>
                                     <QrCodeIcon className="h-5 w-5 text-gray-500" />
-                                    <span className="text-sm font-medium text-gray-900 dark:text-white">Pagamento PIX</span>
+                                    <span className="text-sm font-medium text-gray-900 dark:text-white">{__('pages.donations.pix_payment')}</span>
                                 </>
                             )}
                         </div>
@@ -174,11 +176,11 @@ export default function Page({ donation }: Props) {
                                     iconLeading={copied ? CheckIcon : ClipboardDocumentIcon}
                                     className="w-full"
                                 >
-                                    {copied ? 'Copiado!' : 'Copiar Código PIX'}
+                                    {copied ? __('pages.donations.copied') : __('pages.donations.copy_pix')}
                                 </Button>
 
                                 <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-                                    Este código PIX será válido por {formatTime(timeLeft)}
+                                    {__('pages.donations.pix_valid_for', { time: formatTime(timeLeft) })}
                                 </div>
                             </div>
                         </div>
@@ -190,7 +192,7 @@ export default function Page({ donation }: Props) {
                             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-700">
                                 <ArrowPathIcon className="h-6 w-6 animate-spin text-gray-400" />
                             </div>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">Gerando QR Code PIX...</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">{__('pages.donations.generating_qr')}</p>
                         </div>
                     )}
                 </div>
@@ -198,7 +200,7 @@ export default function Page({ donation }: Props) {
                 {/* Back Button - Outside Cards */}
                 <div className="mt-4">
                     <Button size="sm" color="secondary" href={show.url(donation.streamer.handle)} className="w-full">
-                        Voltar
+                        {__('pages.donations.back')}
                     </Button>
                 </div>
             </div>

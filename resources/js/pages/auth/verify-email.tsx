@@ -1,26 +1,26 @@
 import { Head, Form as InertiaForm, Link as InertiaLink } from '@inertiajs/react';
 
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Button } from '@/components/ui/base/buttons/button';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
+import { useLang } from '@/hooks/use-lang';
 
 export default function VerifyEmail({ status }: { status?: string }) {
+    const { __ } = useLang();
     return (
         <div className="bg-background flex min-h-screen items-center justify-center px-4">
-            <Head title="Email verification" />
+            <Head title={__('auth.verify-email.verify_email.title')} />
 
             <div className="w-full max-w-md">
                 <div className="space-y-6">
                     <div className="space-y-2 text-center">
-                        <h1 className="text-2xl font-bold">Verify email</h1>
-                        <p className="text-muted-foreground text-sm">
-                            Please verify your email address by clicking on the link we just emailed to you.
-                        </p>
+                        <h1 className="text-2xl font-bold">{__('auth.verify-email.verify_email.title')}</h1>
+                        <p className="text-muted-foreground text-sm">{__('auth.verify-email.verify_email.subtitle')}</p>
                     </div>
 
                     {status === 'verification-link-sent' && (
                         <div className="rounded-lg bg-green-50 p-4 text-center text-sm font-medium text-green-700 dark:bg-green-950/30 dark:text-green-400">
-                            A new verification link has been sent to the email address you provided during registration.
+                            {__('auth.verify-email.verify_email.sent')}
                         </div>
                     )}
 
@@ -28,12 +28,12 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         {({ processing }) => (
                             <>
                                 <Button type="submit" color="primary" size="md" className="w-full" isDisabled={processing} isLoading={processing}>
-                                    Resend verification email
+                                    {__('auth.verify-email.verify_email.buttons.resend')}
                                 </Button>
 
                                 <div className="text-sm">
                                     <InertiaLink href={logout()} as="button" className="font-medium text-primary hover:underline">
-                                        Log out
+                                        {__('auth.verify-email.verify_email.buttons.logout')}
                                     </InertiaLink>
                                 </div>
                             </>

@@ -1,6 +1,7 @@
-import { ChartTooltipContent } from '@/components/untitled-ui/application/charts/charts-base';
-import { MetricsSimple } from '@/components/untitled-ui/application/metrics/metrics';
+import { ChartTooltipContent } from '@/components/ui/application/charts/charts-base';
+import { MetricsSimple } from '@/components/ui/application/metrics/metrics';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useLang } from '@/hooks/use-lang';
 import PanelLayout from '@/layouts/panel-layout';
 import { Area, AreaChart, CartesianGrid, Label, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 
@@ -26,6 +27,7 @@ interface DashboardProps {
 
 function Page({ stats }: DashboardProps) {
     const isDesktop = useBreakpoint('lg');
+    const { __, locale } = useLang();
 
     return (
         <div className="flex flex-col gap-8">
@@ -33,8 +35,8 @@ function Page({ stats }: DashboardProps) {
                 {/* Page header */}
                 <div className="flex flex-col justify-between gap-4 lg:flex-row">
                     <div className="flex flex-col gap-0.5 lg:gap-1">
-                        <p className="text-xl font-semibold text-primary lg:text-display-xs">Visão geral</p>
-                        <p className="text-md text-tertiary">Resumo das suas doações e atividades.</p>
+                        <p className="text-xl font-semibold text-primary lg:text-display-xs">{__('pages.dashboard.title')}</p>
+                        <p className="text-md text-tertiary">{__('pages.dashboard.description')}</p>
                     </div>
                 </div>
             </div>
@@ -44,7 +46,7 @@ function Page({ stats }: DashboardProps) {
                     <div className="flex w-full flex-col flex-wrap gap-4 lg:flex-row lg:gap-5">
                         <MetricsSimple
                             title={String(stats.donations_received)}
-                            subtitle="Doações nos últimos 30 dias"
+                            subtitle={__('pages.dashboard.donations_30_days')}
                             type="modern"
                             trend={stats.donations_change >= 0 ? 'positive' : 'negative'}
                             change={`${Math.abs(stats.donations_change)}%`}
@@ -53,7 +55,7 @@ function Page({ stats }: DashboardProps) {
                         />
                         <MetricsSimple
                             title={`R$ ${stats.total_billed}`}
-                            subtitle="Valor arrecadado nos últimos 30 dias"
+                            subtitle={__('pages.dashboard.raised_30_days')}
                             type="modern"
                             trend={stats.billing_change >= 0 ? 'positive' : 'negative'}
                             change={`${Math.abs(stats.billing_change)}%`}
@@ -62,7 +64,7 @@ function Page({ stats }: DashboardProps) {
                         />
                         <MetricsSimple
                             title={`R$ ${stats.average_amount}`}
-                            subtitle="Valor médio por donate nos últimos 30 dias"
+                            subtitle={__('pages.dashboard.average_30_days')}
                             type="modern"
                             trend={stats.average_change >= 0 ? 'positive' : 'negative'}
                             change={`${Math.abs(stats.average_change)}%`}
@@ -74,7 +76,7 @@ function Page({ stats }: DashboardProps) {
                     {/* Chart Section */}
                     <div className="flex flex-col gap-6 rounded-xl ring-secondary ring-inset lg:gap-5 lg:bg-primary lg:p-6 lg:shadow-xs lg:ring-1">
                         <div className="flex items-center justify-between">
-                            <p className="text-lg font-semibold text-primary">Doações</p>
+                            <p className="text-lg font-semibold text-primary">{__('pages.dashboard.donations')}</p>
                         </div>
 
                         <div className="h-60 outline-hidden [&_*]:outline-hidden [&_*]:focus:outline-hidden">
@@ -104,12 +106,12 @@ function Page({ stats }: DashboardProps) {
                                         tickLine={false}
                                         interval="preserveStartEnd"
                                         dataKey="date"
-                                        tickFormatter={(value) => new Date(String(value ?? '')).toLocaleDateString('pt-BR', { day: '2-digit' })}
+                                        tickFormatter={(value) => new Date(String(value ?? '')).toLocaleDateString(locale, { day: '2-digit' })}
                                         padding={{ left: 0, right: 0 }}
                                     >
                                         {isDesktop && (
                                             <Label fill="currentColor" className="!text-xs font-medium max-lg:hidden" position="bottom">
-                                                Dia do mês
+                                                {__('pages.dashboard.day_of_month')}
                                             </Label>
                                         )}
                                     </XAxis>
@@ -119,10 +121,10 @@ function Page({ stats }: DashboardProps) {
                                         axisLine={false}
                                         tickLine={false}
                                         interval="preserveStartEnd"
-                                        tickFormatter={(value) => `R$ ${Number(value).toLocaleString('pt-BR')}`}
+                                        tickFormatter={(value) => new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(Number(value))}
                                     >
                                         <Label
-                                            value="Valor arrecadado"
+                                            value={__('pages.dashboard.raised')}
                                             fill="currentColor"
                                             className="!text-xs font-medium"
                                             style={{ textAnchor: 'middle' }}
@@ -134,11 +136,11 @@ function Page({ stats }: DashboardProps) {
                                     <Tooltip
                                         content={<ChartTooltipContent />}
                                         formatter={(value) => [
-                                            `R$ ${Number(value ?? 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
-                                            'Total',
+                                            new Intl.NumberFormat(locale, { style: 'currency', currency: 'BRL' }).format(Number(value ?? 0)),
+                                            __('pages.dashboard.total'),
                                         ]}
                                         labelFormatter={(value) =>
-                                            new Date(String(value ?? '')).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+                                            new Date(String(value ?? '')).toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' })
                                         }
                                         cursor={{
                                             className: 'stroke-utility-brand-600 stroke-2',
@@ -149,7 +151,7 @@ function Page({ stats }: DashboardProps) {
                                         isAnimationActive={false}
                                         className="text-utility-brand-600 [&_.recharts-area-area]:translate-y-1.5 [&_.recharts-area-area]:[clip-path:inset(0_0_6px_0)]"
                                         dataKey="total"
-                                        name="Total"
+                                        name={__('pages.dashboard.total')}
                                         type="monotone"
                                         stroke="currentColor"
                                         strokeWidth={2}
@@ -169,6 +171,6 @@ function Page({ stats }: DashboardProps) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Dashboard" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.dashboard.title" />;
 
 export default Page;

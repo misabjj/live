@@ -1,4 +1,4 @@
-import { IconNotification } from '@/components/untitled-ui/application/notifications/notifications';
+import { IconNotification } from '@/components/ui/application/notifications/notifications';
 import { toast as sonnerToast } from 'sonner';
 
 export const useToast = () => {

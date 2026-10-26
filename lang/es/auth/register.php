@@ -3,6 +3,8 @@
 return [
     'title' => 'Crear cuenta',
     'subtitle' => 'Regístrate para comenzar a usar nuestra plataforma.',
+    'password_requirement' => 'Debe tener al menos 8 caracteres',
+    'signin_prompt' => '¿Ya tienes una cuenta?',
     'fields' => [
         'display_name' => [
             'label' => 'Nombre de usuario',
@@ -23,6 +25,7 @@ return [
     ],
     'buttons' => [
         'register' => 'Crear cuenta',
+        'processing' => 'Creando cuenta...',
         'login' => '¿Ya tienes cuenta? Inicia sesión',
     ],
 ];

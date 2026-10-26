@@ -1,9 +1,10 @@
 import { MoneyFormField, TextAreaFormField, TextFormField } from '@/components/form-fields';
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Form } from '@/components/untitled-ui/base/form/form';
-import * as RadioGroups from '@/components/untitled-ui/base/radio-groups/radio-groups';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Form } from '@/components/ui/base/form/form';
+import * as RadioGroups from '@/components/ui/base/radio-groups/radio-groups';
 import { useAuth } from '@/hooks/use-auth';
+import { useLang } from '@/hooks/use-lang';
 import { useToast } from '@/hooks/use-toast';
 import { getInitials } from '@/lib/utils';
 import { store } from '@/routes/donations';
@@ -75,6 +76,7 @@ const getFileExtension = (mimeType: string): string => {
 
 export default function Page({ streamer, payment_processors, donation_rules }: Props) {
     const { user: donor } = useAuth();
+    const { __ } = useLang();
     const toast = useToast();
     const [step, setStep] = useState(1);
     const [isTransitioning, setIsTransitioning] = useState(false);
@@ -118,7 +120,7 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
             value: processor.processor,
             title: paymentMethods.join(', '),
             secondaryTitle: '',
-            description: 'Pagamento',
+            description: __('pages.public_donation.payment'),
             icon: processor.supports_pix ? QrCode02 : CreditCard02,
         };
     });
@@ -153,19 +155,19 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
 
     const handleNextStep = () => {
         if (step === 1 && (!form.data.donor_name || !form.data.amount)) {
-            toast.error('Campos obrigatórios', 'Por favor, preencha seu nome e o valor da doação');
+            toast.error(__('pages.public_donation.required_fields_title'), __('pages.public_donation.required_fields_description'));
             return;
         }
 
         if (step === 1 && audioInputMode === 'record' && !mediaBlobUrl) {
-            toast.error('Áudio não gravado', 'Por favor, grave um áudio antes de continuar');
+            toast.error(__('pages.public_donation.audio_missing_title'), __('pages.public_donation.audio_missing_description'));
             return;
         }
 
         const minAmount = getMinAmount();
 
         if (step === 1 && parseFloat(form.data.amount) < minAmount) {
-            toast.error('Valor insuficiente', `O valor mínimo é R$ ${minAmount.toFixed(2)}`);
+            toast.error(__('pages.public_donation.amount_too_low_title'), __('pages.public_donation.amount_too_low_description', { amount: minAmount.toFixed(2) }));
             return;
         }
 
@@ -313,10 +315,10 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                             }`}
                         >
                             <TextFormField
-                                title="Nome de usuário"
+                                title={__('pages.public_donation.donor_name')}
                                 type="text"
                                 name="donor_name"
-                                placeholder="Seu nome"
+                                placeholder={__('pages.public_donation.donor_name_placeholder')}
                                 inputSize="md"
                                 value={form.data.donor_name}
                                 onChange={(value) => {
@@ -342,7 +344,7 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                                         }}
                                         className="flex-1"
                                     >
-                                        ESCREVER
+                                        {__('pages.public_donation.write')}
                                     </Button>
                                     <Button
                                         type="button"
@@ -354,7 +356,7 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                                         }}
                                         className="flex-1"
                                     >
-                                        GRAVAR ÁUDIO
+                                        {__('pages.public_donation.record_audio')}
                                     </Button>
                                 </div>
                             )}
@@ -362,10 +364,10 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                             {audioInputMode === 'text' ? (
                                 <>
                                     <TextAreaFormField
-                                        title="Mensagem"
+                                        title={__('pages.public_donation.message')}
                                         description={`${form.data.content_text.length}/${getMaxCharacters()} caracteres`}
                                         name="content_text"
-                                        placeholder="Sua mensagem"
+                                        placeholder={__('pages.public_donation.message_placeholder')}
                                         value={form.data.content_text}
                                         onChange={(value) => {
                                             const maxChars = getMaxCharacters();
@@ -395,25 +397,25 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                                         </button>
                                     </div>
                                     {mediaBlobUrl && recordingStatus !== 'recording' && (
-                                        <p className="text-sm text-fg-success-primary">Áudio gravado com sucesso!</p>
+                                        <p className="text-sm text-fg-success-primary">{__('pages.public_donation.audio_recorded')}</p>
                                     )}
                                 </div>
                             )}
 
                             <MoneyFormField
-                                title="Valor"
+                                title={__('pages.public_donation.amount')}
                                 name="amount"
                                 inputSize="md"
                                 value={form.data.amount}
                                 onChange={(value) => form.setData('amount', value)}
                                 error={form.errors.amount}
-                                description={`Mínimo: R$ ${(getMinAmount() || 0).toFixed(2)}`}
+                                description={__('pages.public_donation.minimum_amount', { amount: (getMinAmount() || 0).toFixed(2) })}
                                 isRequired
                                 labelPosition="over"
                             />
 
                             <Button type="button" size="lg" onClick={handleNextStep} className="w-full">
-                                Continuar
+                                {__('pages.public_donation.continue')}
                             </Button>
                         </div>
                     )}
@@ -431,11 +433,11 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                         >
                             <div className="flex flex-col gap-1.5">
                                 <label className="text-sm font-medium text-secondary">
-                                    Método de pagamento
+                                    {__('pages.public_donation.payment_method')}
                                     <span className="ml-1 text-fg-error-primary">*</span>
                                 </label>
                                 <RadioGroups.IconSimple
-                                    aria-label="Método de pagamento"
+                                    aria-label={__('pages.public_donation.payment_method')}
                                     value={form.data.payment_processor}
                                     onChange={(value) => {
                                         const processor = payment_processors.find((p) => p.processor === value);
@@ -464,10 +466,10 @@ export default function Page({ streamer, payment_processors, donation_rules }: P
                                     onClick={() => handlePreviousStep(1)}
                                     className="w-full"
                                 >
-                                    Voltar
+                                    {__('pages.public_donation.back')}
                                 </Button>
                                 <Button type="submit" size="lg" isDisabled={form.processing} className="w-full">
-                                    {form.processing ? 'Processando...' : 'Pagar'}
+                                    {form.processing ? __('pages.public_donation.processing') : __('pages.public_donation.pay')}
                                 </Button>
                             </div>
                         </Form>

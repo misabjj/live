@@ -1,4 +1,4 @@
-import { TextArea } from '@/components/untitled-ui/base/textarea/textarea';
+import { TextArea } from '@/components/ui/base/textarea/textarea';
 import { ReactNode } from 'react';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 

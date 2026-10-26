@@ -1,4 +1,4 @@
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Button } from '@/components/ui/base/buttons/button';
 import { cx } from '@/utils/cx';
 import { useId } from 'react';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';

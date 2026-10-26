@@ -319,6 +319,7 @@
 
     /* BORDER COLORS */
     --color-border-primary: var(--color-neutral-300);
+    --color-avatar-contrast-border: var(--color-border-primary);
     --color-border-secondary: var(--color-neutral-200);
     --color-border-secondary_alt: rgb(0 0 0 / 0.1);
     --color-border-tertiary: var(--color-neutral-100);

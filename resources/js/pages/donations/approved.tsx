@@ -1,7 +1,8 @@
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Button } from '@/components/ui/base/buttons/button';
+import { BackgroundPattern } from '@/components/ui/shared-assets/background-patterns';
 import { show } from '@/routes/donate';
+import { useLang } from '@/hooks/use-lang';
 import { Head, Link } from '@inertiajs/react';
 
 interface Donation {
@@ -18,9 +19,10 @@ interface Props {
 }
 
 export default function Page({ donation }: Props) {
+    const { __ } = useLang();
     return (
         <div className="flex min-h-screen items-center justify-center bg-primary_alt px-4 py-12">
-            <Head title={`Doação para @${donation.streamer.handle}`} />
+            <Head title={__('pages.donations.for_streamer', { handle: donation.streamer.handle })} />
 
             <div className="w-full max-w-md space-y-6">
                 <div className="flex items-center gap-4">
@@ -42,14 +44,14 @@ export default function Page({ donation }: Props) {
                         </div>
 
                         <div className="z-10 text-center">
-                            <h2 className="text-2xl font-semibold text-primary">Pagamento aprovado!</h2>
-                            <p className="mt-2 text-sm text-secondary">Sua doação foi confirmada com sucesso e será exibida para o streamer.</p>
+                            <h2 className="text-2xl font-semibold text-primary">{__('pages.donations.approved_title')}</h2>
+                            <p className="mt-2 text-sm text-secondary">{__('pages.donations.approved_description')}</p>
                         </div>
 
                         <div className="z-10 w-full space-y-3">
                             <Link href={show(donation.streamer.handle)} className="block">
                                 <Button type="button" size="lg" color="primary" className="w-full">
-                                    Voltar
+                                    {__('pages.donations.back')}
                                 </Button>
                             </Link>
                         </div>

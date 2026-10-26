@@ -1,4 +1,4 @@
-import { Toggle } from '@/components/untitled-ui/base/toggle/toggle';
+import { Toggle } from '@/components/ui/base/toggle/toggle';
 import { FormField, FormFieldProps, LabelPosition } from './form-field';
 
 export interface ToggleFormFieldProps extends Omit<FormFieldProps, 'children'> {

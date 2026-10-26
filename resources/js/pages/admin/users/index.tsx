@@ -1,11 +1,12 @@
-import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/untitled-ui/application/pagination/pagination';
-import { Table, TableCard } from '@/components/untitled-ui/application/table/table';
-import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
-import { Badge } from '@/components/untitled-ui/base/badges/badges';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { PaginationCardMinimal, PaginationPageMinimalCenter } from '@/components/ui/application/pagination/pagination';
+import { Table, TableCard } from '@/components/ui/application/table/table';
+import { Avatar } from '@/components/ui/base/avatar/avatar';
+import { Badge } from '@/components/ui/base/badges/badges';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
 import PanelLayout from '@/layouts/panel-layout';
 import { formatDate } from '@/lib/formatters';
+import { useLang } from '@/hooks/use-lang';
 import { getInitials } from '@/lib/utils';
 import { dashboard } from '@/routes';
 import { index } from '@/routes/admin/users';
@@ -34,6 +35,7 @@ interface Props {
 }
 
 function Page({ users, filter }: Props) {
+    const { __ } = useLang();
     const isInitialMount = useRef(true);
     const form = useForm({
         filter: {
@@ -72,13 +74,13 @@ function Page({ users, filter }: Props) {
                 <div className="relative flex flex-col gap-4">
                     <div className="flex lg:hidden">
                         <Button href={dashboard.url()} color="link-gray" size="md" iconLeading={ArrowLeft}>
-                            Voltar
+                            {__('pages.admin.back')}
                         </Button>
                     </div>
 
                     <div className="flex flex-col gap-0.5 md:gap-1">
-                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">Todos os Usuários (Admin)</p>
-                        <p className="text-sm text-tertiary sm:text-md">Visualize todos os usuários da plataforma.</p>
+                        <p className="text-lg font-semibold text-primary sm:text-xl md:text-display-xs">{__('pages.admin.users.title')}</p>
+                        <p className="text-sm text-tertiary sm:text-md">{__('pages.admin.users.subtitle')}</p>
                     </div>
                 </div>
             </div>
@@ -89,7 +91,7 @@ function Page({ users, filter }: Props) {
                     <Input
                         className="lg:max-w-100"
                         size="sm"
-                        placeholder="Buscar por nome"
+                        placeholder={__('pages.admin.users.search')}
                         icon={SearchLg}
                         value={form.data.filter.display_name}
                         onChange={handleSearchChange}
@@ -98,13 +100,13 @@ function Page({ users, filter }: Props) {
 
                 {/* Users table */}
                 <TableCard.Root className="lg:rounded-xl">
-                    <TableCard.Header title="Usuários" badge={`${users.total} total`} />
-                    <Table aria-label="Usuários" selectionMode="none" className="bg-primary">
+                    <TableCard.Header title={__('pages.admin.users.table_title')} badge={__('pages.admin.total', { count: users.total })} />
+                    <Table aria-label={__('pages.admin.users.table_title')} selectionMode="none" className="bg-primary">
                         <Table.Header>
-                            <Table.Head id="user" label="Usuário" isRowHeader className="w-full" />
-                            <Table.Head id="handle" label="Handle" />
-                            <Table.Head id="status" label="Status" />
-                            <Table.Head id="created_at" label="Data de Cadastro" />
+                            <Table.Head id="user" label={__('pages.admin.users.user')} isRowHeader className="w-full" />
+                            <Table.Head id="handle" label={__('pages.admin.users.handle')} />
+                            <Table.Head id="status" label={__('pages.admin.users.status')} />
+                            <Table.Head id="created_at" label={__('pages.admin.users.created_at')} />
                         </Table.Header>
 
                         <Table.Body items={users.data}>
@@ -126,12 +128,12 @@ function Page({ users, filter }: Props) {
                                         <div className="flex items-center gap-2">
                                             {user.is_admin && (
                                                 <Badge color="purple" size="sm">
-                                                    Admin
+                                                    {__('pages.admin.users.admin')}
                                                 </Badge>
                                             )}
                                             {user.accepting_donations && (
                                                 <Badge color="success" size="sm">
-                                                    Aceitando doações
+                                                    {__('pages.admin.users.accepting_donations')}
                                                 </Badge>
                                             )}
                                         </div>
@@ -157,6 +159,6 @@ function Page({ users, filter }: Props) {
     );
 }
 
-Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="Todos os Usuários" />;
+Page.layout = (page: React.ReactNode) => <PanelLayout children={page} title="pages.admin.users.title" />;
 
 export default Page;

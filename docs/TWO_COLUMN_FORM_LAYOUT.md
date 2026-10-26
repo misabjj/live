@@ -43,7 +43,7 @@ resources/js/components/settings/two-column-form-layout.tsx
 ```tsx
 import { TwoColumnFormLayout } from '@/components/settings';
 import { SettingsFormContainer, SettingsFormContent, SettingsFormFooter, SettingsPageHeader } from '@/components/settings';
-import { Label } from '@/components/untitled-ui/base/input/label';
+import { Label } from '@/components/ui/base/input/label';
 
 function MyFormPage() {
     const form = useForm({

@@ -30,7 +30,7 @@ return [
     'efi_bank_configured' => 'EFI Bank configurado com sucesso!',
     'efi_bank_credentials_invalid' => 'Credenciais inválidas ou inativas!',
     'efi_bank_certificate_disabled' => 'O certificado está desativado!',
-    'efi_bank_configuration_failed' => 'Não foi possível configurar o EFI Bank. Consulte o tutorial de configuração.',
+    'efi_bank_configuration_failed' => 'Não foi possível configurar o EFI Bank. Verifique as credenciais e tente novamente.',
     'mercado_pago_connection_failed' => 'Falha ao conectar com a API do Mercado Pago.',
     'mercado_pago_configured' => 'Mercado Pago configurado com sucesso!',
     'mercado_pago_configuration_failed' => 'Erro ao configurar o Mercado Pago. Tente novamente.',

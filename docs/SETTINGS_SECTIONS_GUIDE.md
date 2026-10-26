@@ -174,7 +174,7 @@ import { Switch } from 'react-aria-components';
 
 ```tsx
 import { SettingsSection } from '@/components/form-fields';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Button } from '@/components/ui/base/buttons/button';
 
 <SettingsSection
     title="Gerenciar fila"
@@ -197,8 +197,8 @@ import { Button } from '@/components/untitled-ui/base/buttons/button';
 
 ```tsx
 import { SettingsSection } from '@/components/form-fields';
-import { Input } from '@/components/untitled-ui/base/input/input';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
+import { Button } from '@/components/ui/base/buttons/button';
 
 <SettingsSection
     title="Seu perfil"
@@ -244,7 +244,7 @@ import { SettingsSection } from '@/components/form-fields';
 
 ```tsx
 import { SettingsSection } from '@/components/form-fields';
-import { Select } from '@/components/untitled-ui/base/select/select';
+import { Select } from '@/components/ui/base/select/select';
 
 <SettingsSection
     title="Idioma"
@@ -460,9 +460,9 @@ Veja `resources/js/pages/streamers/controls.tsx` para um exemplo completo de uso
 
 ```tsx
 import { SettingsSection, SettingsSectionDivider } from '@/components/form-fields';
-import { SectionHeader } from '@/components/untitled-ui/application/section-headers/section-headers';
-import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Input } from '@/components/untitled-ui/base/input/input';
+import { SectionHeader } from '@/components/ui/application/section-headers/section-headers';
+import { Button } from '@/components/ui/base/buttons/button';
+import { Input } from '@/components/ui/base/input/input';
 import { router } from '@inertiajs/react';
 import { Switch } from 'react-aria-components';
 import { ReactNode } from 'react';
