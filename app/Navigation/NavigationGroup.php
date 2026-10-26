@@ -2,10 +2,13 @@
 
 namespace App\Navigation;
 
+use App\Models\User;
+
 class NavigationGroup
 {
     protected string $name;
 
+    /** @var list<NavigationItem> */
     protected array $items = [];
 
     protected ?int $sort = null;
@@ -13,9 +16,9 @@ class NavigationGroup
     /**
      * Create a new navigation group.
      */
-    public static function make(string $name): static
+    public static function make(string $name): self
     {
-        $instance = new static;
+        $instance = new self;
         $instance->name = $name;
 
         return $instance;
@@ -24,7 +27,7 @@ class NavigationGroup
     /**
      * Set the sort order for this group.
      */
-    public function sort(int $sort): static
+    public function sort(int $sort): self
     {
         $this->sort = $sort;
 
@@ -34,7 +37,8 @@ class NavigationGroup
     /**
      * Add navigation items to this group.
      */
-    public function items(array $items): static
+    /** @param list<NavigationItem> $items */
+    public function items(array $items): self
     {
         $this->items = $items;
 
@@ -44,7 +48,8 @@ class NavigationGroup
     /**
      * Get navigation items filtered by user permissions.
      */
-    public function getItems(?object $user = null): array
+    /** @return list<array<string, mixed>> */
+    public function getItems(?User $user = null): array
     {
         return collect($this->items)
             ->filter(fn (NavigationItem $item) => $item->shouldBeVisible($user))
@@ -73,7 +78,7 @@ class NavigationGroup
     /**
      * Check if this group has any visible items for the user.
      */
-    public function hasVisibleItems(?object $user = null): bool
+    public function hasVisibleItems(?User $user = null): bool
     {
         return collect($this->items)
             ->some(fn (NavigationItem $item) => $item->shouldBeVisible($user));

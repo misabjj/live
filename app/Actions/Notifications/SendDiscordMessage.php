@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Http;
 
 class SendDiscordMessage
 {
+    /** @param string|array<string, mixed> $message */
     public function handle(string|array $message): void
     {
         $webhookUrl = config('services.discord.webhook_url');
@@ -19,13 +20,17 @@ class SendDiscordMessage
                 $this->createEmbed($message),
                 $this->createEmbed([
                     'date' => now(),
-                    'triggerer_id' => auth()?->id(),
+                    'triggerer_id' => auth()->id(),
                     'app_url' => request()->getHttpHost(),
                 ]),
             ],
         ]);
     }
 
+    /**
+     * @param  string|array<string, mixed>  $message
+     * @return array<string, mixed>
+     */
     private function createEmbed(string|array $message): array
     {
         return [

@@ -5,9 +5,8 @@ import { MercadoPagoIcon } from './mercado-pago-icon';
 import { PlayIcon } from './play-icon';
 import { SparkleIcon } from './sparkle-icon';
 import { StripeIcon } from './stripe-icon';
-import { WhatsAppIcon } from './whatsapp-icon';
 
-export { AudioIndicatorIcon, EfiBankIcon, GoogleIcon, MercadoPagoIcon, PlayIcon, SparkleIcon, StripeIcon, WhatsAppIcon };
+export { AudioIndicatorIcon, EfiBankIcon, GoogleIcon, MercadoPagoIcon, PlayIcon, SparkleIcon, StripeIcon };
 
 // Icons object for iteration
 export const Icons = {
@@ -18,5 +17,4 @@ export const Icons = {
     Play: PlayIcon,
     Sparkle: SparkleIcon,
     Stripe: StripeIcon,
-    WhatsApp: WhatsAppIcon,
 } as const;

@@ -17,7 +17,4 @@ export default defineConfig({
         tailwindcss(),
         wayfinder({ formVariants: true }),
     ],
-    resolve: {
-        conditions: ['onnxruntime-web-use-extern-wasm', 'module', 'browser', 'development|production'],
-    },
 });

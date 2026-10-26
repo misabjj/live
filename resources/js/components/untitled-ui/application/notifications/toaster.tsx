@@ -67,10 +67,8 @@ export const Toaster = () => {
     router.on('success', function (e) {
         const { toasts } = e.detail.page.props;
 
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-expect-error
         toasts?.forEach(({ type, message }) => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             toast[type](message);
         });

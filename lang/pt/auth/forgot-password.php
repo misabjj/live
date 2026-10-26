@@ -1,24 +1,16 @@
 <?php
 
 return [
-    'reset_password' => [
-        'title' => 'Redefinir senha',
-        'subtitle' => 'Por favor, insira sua nova senha abaixo',
-        'fields' => [
-            'email' => [
-                'label' => 'E-mail',
-            ],
-            'password' => [
-                'label' => 'Senha',
-                'placeholder' => 'Insira sua nova senha',
-            ],
-            'password_confirmation' => [
-                'label' => 'Confirmar senha',
-                'placeholder' => 'Confirme sua nova senha',
-            ],
+    'title' => 'Esqueceu sua senha?',
+    'subtitle' => 'Sem problema. Informe seu e-mail e enviaremos um link para redefinir sua senha.',
+    'fields' => [
+        'email' => [
+            'label' => 'E-mail',
+            'placeholder' => 'Digite seu e-mail',
         ],
-        'buttons' => [
-            'reset' => 'Redefinir senha',
-        ],
+    ],
+    'buttons' => [
+        'reset' => 'Enviar link de redefinição',
+        'back' => 'Voltar para o login',
     ],
 ];

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/** @property-read User $user */
 class Widget extends BaseModel
 {
     use HasUlids;
@@ -34,6 +35,7 @@ class Widget extends BaseModel
         });
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
@@ -49,18 +51,27 @@ class Widget extends BaseModel
         return route('widgets.show', $this->token);
     }
 
-    public function scopeProfileQrCode(Builder $query): void
+    /** @param Builder<Widget> $query
+     * @return Builder<Widget>
+     */
+    public function scopeProfileQrCode(Builder $query): Builder
     {
-        $query->where('type', WidgetType::ProfileQrCode);
+        return $query->where('type', WidgetType::ProfileQrCode);
     }
 
-    public function scopeDonationAlert(Builder $query): void
+    /** @param Builder<Widget> $query
+     * @return Builder<Widget>
+     */
+    public function scopeDonationAlert(Builder $query): Builder
     {
-        $query->where('type', WidgetType::DonationAlert);
+        return $query->where('type', WidgetType::DonationAlert);
     }
 
-    public function scopeGoal(Builder $query): void
+    /** @param Builder<Widget> $query
+     * @return Builder<Widget>
+     */
+    public function scopeGoal(Builder $query): Builder
     {
-        $query->where('type', WidgetType::Goal);
+        return $query->where('type', WidgetType::Goal);
     }
 }

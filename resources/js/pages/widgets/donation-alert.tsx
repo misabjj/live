@@ -1,9 +1,8 @@
 import { useEchoPublic } from '@laravel/echo-react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { DonationAlert } from '@/components/widgets/donation-alert';
-import { isSupertonicVoice, loadBrowserTextToSpeech, synthesizeWithSupertonic } from '@/lib/supertonic/browser-tts';
 import { donationAlertPlayed } from '@/routes/widgets';
 
 interface Donation {
@@ -12,10 +11,8 @@ interface Donation {
     amount: number;
     currency: string;
     content_text?: string;
-    content_type: 'text_to_speech' | 'text' | 'audio';
+    content_type: 'text' | 'audio';
     content_url?: string;
-    speech_text?: string;
-    voice_id?: string;
 }
 
 interface DonationAlertCreated {
@@ -40,7 +37,6 @@ interface Props {
 
 interface PreparedAudio {
     element: HTMLAudioElement;
-    dispose: () => void;
 }
 
 const queue: Donation[] = [];
@@ -94,12 +90,6 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
     const [currentAlert, setCurrentAlert] = useState<Donation | null>(null);
     const [configuration, setConfiguration] = useState(initialConfiguration);
 
-    useEffect(() => {
-        loadBrowserTextToSpeech().catch((error) => {
-            console.error('Unable to preload Supertonic.', error);
-        });
-    }, []);
-
     async function playNextAlert() {
         clearCurrentAlert();
 
@@ -143,21 +133,7 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
     }
 
     async function prepareAlertAudio(donation: Donation): Promise<PreparedAudio | null> {
-        let url: string | undefined;
-        let dispose = () => {};
-
-        if (donation.content_type === 'text_to_speech' && donation.speech_text && isSupertonicVoice(donation.voice_id)) {
-            try {
-                const speech = await synthesizeWithSupertonic(donation.speech_text, donation.voice_id);
-                url = URL.createObjectURL(speech);
-                dispose = () => URL.revokeObjectURL(url!);
-            } catch (error) {
-                console.error('Supertonic synthesis failed.', error);
-            }
-        }
-
-        url ??= donation.content_url;
-
+        const url = donation.content_url;
         if (!url) {
             return null;
         }
@@ -167,9 +143,8 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
         try {
             await preloadAudio(element);
 
-            return { element, dispose };
+            return { element };
         } catch (error) {
-            dispose();
             console.error('Unable to preload donation audio.', error);
 
             return null;
@@ -190,14 +165,10 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
 
         await playAudio(notificationAudio);
 
-        try {
-            if (preparedAudio) {
-                await playAudio(preparedAudio.element);
-            } else {
-                await wait(3_000);
-            }
-        } finally {
-            preparedAudio?.dispose();
+        if (preparedAudio) {
+            await playAudio(preparedAudio.element);
+        } else {
+            await wait(3_000);
         }
 
         await playNextAlert();
@@ -264,7 +235,6 @@ export default function Page({ token, configuration: initialConfiguration }: Pro
             amount={currentAlert.amount}
             currency={currentAlert.currency}
             message={currentAlert.content_text}
-            isAiGenerated={currentAlert.content_type === 'text_to_speech'}
             configuration={configuration}
             className="w-full"
         />

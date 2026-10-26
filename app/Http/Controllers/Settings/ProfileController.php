@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Settings;
 
-use App\Events\Widgets\ProfileQrCodeUpdated;
+use App\Actions\Settings\UpdateProfile;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Settings\UpdateProfileRequest;
+use App\Support\AuthenticatedUser;
 use App\Support\Toast;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProfileController extends Controller
 {
-    public function show()
+    public function show(): Response
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
 
-        return inertia('settings/profile', [
+        return Inertia::render('settings/profile', [
             'user' => [
                 'display_name' => $user->display_name,
                 'email' => $user->email,
@@ -30,30 +33,13 @@ class ProfileController extends Controller
     /**
      * @throws \Throwable
      */
-    public function update(UpdateProfileRequest $request)
+    public function update(UpdateProfileRequest $request, UpdateProfile $updateProfile): RedirectResponse
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
 
-        DB::transaction(function () use ($user, $request) {
-            $oldHandle = $user->handle;
+        $updateProfile->handle($user, $request->validated(), $request->file('background_image'));
 
-            $user->update([
-                'display_name' => $request->input('display_name'),
-                'handle' => $request->input('handle'),
-
-                'background_image' => $request->hasFile('background_image')
-                    ? $request->file('background_image')->store('background-images', 'public')
-                    : $user->background_image,
-
-                'background_color' => $request->input('background_color'),
-            ]);
-
-            if ($oldHandle !== $user->handle) {
-                broadcast(new ProfileQrCodeUpdated($user->profileQrCode));
-            }
-        });
-
-        Toast::success('Atualizado com sucesso!');
+        Toast::success(__('toasts.profile_updated'));
 
         return back();
     }

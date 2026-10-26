@@ -76,7 +76,7 @@ class CreateUser
     private function sanitizeHandle(string $displayName): string
     {
         return strtolower(
-            preg_replace('/[^a-z0-9_-]/i', '', str_replace(' ', '_', trim($displayName)))
+            (string) preg_replace('/[^a-z0-9_-]/i', '', str_replace(' ', '_', trim($displayName)))
         ) ?: 'user';
     }
 }

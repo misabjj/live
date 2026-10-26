@@ -4,7 +4,7 @@ import type { ComponentType, StepBaseProps } from './progress-types';
 
 export const statuses = {
     incomplete: {
-        icon: 'bg-disabled_subtle ring-[1.5px] ring-inset ring-disabled_subtle',
+        icon: 'opacity-50 ring-[1.5px] ring-inset ',
         dot: 'bg-fg-disabled_subtle',
         connector: 'border-secondary',
         title: 'text-secondary',
@@ -104,7 +104,7 @@ export const IconTopNumber = <T extends ComponentType>({
 }: StepBaseProps<T> & { step: number }) => {
     const statuses = {
         incomplete: {
-            icon: 'bg-primary ring-1 ring-inset ring-secondary text-disabled',
+            icon: 'bg-primary ring-1 ring-inset ring-secondary ',
             title: 'text-secondary',
             description: 'text-tertiary',
         },
@@ -182,7 +182,7 @@ export const IconLeftNumber = <T extends ComponentType>({
 }: StepBaseProps<T> & { step: number }) => {
     const statuses = {
         incomplete: {
-            icon: 'bg-primary ring-1 ring-inset ring-secondary text-disabled',
+            icon: 'bg-primary ring-1 ring-inset ring-secondary ',
             title: 'text-secondary',
             description: 'text-tertiary',
         },

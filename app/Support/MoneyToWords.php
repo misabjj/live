@@ -22,6 +22,10 @@ class MoneyToWords
 
     private static function numberToWords(int $number): string
     {
+        if ($number < 0) {
+            return 'menos '.self::numberToWords(abs($number));
+        }
+
         if ($number === 0) {
             return 'zero';
         }

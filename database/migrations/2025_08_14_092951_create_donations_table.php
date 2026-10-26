@@ -34,8 +34,6 @@ return new class extends Migration
             $table->longText('content_text')->nullable();
             $table->string('content_path')->nullable();
 
-            $table->foreignUlid('narrator_id')->nullable()->constrained();
-
             $table->timestamp('created_at');
 
             $table->timestamp('approved_at')->nullable();

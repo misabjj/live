@@ -81,15 +81,6 @@ return [
             'after_commit' => true,
         ],
 
-        'tts-processing' => [
-            'driver' => 'redis',
-            'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
-            'queue' => 'tts-processing',
-            'retry_after' => 600,
-            'block_for' => null,
-            'after_commit' => true,
-        ],
-
         'audio-processing' => [
             'driver' => 'redis',
             'connection' => env('REDIS_QUEUE_CONNECTION', 'default'),
@@ -113,7 +104,7 @@ return [
     */
 
     'batching' => [
-        'database' => env('DB_CONNECTION', 'sqlite'),
+        'database' => env('DB_CONNECTION', 'pgsql'),
         'table' => 'job_batches',
     ],
 
@@ -132,7 +123,7 @@ return [
 
     'failed' => [
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', 'sqlite'),
+        'database' => env('DB_CONNECTION', 'pgsql'),
         'table' => 'failed_jobs',
     ],
 

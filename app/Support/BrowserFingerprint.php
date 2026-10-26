@@ -6,9 +6,10 @@ use Illuminate\Support\Str;
 
 class BrowserFingerprint
 {
+    /** @return non-empty-string */
     public static function getCookieName(): string
     {
-        return str_replace(' ', '_', strtolower(env('APP_NAME', 'laravel'))).'_bf';
+        return 'browser_fingerprint';
     }
 
     /**
@@ -16,7 +17,9 @@ class BrowserFingerprint
      */
     public static function getFingerprint(): ?string
     {
-        return request()->cookie(self::getCookieName());
+        $fingerprint = request()->cookie(self::getCookieName());
+
+        return is_string($fingerprint) ? $fingerprint : null;
     }
 
     /**

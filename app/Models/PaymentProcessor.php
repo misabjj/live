@@ -11,19 +11,28 @@ class PaymentProcessor extends BaseModel
 {
     use HasUlids;
 
-    public function scopeActive(Builder $query): void
+    /** @param Builder<PaymentProcessor> $query
+     * @return Builder<PaymentProcessor>
+     */
+    public function scopeActive(Builder $query): Builder
     {
-        $query->where('is_active', true);
+        return $query->where('is_active', true);
     }
 
-    public function scopeEfiBank(Builder $query): void
+    /** @param Builder<PaymentProcessor> $query
+     * @return Builder<PaymentProcessor>
+     */
+    public function scopeEfiBank(Builder $query): Builder
     {
-        $query->where('processor', PaymentProcessorEnum::EfiBank->value);
+        return $query->where('processor', PaymentProcessorEnum::EfiBank->value);
     }
 
-    public function scopeMercadoPago(Builder $query): void
+    /** @param Builder<PaymentProcessor> $query
+     * @return Builder<PaymentProcessor>
+     */
+    public function scopeMercadoPago(Builder $query): Builder
     {
-        $query->where('processor', PaymentProcessorEnum::MercadoPago->value);
+        return $query->where('processor', PaymentProcessorEnum::MercadoPago->value);
     }
 
     protected $table = 'payment_processors';
@@ -40,6 +49,7 @@ class PaymentProcessor extends BaseModel
 
     protected $hidden = ['config', 'webhook_signing_secret'];
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

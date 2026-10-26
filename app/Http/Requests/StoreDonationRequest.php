@@ -10,17 +10,19 @@ use Illuminate\Validation\Rule;
 
 class StoreDonationRequest extends FormRequest
 {
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         $contentType = DonationContentType::tryFrom($this->input('content_type'));
 
         return match ($contentType) {
             DonationContentType::Text => $this->getTextRules(),
-            DonationContentType::TextToSpeech => $this->getTextToSpeechRules(),
             DonationContentType::Audio => $this->getAudioRules(),
+            null => [],
         };
     }
 
+    /** @return array<string, mixed> */
     private function getTextRules(): array
     {
         /** @var User $streamer */
@@ -62,59 +64,7 @@ class StoreDonationRequest extends FormRequest
         ];
     }
 
-    private function getTextToSpeechRules(): array
-    {
-        /** @var User $streamer */
-        $streamer = $this->route('streamer');
-        $donationRules = $streamer->donationRules;
-
-        $rules = [
-            'donor_name' => [
-                'required',
-                'string',
-                'min:2',
-                'max:20',
-                'regex:/^[a-zA-ZÀ-ÿ0-9\s\-_.]+$/',
-            ],
-            'content_type' => [
-                'required',
-                Rule::enum(DonationContentType::class),
-            ],
-            'payment_processor' => [
-                'required',
-                'string',
-            ],
-            'payment_method' => [
-                'required',
-                'string',
-            ],
-            'content_text' => [
-                'required',
-                'string',
-                'nullable',
-                'max:'.$donationRules->max_characters_text_to_speech,
-            ],
-            'amount' => [
-                'required',
-                'numeric',
-                'min:'.$donationRules->min_amount_text_to_speech,
-                'max:5000.00',
-                'decimal:0,2',
-            ],
-            'narrator_id' => [
-                'required',
-                'string',
-                Rule::exists('narrators', 'id')->where('is_active', true),
-            ],
-        ];
-
-        if (! $donationRules->accept_ai_audio) {
-            $rules['content_type'][] = 'in:text,audio';
-        }
-
-        return $rules;
-    }
-
+    /** @return array<string, mixed> */
     private function getAudioRules(): array
     {
         /** @var User $streamer */
@@ -156,7 +106,7 @@ class StoreDonationRequest extends FormRequest
         ];
 
         if (! $donationRules->accept_donor_audio) {
-            $rules['content_type'][] = 'in:text,text_to_speech';
+            $rules['content_type'][] = 'in:text';
         }
 
         return $rules;

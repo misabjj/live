@@ -16,6 +16,11 @@ use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property-read DonationRules $donationRules
+ * @property-read ProfileQrCode $profileQrCode
+ * @property-read DonationAlertConfiguration $donationAlertConfiguration
+ */
 class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
     use Authenticatable, Authorizable, CanResetPassword, HasUlids, MustVerifyEmail, Notifiable;
@@ -53,36 +58,43 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'remember_token',
     ];
 
+    /** @return HasMany<Donation, $this> */
     public function donations(): HasMany
     {
         return $this->hasMany(Donation::class, foreignKey: 'streamer_id');
     }
 
+    /** @return HasMany<PaymentProcessor, $this> */
     public function paymentProcessors(): HasMany
     {
         return $this->hasMany(PaymentProcessor::class);
     }
 
+    /** @return HasOne<DonationRules, $this> */
     public function donationRules(): HasOne
     {
         return $this->hasOne(DonationRules::class)->withDefault(DonationRules::getDefaults());
     }
 
+    /** @return HasMany<Goal, $this> */
     public function goals(): HasMany
     {
         return $this->hasMany(Goal::class);
     }
 
+    /** @return HasMany<Widget, $this> */
     public function widgets(): HasMany
     {
         return $this->hasMany(Widget::class);
     }
 
+    /** @return HasOne<ProfileQrCode, $this> */
     public function profileQrCode(): HasOne
     {
         return $this->hasOne(ProfileQrCode::class)->withDefault(ProfileQrCode::getDefaults());
     }
 
+    /** @return HasOne<DonationAlertConfiguration, $this> */
     public function donationAlertConfiguration(): HasOne
     {
         return $this->hasOne(DonationAlertConfiguration::class)->withDefault(DonationAlertConfiguration::getDefaults());

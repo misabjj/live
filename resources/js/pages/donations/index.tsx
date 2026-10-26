@@ -23,7 +23,7 @@ interface Donation {
     amount: number;
     currency: string;
     created_at: string;
-    content_type: 'text' | 'text_to_speech' | 'audio';
+    content_type: 'text' | 'audio';
     content_text?: string;
     content_path?: string;
 }
@@ -35,13 +35,12 @@ interface Props {
     };
 }
 
-const contentTypeMap: Record<'text' | 'text_to_speech' | 'audio', string> = {
+const contentTypeMap: Record<'text' | 'audio', string> = {
     text: 'Mensagem de texto',
-    text_to_speech: 'Gerado por IA',
     audio: 'Áudio gravado',
 };
 
-function getContentTypeLabel(contentType: 'text' | 'text_to_speech' | 'audio'): string {
+function getContentTypeLabel(contentType: 'text' | 'audio'): string {
     return contentTypeMap[contentType] || contentType;
 }
 
@@ -194,10 +193,10 @@ function Page({ donations, filter }: Props) {
             {/* Donation Info Modal */}
             <AriaDialogTrigger isOpen={selectedDonation !== null} onOpenChange={(open) => !open && handleCloseDonationInfo()}>
                 <ModalOverlay isDismissable>
-                    <Modal>
+                    <Modal className="sm:max-w-120">
                         <Dialog>
                             {selectedDonation && (
-                                <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-120">
+                                <>
                                     <CloseButton onClick={handleCloseDonationInfo} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
 
                                     <div className="flex flex-col gap-4 px-4 pt-5 pb-6 sm:px-6 sm:pt-6">
@@ -252,8 +251,7 @@ function Page({ donations, filter }: Props) {
                                         <Button type="button" color="secondary" size="lg" onClick={handleCloseDonationInfo}>
                                             Fechar
                                         </Button>
-                                        {(selectedDonation.content_type === 'text_to_speech' || selectedDonation.content_type === 'audio') &&
-                                            selectedDonation.content_path && (
+                                        {selectedDonation.content_type === 'audio' && selectedDonation.content_path && (
                                                 <Button
                                                     type="button"
                                                     color="primary"
@@ -265,7 +263,7 @@ function Page({ donations, filter }: Props) {
                                                 </Button>
                                             )}
                                     </div>
-                                </div>
+                                </>
                             )}
                         </Dialog>
                     </Modal>

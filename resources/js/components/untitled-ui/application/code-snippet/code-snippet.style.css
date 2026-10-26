@@ -22,34 +22,34 @@
     }
 }
 .shiki code .line.diff.remove {
-    background-color: var(--color-utility-error-100);
+    background-color: var(--color-utility-red-100);
 
     &::after {
         content: '-';
-        color: var(--color-utility-error-700);
+        color: var(--color-utility-red-700);
     }
 }
 .shiki code .line.diff.remove .highlighted-word {
     padding: 1px;
     margin: -1px;
     border-radius: 3px;
-    background-color: var(--color-utility-error-300);
+    background-color: var(--color-utility-red-300);
     color: var(--color-text-primary) !important;
 }
 
 .shiki code .line.diff.add {
-    background-color: var(--color-utility-success-100);
+    background-color: var(--color-utility-green-100);
 
     &::after {
         content: '+';
-        color: var(--color-utility-success-700);
+        color: var(--color-utility-green-700);
     }
 }
 .shiki code .line.diff.add .highlighted-word {
     padding: 1px;
     margin: -1px;
     border-radius: 3px;
-    background-color: var(--color-utility-success-300);
+    background-color: var(--color-utility-green-300);
     color: var(--color-text-primary) !important;
 }
 

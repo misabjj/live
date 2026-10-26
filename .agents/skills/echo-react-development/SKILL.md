@@ -344,7 +344,7 @@ php artisan channel:list
 - Private (`new PrivateChannel`) — requires authorization. Use for user-specific data like orders, messages, or account updates.
 - Presence (`new PresenceChannel`) — authorized + tracks who's online. Use for chat rooms, collaborative editing, "who's viewing this" features, or typing indicators.
 - EncryptedPrivate — end-to-end encryption, Pusher/Reverb only. Use when payload must be hidden from the broadcast server (e.g., sensitive financial data or private messages).
-- Drivers: `reverb` (self-hosted WebSocket server), `pusher` (managed service), `ably` (managed service), `log` (writes to Laravel log, use for debugging), `null` (no-op, use for testing)
+- Drivers: `reverb` (self-hosted WebSocket server), `pusher` (managed service), `log` (writes to Laravel log, use for debugging), `null` (no-op, use for testing)
 
 ### Event Customization
 
@@ -387,9 +387,7 @@ php artisan channel:list
 
 ```bash
 php artisan queue:work    # Required for ShouldBroadcast events
-
 php artisan reverb:start  # Required for Reverb driver
-
 ```
 
 ## Common Pitfalls

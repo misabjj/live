@@ -105,7 +105,7 @@ export const Tag = ({
     const context = useContext(TagGroupContext);
 
     const leadingContent = avatarSrc ? (
-        <Avatar size="xxs" src={avatarSrc} alt="Avatar" contrastBorder={avatarContrastBorder} />
+        <Avatar size="xs" src={avatarSrc} alt="Avatar" contrastBorder={avatarContrastBorder} />
     ) : dot ? (
         <Dot className={cx('text-fg-success-secondary', dotClassName)} size="sm" />
     ) : null;

@@ -3,7 +3,7 @@ import { AvatarLabelGroup } from '@/components/untitled-ui/base/avatar/avatar-la
 import { Button } from '@/components/untitled-ui/base/buttons/button';
 import { ButtonUtility } from '@/components/untitled-ui/base/buttons/button-utility';
 import { cx } from '@/utils/cx';
-import { LifeBuoy01, LogOut01, Settings01 } from '@untitledui/icons';
+import { LogOut01, Settings01 } from '@untitledui/icons';
 import { AnimatePresence, motion } from 'motion/react';
 import type { FC } from 'react';
 import { useState } from 'react';
@@ -11,7 +11,7 @@ import { Button as AriaButton, DialogTrigger as AriaDialogTrigger, Popover as Ar
 import { MobileNavigationHeader } from '../base-components/mobile-header';
 import { NavAccountMenu } from '../base-components/nav-account-card';
 import { NavItemBase } from '../base-components/nav-item';
-import { NavItemButton } from '../base-components/nav-item-button';
+import { NavItemButton } from '../base-components/nav-button';
 import { NavList } from '../base-components/nav-list';
 import type { NavItemType } from '../config';
 
@@ -193,14 +193,6 @@ export const SidebarNavigationSlim = ({ activeUrl, items, footerItems = [], hide
 
                     <div className="mt-auto flex flex-col gap-5 px-2 py-4">
                         <div className="flex flex-col gap-2">
-                            <NavItemBase
-                                type="link"
-                                href="https://wa.me/5571996992155?text=Olá,%20preciso%20de%20ajuda%20com%20o%20Live"
-                                icon={LifeBuoy01}
-                                external={true}
-                            >
-                                Support
-                            </NavItemBase>
                             <NavItemBase current={activeUrl === '/settings'} type="link" href="/settings" icon={Settings01}>
                                 Settings
                             </NavItemBase>

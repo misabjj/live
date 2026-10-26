@@ -176,6 +176,37 @@ return [
     |
     */
 
+    'forms' => [
+        'goal' => [
+            'title' => ['required' => 'A goal title is required.', 'min' => 'The title must contain at least 1 character.', 'max' => 'The title may not exceed 255 characters.'],
+            'target_amount' => ['required' => 'The target amount is required.', 'numeric' => 'The target amount must be a valid number.', 'min' => 'The target amount must be greater than 0.', 'decimal' => 'The target amount may have at most 2 decimal places.'],
+            'raised_amount' => ['numeric' => 'The raised amount must be a valid number.', 'min' => 'The raised amount must be at least 0.', 'decimal' => 'The raised amount may have at most 2 decimal places.'],
+            'closes_at' => ['required' => 'The closing date is required.', 'date' => 'The closing date must be valid.', 'after' => 'The closing date must be in the future.'],
+            'background_color' => ['required' => 'The background color is required.', 'regex' => 'The background color must be a valid hexadecimal color.'],
+            'progress_bar_color' => ['required' => 'The progress bar color is required.', 'regex' => 'The progress bar color must be a valid hexadecimal color.'],
+            'text_color' => ['required' => 'The text color is required.', 'regex' => 'The text color must be a valid hexadecimal color.'],
+            'show_profile_link' => ['boolean' => 'The profile link setting must be true or false.'],
+        ],
+        'profile_qr_code' => [
+            'gradient_color_1' => ['required' => 'The first gradient color is required.', 'regex' => 'The first gradient color must use hexadecimal format (#RRGGBB).'],
+            'gradient_color_2' => ['required' => 'The second gradient color is required.', 'regex' => 'The second gradient color must use hexadecimal format (#RRGGBB).'],
+            'gradient_type' => ['required' => 'The gradient type is required.', 'enum' => 'The gradient type must be linear or radial.'],
+            'gradient_rotation' => ['required' => 'The gradient rotation is required.', 'integer' => 'The gradient rotation must be an integer.', 'min' => 'The gradient rotation must be at least 0 degrees.', 'max' => 'The gradient rotation may not exceed 360 degrees.'],
+            'dots_type' => ['required' => 'The dots type is required.', 'enum' => 'The dots type must be one of the valid values.'],
+            'text_color' => ['required' => 'The text color is required.', 'regex' => 'The text color must use hexadecimal format (#RRGGBB).'],
+            'background_color' => ['required' => 'The background color is required.', 'regex' => 'The background color must use hexadecimal format (#RRGGBB).'],
+            'message' => ['max' => 'The message may not exceed 64 characters.'],
+        ],
+        'payment_processor' => [
+            'processor' => ['required' => 'The payment processor is required.', 'in' => 'The selected payment processor is invalid.', 'unique' => 'This payment processor is already configured.'],
+            'access_token' => ['required' => 'The Mercado Pago access token is required.', 'string' => 'The access token must be valid text.', 'regex' => 'The token must use the valid Mercado Pago format (APP_USR-...). Only production tokens are allowed.', 'min' => 'The access token must contain at least 44 characters.'],
+            'client_id' => ['required' => 'The EFI client ID is required.'],
+            'client_secret' => ['required' => 'The EFI client secret is required.'],
+            'certificate' => ['required' => 'The EFI certificate is required.', 'mimes' => 'The certificate must be in P12 or PEM format.'],
+            'secret_key' => ['required' => 'The Stripe secret key is required.', 'string' => 'The secret key must be valid text.', 'regex' => 'The secret key must use the valid Stripe format (sk_live_...). Only production keys are allowed.', 'min' => 'The Stripe secret key must contain at least 107 characters.'],
+        ],
+    ],
+
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',

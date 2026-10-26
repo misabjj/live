@@ -33,6 +33,7 @@ class QueuePaused implements ShouldBroadcastNow
         return 'donation_alert.queue.paused';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [];

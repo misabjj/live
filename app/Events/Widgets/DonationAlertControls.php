@@ -28,6 +28,7 @@ class DonationAlertControls implements ShouldBroadcastNow
         return 'DonationAlertControls';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [

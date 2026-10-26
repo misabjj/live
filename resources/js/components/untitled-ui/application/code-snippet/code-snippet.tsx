@@ -20,7 +20,7 @@ export const highlight = async (code: string, lang: Languages) => {
         colorReplacements: {
             'github-light': {
                 // Main text color
-                '#24292e': 'var(--color-utility-gray-700)',
+                '#24292e': 'var(--color-utility-neutral-700)',
 
                 '#005cc5': 'var(--color-utility-blue-600)',
                 '#d73a49': 'var(--color-utility-pink-600)',
@@ -29,7 +29,7 @@ export const highlight = async (code: string, lang: Languages) => {
             },
             'github-dark': {
                 // Main text color
-                '#e1e4e8': 'var(--color-utility-gray-700)',
+                '#e1e4e8': 'var(--color-utility-neutral-700)',
 
                 '#79b8ff': 'var(--color-utility-blue-600)',
                 '#f97583': 'var(--color-utility-pink-600)',

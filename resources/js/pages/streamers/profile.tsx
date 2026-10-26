@@ -1,12 +1,10 @@
 import { MoneyFormField, TextAreaFormField, TextFormField } from '@/components/form-fields';
 import { Avatar } from '@/components/untitled-ui/base/avatar/avatar';
 import { Button } from '@/components/untitled-ui/base/buttons/button';
-import { Checkbox } from '@/components/untitled-ui/base/checkbox/checkbox';
 import { Form } from '@/components/untitled-ui/base/form/form';
 import * as RadioGroups from '@/components/untitled-ui/base/radio-groups/radio-groups';
 import { useAuth } from '@/hooks/use-auth';
 import { useToast } from '@/hooks/use-toast';
-import { getVoiceTileStyle } from '@/lib/supertonic/voices';
 import { getInitials } from '@/lib/utils';
 import { store } from '@/routes/donations';
 import { Head, useForm } from '@inertiajs/react';
@@ -23,14 +21,6 @@ interface Streamer {
     background_color: string;
 }
 
-interface Narrator {
-    id: string;
-    name: string;
-    image_path: string | null;
-    voice_id: string;
-    voice_preview_path: string;
-}
-
 interface PaymentProcessor {
     processor: string;
     display_name: string;
@@ -40,18 +30,14 @@ interface PaymentProcessor {
 
 interface DonationRules {
     max_characters_text: number;
-    max_characters_text_to_speech: number;
     max_audio_duration: number;
-    accept_ai_audio: boolean;
     accept_donor_audio: boolean;
     min_amount_text: number;
-    min_amount_text_to_speech: number;
     min_amount_audio: number;
 }
 
 interface Props {
     streamer: Streamer;
-    narrators: Narrator[];
     payment_processors: PaymentProcessor[];
     donation_rules: DonationRules;
 }
@@ -87,19 +73,16 @@ const getFileExtension = (mimeType: string): string => {
     return mimeToExt[mimeType] || 'm4a';
 };
 
-export default function Page({ streamer, narrators, payment_processors, donation_rules }: Props) {
+export default function Page({ streamer, payment_processors, donation_rules }: Props) {
     const { user: donor } = useAuth();
     const toast = useToast();
     const [step, setStep] = useState(1);
-    const [selectedNarrator, setSelectedNarrator] = useState<string | null>(null);
     const [isTransitioning, setIsTransitioning] = useState(false);
     const [direction, setDirection] = useState<'left' | 'right'>('right');
-    const [playingNarratorId, setPlayingNarratorId] = useState<string | null>(null);
     const [nextStep, setNextStep] = useState<number | null>(null);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
     const [audioInputMode, setAudioInputMode] = useState<'text' | 'record'>('text');
     const [recordingTime, setRecordingTime] = useState(0);
-    const recordingTimerRef = useRef<NodeJS.Timeout | null>(null);
+    const recordingTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
     const [mimeType] = useState(() => getSupportedMimeType());
     const [fileExtension] = useState(() => getFileExtension(getSupportedMimeType()));
 
@@ -144,7 +127,6 @@ export default function Page({ streamer, narrators, payment_processors, donation
         donor_name: donor?.display_name || '',
         content_text: '',
         content_type: 'text',
-        narrator_id: '',
         amount: '',
         payment_processor: '',
         payment_method: '',
@@ -160,10 +142,7 @@ export default function Page({ streamer, narrators, payment_processors, donation
             payment_method: data.payment_method,
         };
 
-        if (data.content_type === 'text_to_speech') {
-            transformed.content_text = data.content_text;
-            transformed.narrator_id = data.narrator_id;
-        } else if (data.content_type === 'text') {
+        if (data.content_type === 'text') {
             transformed.content_text = data.content_text;
         } else if (data.content_type === 'audio' && data.audio_file) {
             transformed.audio_file = data.audio_file;
@@ -193,18 +172,9 @@ export default function Page({ streamer, narrators, payment_processors, donation
         setDirection('right');
         setIsTransitioning(true);
 
-        let targetStep = step;
-        if (step === 1 && form.data.content_type === 'text_to_speech') {
-            targetStep = 2;
-        } else if (step === 1 && form.data.content_type !== 'text_to_speech') {
-            targetStep = 3;
-        } else if (step === 2) {
-            targetStep = 3;
-        }
-
-        setNextStep(targetStep);
+        setNextStep(2);
         setTimeout(() => {
-            setStep(targetStep);
+            setStep(2);
             setIsTransitioning(false);
         }, 300);
     };
@@ -217,26 +187,6 @@ export default function Page({ streamer, narrators, payment_processors, donation
             setStep(targetStep);
             setIsTransitioning(false);
         }, 300);
-    };
-
-    const handlePlayVoicePreview = (narrator: Narrator) => {
-        if (playingNarratorId === narrator.id) {
-            if (audioRef.current) {
-                audioRef.current.pause();
-            }
-            setPlayingNarratorId(null);
-            return;
-        }
-
-        if (!audioRef.current) {
-            audioRef.current = new Audio();
-        }
-
-        audioRef.current.src = narrator.voice_preview_path;
-        audioRef.current.play();
-        setPlayingNarratorId(narrator.id);
-
-        audioRef.current.onended = () => setPlayingNarratorId(null);
     };
 
     const handleStartRecording = () => {
@@ -283,16 +233,10 @@ export default function Page({ streamer, narrators, payment_processors, donation
     };
 
     const getMaxCharacters = (): number => {
-        if (form.data.content_type === 'text_to_speech') {
-            return donation_rules.max_characters_text_to_speech;
-        }
         return donation_rules.max_characters_text;
     };
 
     const getMinAmount = (): number => {
-        if (form.data.content_type === 'text_to_speech') {
-            return donation_rules.min_amount_text_to_speech ?? 0;
-        }
         if (form.data.content_type === 'audio') {
             return donation_rules.min_amount_audio ?? 0;
         }
@@ -392,6 +336,7 @@ export default function Page({ streamer, narrators, payment_processors, donation
                                         color={audioInputMode === 'text' ? 'primary' : 'secondary'}
                                         onClick={() => {
                                             setAudioInputMode('text');
+                                            form.setData('content_type', 'text');
                                             clearBlobUrl();
                                             setRecordingTime(0);
                                         }}
@@ -432,14 +377,6 @@ export default function Page({ streamer, narrators, payment_processors, donation
                                         labelPosition="over"
                                     />
 
-                                    {donation_rules.accept_ai_audio && (
-                                        <Checkbox
-                                            label="Gerar áudio com IA"
-                                            size="md"
-                                            isSelected={form.data.content_type === 'text_to_speech'}
-                                            onChange={(checked) => form.setData('content_type', checked ? 'text_to_speech' : 'text')}
-                                        />
-                                    )}
                                 </>
                             ) : (
                                 <div className="flex flex-col gap-3">
@@ -482,102 +419,10 @@ export default function Page({ streamer, narrators, payment_processors, donation
                     )}
 
                     {step === 2 && (
-                        <div
-                            className={`flex flex-col gap-5 transition-all duration-300 ${
-                                isTransitioning && nextStep !== 2
-                                    ? direction === 'right'
-                                        ? '-translate-x-8 opacity-0'
-                                        : 'translate-x-8 opacity-0'
-                                    : 'translate-x-0 opacity-100'
-                            }`}
-                        >
-                            <div className="flex flex-col gap-3">
-                                <label className="text-sm font-medium text-secondary">Escolha uma voz para ler sua mensagem</label>
-
-                                <div className="grid grid-cols-4 gap-3">
-                                    {narrators.map((narrator) => (
-                                        <button
-                                            key={narrator.id}
-                                            type="button"
-                                            onClick={() => {
-                                                setSelectedNarrator(narrator.id);
-                                                form.setData('narrator_id', narrator.id);
-                                            }}
-                                            className="group relative aspect-square overflow-hidden rounded-lg ring-2 transition-all"
-                                            style={{
-                                                borderColor: selectedNarrator === narrator.id ? '#AB81FD' : 'transparent',
-                                            }}
-                                        >
-                                            <div
-                                                className={`absolute inset-0 flex flex-col items-center justify-center gap-1 ${getVoiceTileStyle(narrator.voice_id)}`}
-                                            >
-                                                <span className="text-2xl font-bold sm:text-3xl">{narrator.voice_id}</span>
-                                                <span className="max-w-[90%] truncate text-xs font-semibold sm:text-sm">
-                                                    {narrator.name.split(' - ')[1] ?? narrator.name}
-                                                </span>
-                                            </div>
-
-                                            <div
-                                                className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 opacity-0 transition-opacity group-hover:opacity-100"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handlePlayVoicePreview(narrator);
-                                                }}
-                                            >
-                                                <div className="flex size-10 items-center justify-center rounded-full shadow-lg">
-                                                    <svg
-                                                        className={`size-5 ${playingNarratorId === narrator.id ? 'text-white' : 'text-gray-900'}`}
-                                                        fill="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        {playingNarratorId === narrator.id ? (
-                                                            <>
-                                                                <rect x="6" y="4" width="4" height="16" />
-                                                                <rect x="14" y="4" width="4" height="16" />
-                                                            </>
-                                                        ) : (
-                                                            <path d="M8 5v14l11-7z" />
-                                                        )}
-                                                    </svg>
-                                                </div>
-                                            </div>
-
-                                            {selectedNarrator === narrator.id && (
-                                                <div className="absolute top-2 right-2 flex size-6 items-center justify-center rounded-full">
-                                                    <svg
-                                                        className="size-4 text-white"
-                                                        fill="none"
-                                                        viewBox="0 0 24 24"
-                                                        stroke="currentColor"
-                                                        strokeWidth={3}
-                                                    >
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                                    </svg>
-                                                </div>
-                                            )}
-                                        </button>
-                                    ))}
-                                </div>
-
-                                {form.errors.narrator_id && <p className="text-sm text-fg-error-primary">{form.errors.narrator_id}</p>}
-                            </div>
-
-                            <div className="flex gap-3">
-                                <Button type="button" size="lg" color="secondary" onClick={() => handlePreviousStep(1)} className="w-full">
-                                    Voltar
-                                </Button>
-                                <Button type="button" size="lg" onClick={handleNextStep} className="w-full">
-                                    Continuar
-                                </Button>
-                            </div>
-                        </div>
-                    )}
-
-                    {step === 3 && (
                         <Form
                             onSubmit={handleSubmit}
                             className={`flex flex-col gap-5 transition-all duration-300 ${
-                                isTransitioning && nextStep !== 3
+                                isTransitioning && nextStep !== 2
                                     ? direction === 'right'
                                         ? '-translate-x-8 opacity-0'
                                         : 'translate-x-8 opacity-0'
@@ -616,7 +461,7 @@ export default function Page({ streamer, narrators, payment_processors, donation
                                     type="button"
                                     size="lg"
                                     color="secondary"
-                                    onClick={() => handlePreviousStep(form.data.content_type === 'text_to_speech' ? 2 : 1)}
+                                    onClick={() => handlePreviousStep(1)}
                                     className="w-full"
                                 >
                                     Voltar

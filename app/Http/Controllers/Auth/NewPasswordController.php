@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Actions\Auth\ResetPassword;
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -34,7 +32,7 @@ class NewPasswordController extends Controller
      *
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, ResetPassword $resetPassword): RedirectResponse
     {
         $request->validate([
             'token' => 'required',
@@ -45,17 +43,7 @@ class NewPasswordController extends Controller
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user) use ($request) {
-                $user->forceFill([
-                    'password' => $request->password,
-                    'remember_token' => Str::random(60),
-                ])->save();
-
-                event(new PasswordReset($user));
-            }
-        );
+        $status = $resetPassword->handle($request->only('email', 'password', 'password_confirmation', 'token'));
 
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can

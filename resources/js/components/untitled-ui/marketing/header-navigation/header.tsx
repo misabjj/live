@@ -1,4 +1,3 @@
-import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { Button } from '@/components/untitled-ui/base/buttons/button';
 import { cx } from '@/utils/cx';
 import { ChevronDown, Moon01, Sun } from '@untitledui/icons';
@@ -168,15 +167,6 @@ export const Header = ({ items = headerNavItems, isFullWidth, isFloating, classN
                         </Button>
                     </div>
                     <div className="hidden items-center gap-3 md:flex">
-                        <Button
-                            iconLeading={<WhatsAppIcon data-icon="leading" className="size-5 shrink-0 text-green-600" />}
-                            color="secondary-whatsapp"
-                            size={isFloating ? 'md' : 'lg'}
-                            href="https://api.whatsapp.com/send/?phone=557196992155&text=Ol%C3%A1%2C+quero+saber+mais+sobre+a+plataforma+Live%21&type=phone_number&app_absent=0"
-                            target="blank"
-                        >
-                            Fale conosco
-                        </Button>
                     </div>
                 </div>
             </div>

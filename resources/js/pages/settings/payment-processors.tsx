@@ -298,9 +298,8 @@ function Page({ processors }: PageProps) {
             {/*
             <AriaDialogTrigger isOpen={activeIntegration === 'Stripe'} onOpenChange={(open) => !open && handleCloseSlideout()}>
                 <ModalOverlay isDismissable>
-                    <Modal>
+                    <Modal className="sm:max-w-120">
                         <Dialog>
-                            <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-120">
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
                                 <div className="flex flex-col gap-4 px-4 pt-5 pb-6 sm:px-6 sm:pt-6">
                                     <div className="relative flex size-14 items-center justify-center">
@@ -341,7 +340,6 @@ function Page({ processors }: PageProps) {
                                         </Button>
                                     </div>
                                 </Form>
-                            </div>
                         </Dialog>
                     </Modal>
                 </ModalOverlay>
@@ -351,9 +349,8 @@ function Page({ processors }: PageProps) {
             {/* Mercado Pago Modal */}
             <AriaDialogTrigger isOpen={activeIntegration === 'Mercado Pago'} onOpenChange={(open) => !open && handleCloseSlideout()}>
                 <ModalOverlay isDismissable>
-                    <Modal>
+                    <Modal className="sm:max-w-120">
                         <Dialog>
-                            <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-120">
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
                                 <div className="flex flex-col gap-4 px-4 pt-5 pb-6 sm:px-6 sm:pt-6">
                                     <div className="relative flex size-14 items-center justify-center">
@@ -394,7 +391,6 @@ function Page({ processors }: PageProps) {
                                         </Button>
                                     </div>
                                 </Form>
-                            </div>
                         </Dialog>
                     </Modal>
                 </ModalOverlay>
@@ -403,9 +399,8 @@ function Page({ processors }: PageProps) {
             {/* Efi Bank Modal */}
             <AriaDialogTrigger isOpen={activeIntegration === 'Efi Bank'} onOpenChange={(open) => !open && handleCloseSlideout()}>
                 <ModalOverlay isDismissable>
-                    <Modal>
+                    <Modal className="sm:max-w-120">
                         <Dialog>
-                            <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-120">
                                 <CloseButton onClick={handleCloseSlideout} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
                                 <div className="flex flex-col gap-4 px-4 pt-5 pb-6 sm:px-6 sm:pt-6">
                                     <div className="relative flex size-14 items-center justify-center">
@@ -483,7 +478,6 @@ function Page({ processors }: PageProps) {
                                         </Button>
                                     </div>
                                 </Form>
-                            </div>
                         </Dialog>
                     </Modal>
                 </ModalOverlay>

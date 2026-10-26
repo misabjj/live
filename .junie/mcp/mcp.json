@@ -1,20 +1,17 @@
 {
     "mcpServers": {
         "laravel-boost": {
-            "command": "/opt/homebrew/Cellar/php/8.4.11/bin/php",
+            "command": "php",
             "args": [
-                "/Users/misael/Library/Application Support/Herd/config/valet/Sites/pixvoice/artisan",
+                "artisan",
                 "boost:mcp"
             ]
         },
         "herd": {
-            "command": "/opt/homebrew/Cellar/php/8.4.11/bin/php",
+            "command": "bash",
             "args": [
-                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
-            ],
-            "env": {
-                "SITE_PATH": "/Users/misael/Library/Application Support/Herd/config/valet/Sites/pixvoice"
-            }
+                "scripts/herd-mcp.sh"
+            ]
         }
     }
 }

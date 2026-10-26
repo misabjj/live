@@ -1,47 +1,9 @@
-import { WhatsAppIcon } from '@/components/icons/whatsapp-icon';
 import { BadgeGroup } from '@/components/untitled-ui/base/badges/badge-groups';
 import { Button } from '@/components/untitled-ui/base/buttons/button';
 import { Header } from '@/components/untitled-ui/marketing/header-navigation/header';
 import { SectionDivider } from '@/components/untitled-ui/shared-assets/section-divider';
 import { ArrowRight } from '@untitledui/icons';
 import { type ComponentProps, type FC } from 'react';
-
-interface WhatsappButtonProps {
-    phoneNumber: string;
-    message?: string;
-    ariaLabel?: string;
-    tooltipText?: string;
-}
-
-const WhatsappButton: FC<WhatsappButtonProps> = ({
-    phoneNumber,
-    message = 'Olá! Gostaria de mais informações.',
-    ariaLabel = 'Fale Conosco pelo WhatsApp',
-    tooltipText = 'Fale Conosco',
-}) => {
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-    return (
-        <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label={ariaLabel}
-            className="group fixed right-6 bottom-6 z-[999] flex h-16 w-16 items-center justify-center rounded-full bg-green-500 text-white shadow-lg transition-all duration-300 ease-in-out hover:scale-110 hover:bg-green-600"
-            style={{ position: 'fixed' }}
-        >
-            <WhatsAppIcon className="size-7 text-white" />
-            <div
-                className="absolute right-full mr-4 scale-95 rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold whitespace-nowrap text-white opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100"
-                style={{ transformOrigin: 'right center' }}
-            >
-                {tooltipText}
-                <div className="absolute top-1/2 left-full h-2 w-2 -translate-y-1/2 rotate-45 bg-gray-800"></div>
-            </div>
-        </a>
-    );
-};
 
 const HeaderPrimary = (props: ComponentProps<typeof Header>) => {
     return (
@@ -119,15 +81,6 @@ const Hero = () => {
                                 Receba seus donates diretamente no seu banco, sem saques e com as vozes de IA com mais qualidade.
                             </p>
                             <div className="relative z-1 mt-8 flex w-full flex-col-reverse items-stretch gap-3 sm:w-auto sm:flex-row sm:items-start md:mt-12">
-                                <Button
-                                    iconLeading={<WhatsAppIcon data-icon="leading" className="size-5 shrink-0 text-green-600" />}
-                                    color="secondary-whatsapp"
-                                    size="xl"
-                                    href="https://api.whatsapp.com/send/?phone=557196992155&text=Ol%C3%A1%2C+quero+saber+mais+sobre+a+plataforma+Live%21&type=phone_number&app_absent=0"
-                                    target="blank"
-                                >
-                                    Saber mais
-                                </Button>
                                 <Button size="xl" href="/register" >
                                     Começar agora mesmo!
                                 </Button>
@@ -277,7 +230,6 @@ const TaxPage: FC<TaxPageProps> = ({ platform_fee_percentage }) => {
 
             <Footer />
 
-            <WhatsappButton phoneNumber="557196992155" message="Olá, quero saber mais sobre a plataforma Live!" tooltipText="Fale Conosco" />
         </div>
     );
 };

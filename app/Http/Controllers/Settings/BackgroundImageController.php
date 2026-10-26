@@ -2,44 +2,30 @@
 
 namespace App\Http\Controllers\Settings;
 
+use App\Actions\Settings\DeleteBackgroundImage;
+use App\Actions\Settings\StoreBackgroundImage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UploadBackgroundImageRequest;
+use App\Support\AuthenticatedUser;
 use App\Support\Toast;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\RedirectResponse;
 
 class BackgroundImageController extends Controller
 {
-    public function store(UploadBackgroundImageRequest $request)
+    public function store(UploadBackgroundImageRequest $request, StoreBackgroundImage $storeBackgroundImage): RedirectResponse
     {
-        $user = auth()->user();
+        $storeBackgroundImage->handle(app(AuthenticatedUser::class)->get(), $request->file('photo'));
 
-        if ($user->background_image) {
-            Storage::disk('public')->delete($user->background_image);
-        }
-
-        $file = $request->file('photo');
-        $filename = 'background-images/'.$user->id.'-'.time().$file->getClientOriginalExtension();
-
-        $path = Storage::disk('public')->putFileAs('/', $file, $filename);
-
-        $user->update(['background_image' => $path]);
-
-        Toast::success('Imagem de fundo atualizada com sucesso!');
+        Toast::success(__('toasts.background_image_updated'));
 
         return back();
     }
 
-    public function destroy()
+    public function destroy(DeleteBackgroundImage $deleteBackgroundImage): RedirectResponse
     {
-        $user = auth()->user();
+        $deleteBackgroundImage->handle(app(AuthenticatedUser::class)->get());
 
-        if ($user->background_image) {
-            Storage::disk('public')->delete($user->background_image);
-
-            $user->update(['background_image' => null]);
-        }
-
-        Toast::success('Imagem de fundo removida com sucesso!');
+        Toast::success(__('toasts.background_image_removed'));
 
         return back();
     }

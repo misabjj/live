@@ -33,6 +33,7 @@ class QueueResumed implements ShouldBroadcastNow
         return 'donation_alert.queue.resumed';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [];

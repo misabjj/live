@@ -77,11 +77,11 @@ function Page({ stats }: DashboardProps) {
                             <p className="text-lg font-semibold text-primary">Doações</p>
                         </div>
 
-                        <div className="h-60 outline-none [&_*]:outline-none [&_*]:focus:outline-none">
+                        <div className="h-60 outline-hidden [&_*]:outline-hidden [&_*]:focus:outline-hidden">
                             <ResponsiveContainer className="h-full">
                                 <AreaChart
                                     data={stats.chart_data}
-                                    className="text-tertiary outline-none focus:outline-none [&_.recharts-text]:text-xs"
+                                    className="text-tertiary outline-hidden focus:outline-hidden [&_.recharts-text]:text-xs"
                                     margin={{
                                         top: isDesktop ? 12 : 6,
                                         bottom: isDesktop ? 16 : 0,
@@ -96,7 +96,7 @@ function Page({ stats }: DashboardProps) {
                                         </linearGradient>
                                     </defs>
 
-                                    <CartesianGrid vertical={false} stroke="currentColor" className="text-utility-gray-100" />
+                                    <CartesianGrid vertical={false} stroke="currentColor" className="text-utility-neutral-100" />
 
                                     <XAxis
                                         fill="currentColor"
@@ -104,7 +104,7 @@ function Page({ stats }: DashboardProps) {
                                         tickLine={false}
                                         interval="preserveStartEnd"
                                         dataKey="date"
-                                        tickFormatter={(value) => new Date(value).toLocaleDateString('pt-BR', { day: '2-digit' })}
+                                        tickFormatter={(value) => new Date(String(value ?? '')).toLocaleDateString('pt-BR', { day: '2-digit' })}
                                         padding={{ left: 0, right: 0 }}
                                     >
                                         {isDesktop && (
@@ -138,7 +138,7 @@ function Page({ stats }: DashboardProps) {
                                             'Total',
                                         ]}
                                         labelFormatter={(value) =>
-                                            new Date(value).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
+                                            new Date(String(value ?? '')).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
                                         }
                                         cursor={{
                                             className: 'stroke-utility-brand-600 stroke-2',

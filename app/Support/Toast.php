@@ -26,11 +26,13 @@ class Toast
         self::put('info', $message);
     }
 
+    /** @return list<array{type: string, message: string, id: string}> */
     public static function pull(): array
     {
         return Session::pull('toasts', []);
     }
 
+    /** @return list<array{type: string, message: string, id: string}> */
     public static function get(): array
     {
         return Session::get('toasts', []);

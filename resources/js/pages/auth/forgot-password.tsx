@@ -33,7 +33,7 @@ export default function Page({ status }: ForgotPasswordProps) {
 
     return (
         <>
-            <Head title="Esqueci minha senha" />
+            <Head title={__('auth/forgot-password.title')} />
             <section className="flex min-h-screen items-center justify-center overflow-hidden bg-primary px-4 py-12 md:px-8">
                 <div className="mx-auto flex w-full max-w-90 flex-col gap-8">
                     <div className="flex flex-col items-center gap-6 text-center">

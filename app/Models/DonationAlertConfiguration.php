@@ -18,11 +18,13 @@ class DonationAlertConfiguration extends BaseModel
         'message_color',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return array<string, mixed> */
     public static function getDefaults(): array
     {
         return [

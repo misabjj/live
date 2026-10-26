@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $users = QueryBuilder::for(User::query())
             ->allowedFilters(
@@ -21,17 +23,17 @@ class UserController extends Controller
             ->defaultSort('-created_at')
             ->paginate()
             ->withQueryString()
-            ->through(fn (User $user) => [
+            ->through(fn (User $user): array => [
                 'id' => $user->id,
                 'display_name' => $user->display_name,
                 'email' => $user->email,
                 'handle' => $user->handle,
                 'is_admin' => $user->is_admin,
                 'accepting_donations' => $user->accepting_donations,
-                'created_at' => $user->created_at->format('d/m/Y H:i'),
+                'created_at' => $user->created_at,
             ]);
 
-        return inertia('admin/users/index', [
+        return Inertia::render('admin/users/index', [
             'users' => $users,
             'filter' => [
                 'display_name' => $request->query('filter.display_name', ''),

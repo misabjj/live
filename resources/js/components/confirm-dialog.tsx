@@ -24,9 +24,8 @@ export function ConfirmDialog({ isOpen, options, onConfirm, onCancel }: ConfirmD
     return (
         <AriaDialogTrigger isOpen={isOpen} onOpenChange={(open) => !open && onCancel()}>
             <ModalOverlay isDismissable>
-                <Modal>
+                <Modal className="sm:max-w-136">
                     <Dialog>
-                        <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-136">
                             <CloseButton onClick={onCancel} theme="light" size="lg" className="absolute top-3 right-3 z-20" />
                             <div className="flex flex-col gap-4 px-4 pt-5 sm:flex-row sm:px-6 sm:pt-6">
                                 {isDanger && (
@@ -54,7 +53,6 @@ export function ConfirmDialog({ isOpen, options, onConfirm, onCancel }: ConfirmD
                                     {confirmLabel}
                                 </Button>
                             </div>
-                        </div>
                     </Dialog>
                 </Modal>
             </ModalOverlay>

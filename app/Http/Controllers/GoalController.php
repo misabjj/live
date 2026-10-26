@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Actions\Goals\CreateGoal;
+use App\Actions\Goals\DeleteGoal;
 use App\Actions\Goals\ToggleGoalStatus;
-use App\Events\Widgets\GoalUpdated;
+use App\Actions\Goals\UpdateGoal;
 use App\Http\Requests\GoalRequest;
 use App\Models\Goal;
 use App\Models\Widget;
+use App\Support\AuthenticatedUser;
 use App\Support\Toast;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,9 +22,7 @@ class GoalController extends Controller
 {
     public function index(Request $request): Response
     {
-        $goals = QueryBuilder::for(
-            auth()->user()->goals()
-        )
+        $goals = QueryBuilder::for(app(AuthenticatedUser::class)->get()->goals())
             ->allowedFilters(AllowedFilter::partial('title'))
             ->orderByDesc('is_active')
             ->paginate()
@@ -36,24 +36,20 @@ class GoalController extends Controller
                 'closes_at' => $goal->closes_at,
                 'created_at' => $goal->created_at,
             ]);
-
-        $goalWidget = Widget::goal()->where('user_id', auth()->id())->first();
+        $goalWidget = Widget::goal()->where('user_id', app(AuthenticatedUser::class)->get()->id)->first();
 
         return Inertia::render('goals/index', [
             'goals' => $goals,
             'filter' => [
                 'title' => $request->query('filter.title', ''),
             ],
-            'widget' => $goalWidget ? [
-                'id' => $goalWidget->id,
-                'url' => $goalWidget->getUrl(),
-            ] : null,
+            'widget' => $goalWidget ? ['id' => $goalWidget->id, 'url' => $goalWidget->getUrl()] : null,
         ]);
     }
 
     public function create(): Response
     {
-        return inertia('goals/create', [
+        return Inertia::render('goals/create', [
             'defaults' => Goal::getDefaults(),
         ]);
     }
@@ -64,15 +60,15 @@ class GoalController extends Controller
     public function store(GoalRequest $request, CreateGoal $createGoal): RedirectResponse
     {
         $createGoal->handle(
-            user: auth()->user(),
+            user: app(AuthenticatedUser::class)->get(),
             title: $request->title,
-            targetAmount: $request->target_amount,
+            targetAmount: (string) $request->target_amount,
             closesAt: $request->closes_at,
             backgroundColor: $request->background_color,
             progressBarColor: $request->progress_bar_color,
             textColor: $request->text_color,
-            showProfileLink: $request->show_profile_link,
-            initialAmount: $request->raised_amount,
+            showProfileLink: filter_var($request->show_profile_link, FILTER_VALIDATE_BOOLEAN),
+            initialAmount: $request->raised_amount !== null ? (string) $request->raised_amount : null,
         );
 
         return redirect()->route('goals.index');
@@ -88,7 +84,7 @@ class GoalController extends Controller
                 'title' => $goal->title,
                 'target_amount' => $goal->target_amount,
                 'raised_amount' => $goal->raised_amount,
-                'closes_at' => $goal->serializeDate($goal->closes_at),
+                'closes_at' => $goal->closes_at,
                 'background_color' => $goal->background_color,
                 'progress_bar_color' => $goal->progress_bar_color,
                 'text_color' => $goal->text_color,
@@ -100,37 +96,42 @@ class GoalController extends Controller
     /**
      * @throws \Throwable
      */
-    public function update(GoalRequest $request, Goal $goal): RedirectResponse
+    public function update(GoalRequest $request, Goal $goal, UpdateGoal $updateGoal): RedirectResponse
     {
         $this->authorize('update', $goal);
 
-        \DB::transaction(function () use ($request, $goal) {
-            $goal->update([
-                'title' => $request->title,
-                'target_amount' => $request->target_amount,
-                'raised_amount' => $request->raised_amount ?? 0,
-                'closes_at' => $request->closes_at,
-                'background_color' => $request->background_color,
-                'progress_bar_color' => $request->progress_bar_color,
-                'text_color' => $request->text_color,
-                'show_profile_link' => $request->show_profile_link,
-            ]);
+        $validated = $request->validated();
 
-            broadcast(new GoalUpdated($goal));
-        });
+        $updateGoal->handle(
+            goal: $goal,
+            title: (string) $validated['title'],
+            targetAmount: (string) $validated['target_amount'],
+            raisedAmount: array_key_exists('raised_amount', $validated)
+                ? ($validated['raised_amount'] === null ? null : (string) $validated['raised_amount'])
+                : (string) $goal->raised_amount,
+            closesAt: (string) $validated['closes_at'],
+            backgroundColor: (string) $validated['background_color'],
+            progressBarColor: (string) $validated['progress_bar_color'],
+            textColor: (string) $validated['text_color'],
+            showProfileLink: array_key_exists('show_profile_link', $validated)
+                ? ($validated['show_profile_link'] === null
+                    ? null
+                    : filter_var($validated['show_profile_link'], FILTER_VALIDATE_BOOLEAN))
+                : $goal->show_profile_link,
+        );
 
-        Toast::success('Meta atualizada com sucesso!');
+        Toast::success(__('toasts.goal_updated'));
 
         return back();
     }
 
-    public function destroy(Goal $goal): RedirectResponse
+    public function destroy(Goal $goal, DeleteGoal $deleteGoal): RedirectResponse
     {
         $this->authorize('delete', $goal);
 
-        $goal->delete();
+        $deleteGoal->handle($goal);
 
-        Toast::success('Meta deletada com sucesso!');
+        Toast::success(__('toasts.goal_deleted'));
 
         return back();
     }
@@ -144,7 +145,7 @@ class GoalController extends Controller
 
         $toggleGoalStatus->handle($goal);
 
-        Toast::success($goal->is_active ? 'Meta ativada com sucesso!' : 'Meta desativada com sucesso!');
+        Toast::success($goal->is_active ? __('toasts.goal_activated') : __('toasts.goal_deactivated'));
 
         return back();
     }

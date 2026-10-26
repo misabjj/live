@@ -135,9 +135,8 @@ export const AIAssistantModal = () => {
     return (
         <AriaDialogTrigger isOpen={isOpen} onOpenChange={setIsOpen}>
             <ModalOverlay isDismissable>
-                <Modal>
+                <Modal className="max-w-120">
                     <Dialog>
-                        <div className="relative w-full max-w-120 overflow-hidden rounded-2xl bg-primary shadow-xl">
                             <div className="flex flex-col items-center gap-5 px-4 py-6 text-center md:px-6 md:pt-8">
                                 <Logo />
 
@@ -188,7 +187,6 @@ export const AIAssistantModal = () => {
                             <div className="flex flex-col px-4 pb-4 md:px-5 md:pb-5">
                                 <MessageActionAdvanced />
                             </div>
-                        </div>
                     </Dialog>
                 </Modal>
             </ModalOverlay>

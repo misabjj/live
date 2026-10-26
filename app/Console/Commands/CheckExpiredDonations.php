@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Actions\Donations\ApproveDonation;
 use App\Actions\Donations\ExpireDonation;
 use App\Models\Donation;
+use App\Support\EfiCertificate;
 use Efi\EfiPay;
 use Exception;
 use Illuminate\Console\Command;
@@ -59,21 +60,10 @@ class CheckExpiredDonations extends Command
                             continue;
                         }
 
-                        $tempCertificatePath = tempnam(sys_get_temp_dir(), '');
-
-                        if ($tempCertificatePath === false) {
-                            $this->error("Failed to create temp file for donation {$donation->id}");
-                            $errors++;
-
-                            continue;
-                        }
-
-                        file_put_contents($tempCertificatePath, $paymentProcessor->config->certificate_content);
-
                         $efiPay = new EfiPay([
                             'client_id' => $paymentProcessor->config->client_id,
                             'client_secret' => $paymentProcessor->config->client_secret,
-                            'certificate' => $tempCertificatePath,
+                            'certificate' => EfiCertificate::fromConfig($paymentProcessor->config),
                             'sandbox' => false,
                             'debug' => false,
                             'timeout' => 30,

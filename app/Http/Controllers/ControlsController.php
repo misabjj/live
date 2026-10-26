@@ -2,27 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Controls\MarkDonationAlertPlayed;
+use App\Actions\Controls\PlaySpecificDonation;
+use App\Actions\Controls\SkipDonationAlert;
+use App\Actions\Controls\ToggleAcceptingDonations;
+use App\Actions\Controls\ToggleAutoplay;
 use App\Enums\WidgetType;
-use App\Events\Widgets\DonationAlert;
-use App\Events\Widgets\DonationAlertControls;
-use App\Events\Widgets\DonationAlertPlayed;
-use App\Events\Widgets\QueuePaused;
-use App\Events\Widgets\QueueResumed;
 use App\Models\Donation;
+use App\Support\AuthenticatedUser;
 use App\Support\Toast;
+use Illuminate\Http\RedirectResponse;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ControlsController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
 
         $unplayedDonations = $user->donations()
             ->approved()
             ->unplayed()
             ->latest('approved_at')
             ->get()
-            ->map(fn (Donation $donation) => [
+            ->map(fn (Donation $donation): array => [
                 'id' => $donation->id,
                 'donor_name' => $donation->donor_name,
                 'amount' => $donation->amount,
@@ -32,96 +36,70 @@ class ControlsController extends Controller
                 'content_type' => $donation->content_type->value,
                 'approved_at' => $donation->approved_at,
             ]);
+        $widget = $user->widgets()->where('type', WidgetType::DonationAlert)->first();
 
-        $donationAlertWidget = $user->widgets()->where('type', WidgetType::DonationAlert)->first();
-
-        return inertia('streamers/controls', [
+        return Inertia::render('streamers/controls', [
             'queue_paused' => $user->queue_paused,
             'accepting_donations' => $user->accepting_donations,
             'profile_url' => route('donate.show', $user->handle),
             'unplayed_donations' => $unplayedDonations,
-            'donation_alert_widget_token' => $donationAlertWidget?->token,
+            'donation_alert_widget_token' => $widget?->token,
         ]);
     }
 
-    public function toggleAutoplay()
+    public function toggleAutoplay(ToggleAutoplay $toggleAutoplay): RedirectResponse
     {
-        $user = auth()->user();
+        $isPaused = $toggleAutoplay->handle(app(AuthenticatedUser::class)->get());
 
-        $newPausedState = ! $user->queue_paused;
-        $user->update(['queue_paused' => $newPausedState]);
-
-        if ($newPausedState) {
-            broadcast(new QueuePaused($user));
-            Toast::success('Fila pausada!');
+        if ($isPaused) {
+            Toast::success(__('toasts.queue_paused'));
         } else {
-            broadcast(new QueueResumed($user));
-            Toast::success('Fila retomada!');
+            Toast::success(__('toasts.queue_resumed'));
         }
 
         return back();
     }
 
-    public function toggleAcceptingDonations()
+    public function toggleAcceptingDonations(ToggleAcceptingDonations $toggleAcceptingDonations): RedirectResponse
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
 
-        if ($user->paymentProcessors()->active()->doesntExist()) {
-            Toast::warning('Você precisa ter um processador de pagamento ativo!');
+        if (! $toggleAcceptingDonations->handle($user)) {
+            Toast::warning(__('toasts.payment_processor_required'));
 
             return to_route('settings.payment-processors.index');
         }
 
-        $user->update(['accepting_donations' => ! $user->accepting_donations]);
-
-        Toast::success('Atualizado com sucesso!');
+        Toast::success(__('toasts.settings_updated'));
 
         return back();
     }
 
-    public function skipDonationAlert()
+    public function skipDonationAlert(SkipDonationAlert $skipDonationAlert): RedirectResponse
     {
-        $user = auth()->user();
+        $skipDonationAlert->handle(app(AuthenticatedUser::class)->get());
 
-        $widget = $user->widgets()->donationAlert()->first();
-
-        DonationAlertControls::dispatch($widget, 'skip');
-
-        Toast::success('Alerta pulado!');
+        Toast::success(__('toasts.donation_alert_skipped'));
 
         return back();
     }
 
-    public function playSpecificDonation(Donation $donation)
+    public function playSpecificDonation(Donation $donation, PlaySpecificDonation $playSpecificDonation): RedirectResponse
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
+        $playSpecificDonation->handle($user, $donation);
 
-        if ($donation->streamer_id !== $user->id) {
-            abort(403);
-        }
-
-        broadcast(new DonationAlert($donation, forcePlay: true));
-
-        Toast::success('Alerta reproduzido!');
+        Toast::success(__('toasts.donation_alert_replayed'));
 
         return back();
     }
 
-    public function markAsPlayed(Donation $donation)
+    public function markAsPlayed(Donation $donation, MarkDonationAlertPlayed $markDonationAlertPlayed): RedirectResponse
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
+        $markDonationAlertPlayed->handle($user, $donation);
 
-        if ($donation->streamer_id !== $user->id) {
-            abort(403);
-        }
-
-        $widget = $user->widgets()->donationAlert()->firstOrFail();
-
-        $donation->update(['in_queue' => false]);
-
-        broadcast(new DonationAlertPlayed($widget->token, $donation->id));
-
-        Toast::success('Alerta removido da fila!');
+        Toast::success(__('toasts.donation_alert_removed_from_queue'));
 
         return back();
     }

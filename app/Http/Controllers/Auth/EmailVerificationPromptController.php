@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Support\AuthenticatedUser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -15,7 +16,7 @@ class EmailVerificationPromptController extends Controller
      */
     public function __invoke(Request $request): Response|RedirectResponse
     {
-        if ($request->user()->hasVerifiedEmail()) {
+        if (app(AuthenticatedUser::class)->get()->hasVerifiedEmail()) {
             return redirect()->intended(route('dashboard', absolute: false));
         }
 

@@ -27,10 +27,6 @@ return [
         'key' => env('RESEND_KEY'),
     ],
 
-    'supertonic' => [
-        'test_voice' => env('SUPERTONIC_TEST_VOICE', 'M3'),
-    ],
-
     'discord' => [
         'webhook_url' => env('DISCORD_WEBHOOK_URL'),
     ],

@@ -7,6 +7,7 @@ use App\Enums\QrCodeGradientType;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/** @property-read User $user */
 class ProfileQrCode extends BaseModel
 {
     use HasUlids;
@@ -35,11 +36,13 @@ class ProfileQrCode extends BaseModel
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return array<string, mixed> */
     public static function getDefaults(): array
     {
         return [

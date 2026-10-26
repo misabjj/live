@@ -3,7 +3,7 @@ export type IconComponentType = React.FunctionComponent<{ className?: string; st
 export type Sizes = 'sm' | 'md' | 'lg';
 
 export type BadgeColors =
-    'gray' | 'brand' | 'error' | 'warning' | 'success' | 'gray-blue' | 'blue-light' | 'blue' | 'indigo' | 'purple' | 'pink' | 'orange';
+    'gray' | 'brand' | 'error' | 'warning' | 'success' | 'slate' | 'sky' | 'blue' | 'indigo' | 'purple' | 'pink' | 'orange';
 
 export type FlagTypes =
     | 'AD'

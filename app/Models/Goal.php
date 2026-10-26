@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** @property-read User $user */
 class Goal extends BaseModel
 {
     use HasUlids;
@@ -46,19 +47,24 @@ class Goal extends BaseModel
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return HasMany<Donation, $this> */
     public function donations(): HasMany
     {
         return $this->hasMany(Donation::class);
     }
 
-    public function scopeActive(Builder $query): void
+    /** @param Builder<Goal> $query
+     * @return Builder<Goal>
+     */
+    public function scopeActive(Builder $query): Builder
     {
-        $query->where('is_active', true);
+        return $query->where('is_active', true);
     }
 
     public function getProgressPercentage(): float
@@ -75,7 +81,7 @@ class Goal extends BaseModel
 
     public function hasClosed(): bool
     {
-        return $this->closes_at !== null && $this->closes_at->isPast();
+        return $this->closes_at->isPast();
     }
 
     public function isReached(): bool
@@ -83,6 +89,7 @@ class Goal extends BaseModel
         return (float) $this->raised_amount >= (float) $this->target_amount;
     }
 
+    /** @return array<string, mixed> */
     public static function getDefaults(): array
     {
         return [

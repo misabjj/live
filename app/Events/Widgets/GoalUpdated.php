@@ -35,6 +35,7 @@ class GoalUpdated implements ShouldBroadcast
         return 'goal.updated';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         if (! $this->goal->is_active) {
@@ -51,7 +52,7 @@ class GoalUpdated implements ShouldBroadcast
             'progress_bar_color' => $this->goal->progress_bar_color,
             'text_color' => $this->goal->text_color,
             'show_profile_link' => $this->goal->show_profile_link,
-            'user_handle' => $this->goal->user?->handle,
+            'user_handle' => $this->goal->user->handle,
             'percentage' => $this->goal->getProgressPercentage(),
         ];
     }

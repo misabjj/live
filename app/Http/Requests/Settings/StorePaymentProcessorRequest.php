@@ -68,27 +68,27 @@ class StorePaymentProcessorRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'processor.required' => __('validation.settings.payment_processors.processor.required'),
-            'processor.in' => __('validation.settings.payment_processors.processor.in'),
-            'processor.unique' => __('validation.settings.payment_processors.processor.unique'),
+            'processor.required' => __('validation.forms.payment_processor.processor.required'),
+            'processor.in' => __('validation.forms.payment_processor.processor.in'),
+            'processor.unique' => __('validation.forms.payment_processor.processor.unique'),
 
             // Mercado Pago messages
-            'access_token.required' => 'O token de acesso do Mercado Pago é obrigatório.',
-            'access_token.string' => 'O token de acesso deve ser um texto válido.',
-            'access_token.regex' => 'O token deve ter o formato válido do Mercado Pago (APP_USR-...). Apenas tokens de produção são permitidos.',
-            'access_token.min' => 'O token de acesso deve ter pelo menos 44 caracteres.',
+            'access_token.required' => __('validation.forms.payment_processor.access_token.required'),
+            'access_token.string' => __('validation.forms.payment_processor.access_token.string'),
+            'access_token.regex' => __('validation.forms.payment_processor.access_token.regex'),
+            'access_token.min' => __('validation.forms.payment_processor.access_token.min'),
 
             // EFI Bank messages
-            'client_id.required' => __('validation.settings.payment_processors.efi_bank.client_id.required_if'),
-            'client_secret.required' => __('validation.settings.payment_processors.efi_bank.client_secret.required_if'),
-            'certificate.required' => __('validation.settings.payment_processors.efi_bank.certificate.required_if'),
-            'certificate.mimes' => __('validation.settings.payment_processors.efi_bank.certificate.mimes'),
+            'client_id.required' => __('validation.forms.payment_processor.client_id.required'),
+            'client_secret.required' => __('validation.forms.payment_processor.client_secret.required'),
+            'certificate.required' => __('validation.forms.payment_processor.certificate.required'),
+            'certificate.mimes' => __('validation.forms.payment_processor.certificate.mimes'),
 
             // Stripe messages
-            'secret_key.required' => 'A chave secreta do Stripe é obrigatória.',
-            'secret_key.string' => 'A chave secreta deve ser um texto válido.',
-            'secret_key.regex' => 'A chave secreta deve ter o formato válido do Stripe (sk_live_...). Apenas chaves de produção são permitidas.',
-            'secret_key.min' => 'A chave secreta do Stripe deve ter pelo menos 107 caracteres.',
+            'secret_key.required' => __('validation.forms.payment_processor.secret_key.required'),
+            'secret_key.string' => __('validation.forms.payment_processor.secret_key.string'),
+            'secret_key.regex' => __('validation.forms.payment_processor.secret_key.regex'),
+            'secret_key.min' => __('validation.forms.payment_processor.secret_key.min'),
         ];
     }
 }

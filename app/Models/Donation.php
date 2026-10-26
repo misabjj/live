@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Storage;
 
+/**
+ * @property-read User $streamer
+ * @property-read Goal|null $goal
+ */
 class Donation extends BaseModel
 {
     use HasUlids, SoftDeletes;
@@ -37,7 +41,6 @@ class Donation extends BaseModel
         'content_type',
         'content_text',
         'content_path',
-        'narrator_id',
         'approved_at',
         'expires_at',
         'expired_at',
@@ -53,6 +56,7 @@ class Donation extends BaseModel
         'payment_processor' => PaymentProcessorEnum::class,
         'amount' => 'float',
         'created_at' => 'datetime',
+        'deleted_at' => 'datetime',
         'approved_at' => 'datetime',
         'expires_at' => 'datetime',
         'expired_at' => 'datetime',
@@ -60,24 +64,22 @@ class Donation extends BaseModel
         'banned_at' => 'datetime',
     ];
 
+    /** @return BelongsTo<User, $this> */
     public function streamer(): BelongsTo
     {
         return $this->belongsTo(User::class, foreignKey: 'streamer_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function donor(): BelongsTo
     {
         return $this->belongsTo(User::class, foreignKey: 'donor_id');
     }
 
+    /** @return BelongsTo<Goal, $this> */
     public function goal(): BelongsTo
     {
         return $this->belongsTo(Goal::class);
-    }
-
-    public function narrator(): BelongsTo
-    {
-        return $this->belongsTo(Narrator::class);
     }
 
     public function isPending(): bool
@@ -100,31 +102,49 @@ class Donation extends BaseModel
         return $this->status === DonationStatus::Expired;
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopePending(Builder $query): Builder
     {
         return $query->where('status', DonationStatus::Pending);
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopeOverdue(Builder $query): Builder
     {
         return $query->where('expires_at', '<=', now());
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopeApproved(Builder $query): Builder
     {
         return $query->where('status', DonationStatus::Approved);
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopeApprovedThirtyDaysAgo(Builder $query): Builder
     {
         return $query->where('approved_at', '>=', now()->subDays(30));
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopeExpired(Builder $query): Builder
     {
         return $query->where('status', DonationStatus::Expired);
     }
 
+    /** @param Builder<Donation> $query
+     * @return Builder<Donation>
+     */
     public function scopeUnplayed(Builder $query): Builder
     {
         return $query->where('in_queue', true);

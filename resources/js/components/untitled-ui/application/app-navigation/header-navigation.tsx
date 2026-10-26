@@ -5,11 +5,10 @@ import { cx } from '@/utils/cx';
 import { Bell01, Settings01 } from '@untitledui/icons';
 import type { FC, ReactNode } from 'react';
 import { Button as AriaButton, DialogTrigger, Popover } from 'react-aria-components';
-import { FaWhatsapp } from 'react-icons/fa';
 import { MobileNavigationHeader } from './base-components/mobile-header';
 import { NavAccountCard, NavAccountMenu } from './base-components/nav-account-card';
 import { NavItemBase } from './base-components/nav-item';
-import { NavItemButton } from './base-components/nav-item-button';
+import { NavItemButton } from './base-components/nav-button';
 import { NavList } from './base-components/nav-list';
 
 type NavItem = {
@@ -68,14 +67,6 @@ export const HeaderNavigationBase = ({
 
                     <div className="mt-auto flex flex-col gap-4 px-2 py-4 lg:px-4 lg:py-6">
                         <div className="flex flex-col gap-1">
-                            <NavItemBase
-                                type="link"
-                                href="https://wa.me/5571996992155?text=Olá,%20preciso%20de%20ajuda%20com%20o%20Live"
-                                icon={FaWhatsapp}
-                                external={true}
-                            >
-                                Support
-                            </NavItemBase>
                             <NavItemBase
                                 type="link"
                                 href="#"

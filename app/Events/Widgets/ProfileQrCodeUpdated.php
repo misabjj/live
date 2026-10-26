@@ -35,6 +35,7 @@ class ProfileQrCodeUpdated implements ShouldBroadcast
         return 'profile-qr-code.updated';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [
@@ -46,7 +47,6 @@ class ProfileQrCodeUpdated implements ShouldBroadcast
             'message' => $this->profileQrCode->message,
             'text_color' => $this->profileQrCode->text_color,
             'background_color' => $this->profileQrCode->background_color,
-            'card_border_color' => $this->profileQrCode->card_border_color,
         ];
     }
 }

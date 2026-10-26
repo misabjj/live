@@ -14,6 +14,7 @@ class ProfileQrCodeRequest extends FormRequest
         return true;
     }
 
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         return [
@@ -31,23 +32,23 @@ class ProfileQrCodeRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'gradient_color_1.required' => 'A primeira cor do gradiente é obrigatória.',
-            'gradient_color_1.regex' => 'A primeira cor do gradiente deve estar no formato hexadecimal (#RRGGBB).',
-            'gradient_color_2.required' => 'A segunda cor do gradiente é obrigatória.',
-            'gradient_color_2.regex' => 'A segunda cor do gradiente deve estar no formato hexadecimal (#RRGGBB).',
-            'gradient_type.required' => 'O tipo de gradiente é obrigatório.',
-            'gradient_type.in' => 'O tipo de gradiente deve ser linear ou radial.',
-            'gradient_rotation.required' => 'A rotação do gradiente é obrigatória.',
-            'gradient_rotation.integer' => 'A rotação do gradiente deve ser um número inteiro.',
-            'gradient_rotation.min' => 'A rotação do gradiente deve ser no mínimo 0 graus.',
-            'gradient_rotation.max' => 'A rotação do gradiente deve ser no máximo 360 graus.',
-            'dots_type.required' => 'O tipo de pontos é obrigatório.',
-            'dots_type.in' => 'O tipo de pontos deve ser um dos valores válidos.',
-            'text_color.required' => 'A cor do texto é obrigatória.',
-            'text_color.regex' => 'A cor do texto deve estar no formato hexadecimal (#RRGGBB).',
-            'background_color.required' => 'A cor de fundo é obrigatória.',
-            'background_color.regex' => 'A cor de fundo deve estar no formato hexadecimal (#RRGGBB).',
-            'message.max' => 'A mensagem deve ter no máximo 64 caracteres.',
+            'gradient_color_1.required' => __('validation.forms.profile_qr_code.gradient_color_1.required'),
+            'gradient_color_1.regex' => __('validation.forms.profile_qr_code.gradient_color_1.regex'),
+            'gradient_color_2.required' => __('validation.forms.profile_qr_code.gradient_color_2.required'),
+            'gradient_color_2.regex' => __('validation.forms.profile_qr_code.gradient_color_2.regex'),
+            'gradient_type.required' => __('validation.forms.profile_qr_code.gradient_type.required'),
+            'gradient_type.enum' => __('validation.forms.profile_qr_code.gradient_type.enum'),
+            'gradient_rotation.required' => __('validation.forms.profile_qr_code.gradient_rotation.required'),
+            'gradient_rotation.integer' => __('validation.forms.profile_qr_code.gradient_rotation.integer'),
+            'gradient_rotation.min' => __('validation.forms.profile_qr_code.gradient_rotation.min'),
+            'gradient_rotation.max' => __('validation.forms.profile_qr_code.gradient_rotation.max'),
+            'dots_type.required' => __('validation.forms.profile_qr_code.dots_type.required'),
+            'dots_type.enum' => __('validation.forms.profile_qr_code.dots_type.enum'),
+            'text_color.required' => __('validation.forms.profile_qr_code.text_color.required'),
+            'text_color.regex' => __('validation.forms.profile_qr_code.text_color.regex'),
+            'background_color.required' => __('validation.forms.profile_qr_code.background_color.required'),
+            'background_color.regex' => __('validation.forms.profile_qr_code.background_color.regex'),
+            'message.max' => __('validation.forms.profile_qr_code.message.max'),
         ];
     }
 }

@@ -18,7 +18,6 @@ import {
 } from '@untitledui/icons';
 import type { FC, ReactNode } from 'react';
 import { useRef } from 'react';
-import { FaWhatsapp } from 'react-icons/fa';
 
 interface BackendNavigationItem {
     title: string;
@@ -65,7 +64,6 @@ const getIconComponent = (iconName: string): FC<{ className?: string }> => {
         'cursor-01': Cursor01,
         'qr-code-02': QrCode02,
         'graduation-hat-02': GraduationHat02,
-        whatsapp: FaWhatsapp,
     };
     return iconMap[iconName] || BarChartSquare02;
 };
@@ -99,20 +97,9 @@ const transformNavigationItems = (items: BackendNavigationItem[]): NavItemType[]
     });
 };
 
-// Standard footer items for all pages
-const getFooterItems = (): NavItemType[] => [
-    {
-        label: 'Suporte',
-        href: 'https://wa.me/5571996992155?text=Olá,%20preciso%20de%20ajuda%20com%20o%20Live',
-        icon: getIconComponent('whatsapp'),
-        external: true,
-    },
-];
-
 export default ({ children, title }: PanelLayoutProps) => {
     const page = usePage<PagePropsWithNavigation>();
     const sidebarItems = transformNavigationItems(page.props.navigation.main);
-    const footerItems = getFooterItems();
     const currentUrl = page.url;
     const mobileNavigationRef = useRef<MobileNavigationHeaderRef>(null);
 
@@ -130,7 +117,6 @@ export default ({ children, title }: PanelLayoutProps) => {
             <SidebarNavigationSimple
                 ref={mobileNavigationRef}
                 items={sidebarItems}
-                footerItems={footerItems}
                 activeUrl={currentUrl}
                 onCloseModal={handleNavItemClick}
             />

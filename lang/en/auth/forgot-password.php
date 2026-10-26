@@ -1,24 +1,16 @@
 <?php
 
 return [
-    'reset_password' => [
-        'title' => 'Reset password',
-        'subtitle' => 'Please enter your new password below',
-        'fields' => [
-            'email' => [
-                'label' => 'Email',
-            ],
-            'password' => [
-                'label' => 'Password',
-                'placeholder' => 'Enter your new password',
-            ],
-            'password_confirmation' => [
-                'label' => 'Confirm password',
-                'placeholder' => 'Confirm your new password',
-            ],
+    'title' => 'Forgot password?',
+    'subtitle' => 'No worries. Enter your email and we’ll send you a link to reset your password.',
+    'fields' => [
+        'email' => [
+            'label' => 'Email',
+            'placeholder' => 'Enter your email address',
         ],
-        'buttons' => [
-            'reset' => 'Reset password',
-        ],
+    ],
+    'buttons' => [
+        'reset' => 'Send reset link',
+        'back' => 'Back to sign in',
     ],
 ];

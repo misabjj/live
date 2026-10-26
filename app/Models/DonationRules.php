@@ -13,45 +13,38 @@ class DonationRules extends BaseModel
 
     protected $fillable = [
         'user_id',
-        'accept_ai_audio',
         'accept_donor_audio',
         'min_amount_text',
-        'min_amount_text_to_speech',
         'min_amount_audio',
         'max_characters_text',
-        'max_characters_text_to_speech',
         'max_audio_duration',
     ];
 
     protected function casts(): array
     {
         return [
-            'accept_ai_audio' => 'boolean',
             'accept_donor_audio' => 'boolean',
             'min_amount_text' => 'float',
-            'min_amount_text_to_speech' => 'float',
             'min_amount_audio' => 'float',
             'max_characters_text' => 'integer',
-            'max_characters_text_to_speech' => 'integer',
             'max_audio_duration' => 'integer',
         ];
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /** @return array<string, mixed> */
     public static function getDefaults(): array
     {
         return [
-            'accept_ai_audio' => true,
             'accept_donor_audio' => true,
             'min_amount_text' => config('platform.donation_min_amount_text'),
-            'min_amount_text_to_speech' => config('platform.donation_min_amount_text_to_speech'),
             'min_amount_audio' => config('platform.donation_min_amount_audio'),
             'max_characters_text' => 72,
-            'max_characters_text_to_speech' => 72,
             'max_audio_duration' => config('platform.donation_max_audio_duration'),
         ];
     }

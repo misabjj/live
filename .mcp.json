@@ -8,13 +8,10 @@
             ]
         },
         "herd": {
-            "command": "php",
+            "command": "bash",
             "args": [
-                "/Applications/Herd.app/Contents/Resources/herd-mcp.phar"
-            ],
-            "env": {
-                "SITE_PATH": "/Users/misael/Library/Application Support/Herd/config/valet/Sites/pixvoice"
-            }
+                "scripts/herd-mcp.sh"
+            ]
         }
     }
 }

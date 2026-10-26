@@ -1,5 +1,3 @@
-import '../css/app.css';
-
 import { Toaster } from '@/components/untitled-ui/application/notifications/toaster';
 import { createInertiaApp } from '@inertiajs/react';
 import { configureEcho } from '@laravel/echo-react';
@@ -9,9 +7,6 @@ import { resolvePage } from './resolve-page';
 
 configureEcho({
     broadcaster: import.meta.env.VITE_BROADCAST_CONNECTION || 'reverb',
-    ...(import.meta.env.VITE_BROADCAST_CONNECTION === 'ably'
-        ? { key: import.meta.env.VITE_ABLY_PUBLIC_KEY }
-        : {}),
 });
 
 const appName = import.meta.env.VITE_APP_NAME || '';

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class GoalRequest extends FormRequest
 {
+    /** @return array<string, mixed> */
     public function rules(): array
     {
         return [
@@ -57,33 +58,33 @@ class GoalRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'title.required' => 'Título da meta é obrigatório.',
-            'title.min' => 'Título deve ter pelo menos 1 caractere.',
-            'title.max' => 'Título não pode exceder 255 caracteres.',
+            'title.required' => __('validation.forms.goal.title.required'),
+            'title.min' => __('validation.forms.goal.title.min'),
+            'title.max' => __('validation.forms.goal.title.max'),
 
-            'target_amount.required' => 'Valor meta é obrigatório.',
-            'target_amount.numeric' => 'Valor meta deve ser um número válido.',
-            'target_amount.min' => 'Valor meta deve ser maior que 0.',
-            'target_amount.decimal' => 'Valor meta deve ter no máximo 2 casas decimais.',
+            'target_amount.required' => __('validation.forms.goal.target_amount.required'),
+            'target_amount.numeric' => __('validation.forms.goal.target_amount.numeric'),
+            'target_amount.min' => __('validation.forms.goal.target_amount.min'),
+            'target_amount.decimal' => __('validation.forms.goal.target_amount.decimal'),
 
-            'raised_amount.numeric' => 'Valor arrecadado deve ser um número válido.',
-            'raised_amount.min' => 'Valor arrecadado deve ser maior ou igual a 0.',
-            'raised_amount.decimal' => 'Valor arrecadado deve ter no máximo 2 casas decimais.',
+            'raised_amount.numeric' => __('validation.forms.goal.raised_amount.numeric'),
+            'raised_amount.min' => __('validation.forms.goal.raised_amount.min'),
+            'raised_amount.decimal' => __('validation.forms.goal.raised_amount.decimal'),
 
-            'closes_at.required' => 'Data de encerramento é obrigatória.',
-            'closes_at.date_format' => 'Data de encerramento deve estar em formato válido.',
-            'closes_at.after' => 'Data de encerramento deve ser no futuro.',
+            'closes_at.required' => __('validation.forms.goal.closes_at.required'),
+            'closes_at.date' => __('validation.forms.goal.closes_at.date'),
+            'closes_at.after' => __('validation.forms.goal.closes_at.after'),
 
-            'background_color.required' => 'Cor de fundo é obrigatória.',
-            'background_color.regex' => 'Cor de fundo deve ser uma cor hexadecimal válida.',
+            'background_color.required' => __('validation.forms.goal.background_color.required'),
+            'background_color.regex' => __('validation.forms.goal.background_color.regex'),
 
-            'progress_bar_color.required' => 'Cor da barra é obrigatória.',
-            'progress_bar_color.regex' => 'Cor da barra deve ser uma cor hexadecimal válida.',
+            'progress_bar_color.required' => __('validation.forms.goal.progress_bar_color.required'),
+            'progress_bar_color.regex' => __('validation.forms.goal.progress_bar_color.regex'),
 
-            'text_color.required' => 'Cor do texto é obrigatório.',
-            'text_color.regex' => 'Cor do texto deve ser uma cor hexadecimal válida.',
+            'text_color.required' => __('validation.forms.goal.text_color.required'),
+            'text_color.regex' => __('validation.forms.goal.text_color.regex'),
 
-            'show_profile_link.boolean' => 'Mostrar link do perfil deve ser verdadeiro ou falso.',
+            'show_profile_link.boolean' => __('validation.forms.goal.show_profile_link.boolean'),
         ];
     }
 }

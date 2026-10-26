@@ -9,9 +9,8 @@
     ],
     "license": "MIT",
     "require": {
-        "php": "^8.4",
+        "php": "^8.5",
         "ext-openssl": "*",
-        "ably/ably-php": "^1.1",
         "efipay/sdk-php-apis-efi": "^1.19",
         "erag/laravel-lang-sync-inertia": "^2.3",
         "inertiajs/inertia-laravel": "^3.1",
@@ -26,23 +25,24 @@
         "mercadopago/dx-php": "^3.10",
         "pbmedia/laravel-ffmpeg": "^8.9",
         "predis/predis": "^3.5",
-        "spatie/laravel-data": "^4.23",
         "spatie/laravel-query-builder": "^7.3",
-        "spatie/laravel-typescript-transformer": "^3.3",
         "stripe/stripe-php": "^20.3"
     },
     "require-dev": {
+        "brianium/paratest": "^7.20",
+        "calebdw/phpstan-laravel": "^1.11",
         "fakerphp/faker": "^1.24",
         "laravel/boost": "^2.4",
         "laravel/pail": "^1.2.7",
+        "laravel/pao": "^1.1",
         "laravel/pint": "^1.29",
-        "laravel/sail": "^1.63",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.9.4",
         "pestphp/pest": "^4.7",
         "pestphp/pest-plugin-laravel": "^4.1",
-        "spatie/guidelines-skills": "^1.0",
-        "spatie/typescript-transformer": "^3.3"
+        "phpstan/phpstan": "^2.3",
+        "rector/rector": "^2.7",
+        "spatie/guidelines-skills": "^1.0"
     },
     "autoload": {
         "psr-4": {
@@ -69,21 +69,22 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi",
-            "@php -r \"file_exists('database/database.sqlite') || touch('database/database.sqlite');\"",
             "@php artisan migrate --graceful --ansi"
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"bun run dev\" --names=server,queue,logs,vite --kill-others"
         ],
         "dev:ssr": [
-            "npm run build:ssr",
+            "bun run build:ssr",
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
+            "bunx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
         ],
+        "analyse": "@php vendor/bin/phpstan analyse --memory-limit=2G",
+        "refactor:check": "@php vendor/bin/rector process --dry-run",
         "test": [
             "@php artisan config:clear --ansi",
-            "@php artisan test"
+            "@php artisan test --parallel"
         ]
     },
     "extra": {

@@ -2,58 +2,49 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Donation;
+use App\Support\AuthenticatedUser;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
-    public function show()
+    public function show(): Response
     {
-        $user = auth()->user();
+        $user = app(AuthenticatedUser::class)->get();
         $now = now();
         $startDate = $now->copy()->subDays(30);
         $previousStartDate = $startDate->copy()->subDays(30);
 
-        // Current period (last 30 days)
         $donationsReceived = $user->donations()->approvedThirtyDaysAgo()->count();
-        $totalBilled = $user->donations()->approvedThirtyDaysAgo()->sum('amount');
-
-        // Previous period (30-60 days ago)
+        $totalBilled = (float) $user->donations()->approvedThirtyDaysAgo()->sum('amount');
         $previousDonationsReceived = $user->donations()
             ->approved()
             ->where('approved_at', '>=', $previousStartDate)
             ->where('approved_at', '<', $startDate)
             ->count();
-
-        $previousTotalBilled = $user->donations()
+        $previousTotalBilled = (float) $user->donations()
             ->approved()
             ->where('approved_at', '>=', $previousStartDate)
             ->where('approved_at', '<', $startDate)
             ->sum('amount');
 
-        // Calculate percentage changes
         $donationsChange = $previousDonationsReceived > 0
             ? round((($donationsReceived - $previousDonationsReceived) / $previousDonationsReceived) * 100, 1)
             : ($donationsReceived > 0 ? 100 : 0);
-
         $billingChange = $previousTotalBilled > 0
             ? round((($totalBilled - $previousTotalBilled) / $previousTotalBilled) * 100, 1)
             : ($totalBilled > 0 ? 100 : 0);
-
-        // Calculate average donation and its change
         $averageAmount = $donationsReceived > 0 ? $totalBilled / $donationsReceived : 0;
         $previousAverageAmount = $previousDonationsReceived > 0 ? $previousTotalBilled / $previousDonationsReceived : 0;
-
         $averageChange = $previousAverageAmount > 0
             ? round((($averageAmount - $previousAverageAmount) / $previousAverageAmount) * 100, 1)
             : ($averageAmount > 0 ? 100 : 0);
 
-        // Chart data - donations by day for current month
-        $monthStart = $now->copy()->startOfMonth();
-        $chartData = Donation::where('streamer_id', $user->id)
-            ->approved()
-            ->where('approved_at', '>=', $monthStart)
+        $chartData = DB::table('donations')
+            ->where('streamer_id', $user->id)
+            ->where('status', 'approved')
+            ->where('approved_at', '>=', $now->copy()->startOfMonth())
             ->select([
                 DB::raw('DATE(approved_at) as date'),
                 DB::raw('SUM(amount) as total'),
@@ -62,13 +53,11 @@ class DashboardController extends Controller
             ->groupBy(DB::raw('DATE(approved_at)'))
             ->orderBy('date')
             ->get()
-            ->map(function ($item) {
-                return [
-                    'date' => $item->date,
-                    'total' => (float) $item->total,
-                    'count' => (int) $item->count,
-                ];
-            });
+            ->map(fn (object $item): array => [
+                'date' => $item->date,
+                'total' => (float) $item->total,
+                'count' => (int) $item->count,
+            ]);
 
         return Inertia::render('streamers/dashboard', [
             'stats' => [

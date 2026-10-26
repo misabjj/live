@@ -2,6 +2,8 @@
 
 namespace App\Navigation;
 
+use App\Models\User;
+
 class NavigationItem
 {
     protected string $title;
@@ -24,20 +26,21 @@ class NavigationItem
 
     protected ?string $group = null;
 
+    /** @var list<NavigationItem> */
     protected array $items = [];
 
     /**
      * Create a new navigation item instance.
      */
-    public static function make(): static
+    public static function make(): self
     {
-        return new static;
+        return new self;
     }
 
     /**
      * Set the title of the navigation item.
      */
-    public function title(string $title): static
+    public function title(string $title): self
     {
         $this->title = $title;
 
@@ -47,7 +50,7 @@ class NavigationItem
     /**
      * Set the route name for the navigation item.
      */
-    public function route(string $route): static
+    public function route(string $route): self
     {
         $this->route = $route;
         $this->url = null; // Clear URL if route is set
@@ -58,7 +61,7 @@ class NavigationItem
     /**
      * Set the URL for the navigation item.
      */
-    public function url(string $url): static
+    public function url(string $url): self
     {
         $this->url = $url;
         $this->route = null; // Clear route if URL is set
@@ -69,7 +72,7 @@ class NavigationItem
     /**
      * Set the icon for the navigation item.
      */
-    public function icon(string $icon): static
+    public function icon(string $icon): self
     {
         $this->icon = $icon;
 
@@ -79,7 +82,7 @@ class NavigationItem
     /**
      * Mark this navigation item as admin-only.
      */
-    public function admin(bool $admin = true): static
+    public function admin(bool $admin = true): self
     {
         $this->isAdmin = $admin;
 
@@ -89,7 +92,7 @@ class NavigationItem
     /**
      * Mark this navigation item as external.
      */
-    public function external(bool $external = true): static
+    public function external(bool $external = true): self
     {
         $this->isExternal = $external;
 
@@ -99,7 +102,7 @@ class NavigationItem
     /**
      * Set the sort order for the navigation item.
      */
-    public function sort(int $sort): static
+    public function sort(int $sort): self
     {
         $this->sort = $sort;
 
@@ -109,7 +112,7 @@ class NavigationItem
     /**
      * Set whether the navigation item is active.
      */
-    public function active(bool $active = true): static
+    public function active(bool $active = true): self
     {
         $this->isActive = $active;
 
@@ -119,7 +122,7 @@ class NavigationItem
     /**
      * Add a badge to the navigation item.
      */
-    public function badge(string $badge): static
+    public function badge(string $badge): self
     {
         $this->badge = $badge;
 
@@ -129,7 +132,7 @@ class NavigationItem
     /**
      * Set the group for the navigation item.
      */
-    public function group(string $group): static
+    public function group(string $group): self
     {
         $this->group = $group;
 
@@ -139,7 +142,8 @@ class NavigationItem
     /**
      * Set the items for the navigation item.
      */
-    public function items(array $items): static
+    /** @param list<NavigationItem> $items */
+    public function items(array $items): self
     {
         $this->items = $items;
 
@@ -149,7 +153,7 @@ class NavigationItem
     /**
      * Check if this navigation item should be visible for the given user.
      */
-    public function shouldBeVisible(?object $user = null): bool
+    public function shouldBeVisible(?User $user = null): bool
     {
         if (! $this->isActive) {
             return false;
@@ -181,6 +185,7 @@ class NavigationItem
     /**
      * Convert the navigation item to an array.
      */
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [
@@ -250,13 +255,11 @@ class NavigationItem
             if ($currentRoute) {
                 // Extract the base segment (e.g., "settings" from "settings.profile")
                 $routeParts = explode('.', $this->route);
-                if (count($routeParts) > 0) {
-                    $baseSegment = $routeParts[0];
+                $baseSegment = $routeParts[0];
 
-                    // Check if current route starts with the same base segment
-                    if (str_starts_with($currentRoute, $baseSegment.'.')) {
-                        return true;
-                    }
+                // Check if current route starts with the same base segment
+                if (str_starts_with($currentRoute, $baseSegment.'.')) {
+                    return true;
                 }
             }
 

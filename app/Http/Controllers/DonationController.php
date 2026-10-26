@@ -2,35 +2,33 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Donations\BroadcastDonationAlert;
-use App\Enums\DonationContentType;
-use App\Enums\DonationCurrency;
-use App\Enums\PaymentMethod;
-use App\Enums\PaymentProcessor;
+use App\Actions\Donations\BlockDonor;
+use App\Actions\Donations\CreateDonation;
+use App\Actions\Donations\PlayAlert;
+use App\Exceptions\DonationUnavailable;
 use App\Http\Requests\StoreDonationRequest;
 use App\Models\Donation;
 use App\Models\User;
-use App\Support\BrowserFingerprint;
-use App\Support\EfiCertificate;
+use App\Support\AuthenticatedUser;
 use App\Support\Toast;
-use Efi\EfiPay;
 use Exception;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class DonationController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $donations = QueryBuilder::for(auth()->user()->donations()->approved())
+        $donations = QueryBuilder::for(app(AuthenticatedUser::class)->get()->donations()->approved())
             ->allowedFilters(AllowedFilter::partial('donor_name'))
             ->defaultSort('-created_at')
             ->paginate()
             ->withQueryString()
-            ->through(fn (Donation $donation) => [
+            ->through(fn (Donation $donation): array => [
                 'id' => $donation->id,
                 'donor_name' => $donation->donor_name,
                 'amount' => $donation->amount,
@@ -41,7 +39,7 @@ class DonationController extends Controller
                 'content_path' => $donation->getContentUrl(),
             ]);
 
-        return inertia('donations/index', [
+        return Inertia::render('donations/index', [
             'donations' => $donations,
             'filter' => [
                 'donor_name' => $request->query('filter.donor_name', ''),
@@ -52,156 +50,21 @@ class DonationController extends Controller
     /**
      * @throws \Throwable
      */
-    public function store(StoreDonationRequest $request, User $streamer)
+    public function store(StoreDonationRequest $request, User $streamer, CreateDonation $createDonation): RedirectResponse
     {
-        if (! $streamer->accepting_donations) {
-            return back()->with('error', 'Streamer não está aceitando doações!');
+        try {
+            $donation = $createDonation->handle($request, $streamer);
+        } catch (DonationUnavailable $exception) {
+            return back()->with('error', $exception->getMessage());
         }
-
-        // Try to get an active PIX processor (EFI Bank or MercadoPago)
-        $paymentProcessor = $streamer->paymentProcessors()->active()
-            ->where(function ($query) {
-                $query->where('processor', PaymentProcessor::EfiBank)
-                    ->orWhere('processor', PaymentProcessor::MercadoPago);
-            })
-            ->first();
-
-        if (! $paymentProcessor) {
-            return back()->with('error', 'Não há processador de pagamento PIX ativo!');
-        }
-
-        $expiresAt = now()->addMinutes(30);
-        $paymentResponse = null;
-        $splitId = null;
-
-        // Process payment based on the processor type
-        if ($paymentProcessor->isEfiBank()) {
-            $tempCertificatePath = EfiCertificate::writeTemporaryPem(
-                $paymentProcessor->config->certificate_content,
-            );
-
-            try {
-                $efiPay = new EfiPay([
-                    'client_id' => $paymentProcessor->config->client_id,
-                    'client_secret' => $paymentProcessor->config->client_secret,
-                    'certificate' => $tempCertificatePath,
-                    'sandbox' => false,
-                    'debug' => false,
-                    'timeout' => 30,
-                ]);
-
-                $platformPercentage = config('platform.fee_percentage');
-                $streamerPercentage = 100 - $platformPercentage;
-
-                $shouldSplit = false;
-
-                if ($shouldSplit) {
-                    $split = $efiPay->pixSplitConfig([], [
-                        'lancamento' => [
-                            'imediato' => true,
-                        ],
-                        'split' => [
-                            'divisaoTarifa' => 'assumir_total',
-                            'minhaParte' => [
-                                'tipo' => 'porcentagem',
-                                'valor' => number_format($streamerPercentage, 2, '.', ''),
-                            ],
-                            'repasses' => [
-                                [
-                                    'tipo' => 'porcentagem',
-                                    'valor' => number_format($platformPercentage, 2, '.', ''),
-                                    'favorecido' => [
-                                        'cpf' => config('platform.efi_document_number'),
-                                        'conta' => config('platform.efi_account_number'),
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ]);
-                }
-
-                $charge = $efiPay->pixCreateImmediateCharge([], [
-                    'calendario' => [
-                        'expiracao' => (int) now()->diffInSeconds($expiresAt, false),
-                    ],
-                    'valor' => [
-                        'original' => number_format($request->amount, 2, '.', ''),
-                    ],
-                    'chave' => $paymentProcessor->config->pix_key,
-                ]);
-
-                if ($shouldSplit) {
-                    $efiPay->pixSplitLinkCharge([
-                        'txid' => $charge['txid'],
-                        'splitConfigId' => $split['id'],
-                    ]);
-                }
-
-                $paymentResponse = [
-                    'payment_id' => $charge['txid'],
-                    'payment_reference' => $charge['pixCopiaECola'],
-                ];
-
-                if ($shouldSplit) {
-                    $splitId = $split['id'];
-                }
-            } finally {
-                EfiCertificate::deleteTemporary($tempCertificatePath);
-            }
-
-        } else {
-            return back()->with('error', 'Processador de pagamento não suportado!');
-        }
-
-        if (! $paymentResponse) {
-            return back()->with('error', 'Erro ao criar o pagamento!');
-        }
-
-        $donationData = [
-            'streamer_id' => $streamer->id,
-            'goal_id' => $streamer->goals()->active()->value('id'),
-            'donor_ip_address' => $request->ip(),
-            'donor_name' => preg_replace('/\s+/', ' ', trim($request->donor_name)),
-            'donor_browser_fingerprint' => BrowserFingerprint::getFingerprint(),
-            'donor_id' => auth()->id(),
-            'currency' => DonationCurrency::Brl,
-            'amount' => $request->amount,
-            'content_type' => $request->content_type,
-            'expires_at' => $expiresAt,
-            'payment_id' => $paymentResponse['payment_id'],
-            'payment_reference' => $paymentResponse['payment_reference'],
-            'payment_split_id' => $splitId,
-            'payment_processor' => $paymentProcessor->processor,
-            'payment_method' => PaymentMethod::Pix,
-        ];
-
-        $donation = new Donation($donationData);
-        $donation->id = strtolower(Str::ulid()->toString());
-
-        if ($request->content_type === DonationContentType::TextToSpeech->value) {
-            $donation->content_text = $request->content_text;
-            $donation->narrator_id = $request->narrator_id;
-        } elseif ($request->content_type === DonationContentType::Text->value) {
-            $donation->content_text = $request->content_text;
-        } elseif ($request->content_type === DonationContentType::Audio->value && $request->hasFile('audio_file')) {
-            $extension = $request->file('audio_file')->getClientOriginalExtension();
-            $filename = $donation->id.'-'.time().'.'.$extension;
-            $path = "donations/{$filename}";
-
-            Storage::disk('public')->put($path, $request->file('audio_file')->get());
-
-            $donation->content_path = $path;
-        }
-
-        $donation->save();
 
         return to_route('donations.show', $donation);
     }
 
-    public function show(Donation $donation)
+    public function show(Donation $donation): Response
     {
         if ($donation->isPending()) {
-            return inertia('donations/pending', [
+            return Inertia::render('donations/pending', [
                 'donation' => [
                     'id' => $donation->id,
                     'donor_name' => $donation->donor_name,
@@ -224,7 +87,7 @@ class DonationController extends Controller
         }
 
         if ($donation->isApproved()) {
-            return inertia('donations/approved', [
+            return Inertia::render('donations/approved', [
                 'donation' => [
                     'id' => $donation->id,
                     'streamer' => [
@@ -237,7 +100,7 @@ class DonationController extends Controller
         }
 
         if ($donation->isExpired()) {
-            return inertia('donations/expired', [
+            return Inertia::render('donations/expired', [
                 'donation' => [
                     'id' => $donation->id,
                     'streamer' => [
@@ -255,36 +118,29 @@ class DonationController extends Controller
     /**
      * @throws \Throwable
      */
-    public function playDonationAlert(Donation $donation, BroadcastDonationAlert $broadcastDonationAlert)
+    public function playDonationAlert(Donation $donation, PlayAlert $playAlert): RedirectResponse
     {
         $this->authorize('update', $donation);
 
-        $user = auth()->user();
+        app(AuthenticatedUser::class)->get();
 
-        if (! $user->queue_paused) {
-            $broadcastDonationAlert->handle($donation);
-            Toast::success('Alerta será reproduzido em breve!');
-        } else {
-            if (! $donation->in_queue) {
-                $donation->update(['in_queue' => true]);
-            }
-            Toast::success('Adicionado à fila de alertas!');
-        }
+        $wasBroadcast = $playAlert->handle($donation);
+        Toast::success($wasBroadcast ? __('toasts.donation_alert_queued') : __('toasts.donation_alert_added_to_queue'));
 
         return back();
     }
 
-    public function blockDonor(Donation $donation)
+    public function blockDonor(Donation $donation, BlockDonor $blockDonor): RedirectResponse
     {
         $donorName = $donation->donor_name;
 
         try {
             // This will soft delete the donation, effectively blocking the donor's message
-            $donation->delete();
+            $blockDonor->handle($donation);
 
-            Toast::warning("Donor '{$donorName}' has been blocked and their message removed.");
+            Toast::warning(__('toasts.donor_blocked', ['name' => $donorName]));
         } catch (Exception $e) {
-            Toast::error('Failed to block donor. Please try again.');
+            Toast::error(__('toasts.donor_block_failed'));
         }
 
         return back();

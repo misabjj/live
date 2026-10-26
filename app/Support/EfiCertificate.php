@@ -2,50 +2,24 @@
 
 namespace App\Support;
 
-use RuntimeException;
+use InvalidArgumentException;
 
 final class EfiCertificate
 {
-    public static function pemFromP12(string $certificateContent): string
+    public static function fromConfig(object $config): string
     {
-        $certificateData = [];
+        $certificateBase64 = $config->certificate_base64 ?? null;
 
-        if (! openssl_pkcs12_read($certificateContent, $certificateData, '')) {
-            throw new RuntimeException('Não foi possível ler o certificado.');
+        if (is_string($certificateBase64) && $certificateBase64 !== '') {
+            return $certificateBase64;
         }
 
-        return $certificateData['pkey']."\n".$certificateData['cert'];
-    }
+        $legacyCertificateContent = $config->certificate_content ?? null;
 
-    public static function writeTemporaryPem(string $certificateContent): string
-    {
-        $temporaryPath = tempnam(sys_get_temp_dir(), 'efi_');
-
-        if ($temporaryPath === false) {
-            throw new RuntimeException('Não foi possível criar o arquivo temporário do certificado.');
+        if (! is_string($legacyCertificateContent) || $legacyCertificateContent === '') {
+            throw new InvalidArgumentException('O certificado EFI não está configurado.');
         }
 
-        $temporaryPemPath = $temporaryPath.'.pem';
-
-        if (! rename($temporaryPath, $temporaryPemPath)) {
-            unlink($temporaryPath);
-
-            throw new RuntimeException('Não foi possível preparar o arquivo temporário do certificado.');
-        }
-
-        if (file_put_contents($temporaryPemPath, $certificateContent) === false) {
-            unlink($temporaryPemPath);
-
-            throw new RuntimeException('Não foi possível gravar o arquivo temporário do certificado.');
-        }
-
-        return $temporaryPemPath;
-    }
-
-    public static function deleteTemporary(?string $path): void
-    {
-        if ($path !== null && is_file($path)) {
-            unlink($path);
-        }
+        return base64_encode($legacyCertificateContent);
     }
 }

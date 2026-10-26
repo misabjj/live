@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SetLocale
 {
+    /** @var list<string> */
     private array $supportedLocales = ['pt', 'en', 'es'];
 
     /**
@@ -18,15 +19,13 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //        $urlLocale = $request->route('locale');
-        //
-        //        if ($urlLocale && in_array($urlLocale, $this->supportedLocales)) {
-        //            app()->setLocale($urlLocale);
-        //        } else {
-        //            app()->setLocale(
-        //                $this->getPreferredLocale($request)
-        //            );
-        //        }
+        $urlLocale = $request->route('locale');
+
+        if (is_string($urlLocale) && in_array($urlLocale, $this->supportedLocales, true)) {
+            app()->setLocale($urlLocale);
+        } else {
+            app()->setLocale($this->getPreferredLocale($request));
+        }
 
         // Add locale data to all Inertia responses
         Inertia::share([

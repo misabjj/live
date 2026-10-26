@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use App\Navigation\Navigation;
 use App\Support\Toast;
 use Illuminate\Http\Request;
@@ -37,23 +38,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $user = $user instanceof User ? $user : null;
+
         return [
             ...parent::share($request),
-            'name' => config('app.name'),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => auth()->user()->id,
-                    'handle' => auth()->user()->handle,
-                    'display_name' => auth()->user()->display_name,
-                    'email' => auth()->user()->email,
-                    'profile_photo' => auth()->user()->getProfilePhotoUrl(),
-                    'accepting_donations' => auth()->user()->accepting_donations,
-                    'created_at' => auth()->user()->created_at,
+                'user' => $user ? [
+                    'id' => $user->id,
+                    'handle' => $user->handle,
+                    'display_name' => $user->display_name,
+                    'email' => $user->email,
+                    'profile_photo' => $user->getProfilePhotoUrl(),
+                    'accepting_donations' => $user->accepting_donations,
+                    'created_at' => $user->created_at,
                 ] : null,
             ],
             'locale' => app()->getLocale(),
             'navigation' => $this->shouldShowPanel($request) ? Navigation::getNavigationItems(
-                $request->user()
+                $user
             ) : null,
             'toasts' => Toast::pull(),
         ];

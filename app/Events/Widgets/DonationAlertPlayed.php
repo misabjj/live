@@ -27,6 +27,7 @@ class DonationAlertPlayed implements ShouldBroadcastNow
         return 'DonationAlertPlayed';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
         return [

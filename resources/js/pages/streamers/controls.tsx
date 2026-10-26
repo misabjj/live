@@ -21,7 +21,7 @@ interface Donation {
     currency: string;
     content_text: string | null;
     content_path?: string; // Added
-    content_type?: 'text' | 'text_to_speech' | 'audio'; // Added
+    content_type?: 'text' | 'audio';
 }
 
 /**

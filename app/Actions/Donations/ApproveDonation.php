@@ -35,7 +35,9 @@ class ApproveDonation
 
             if ($donation->goal_id) {
                 $donation->goal()->increment('raised_amount', $donation->amount);
-                broadcast(new GoalUpdated($donation->goal));
+                if ($donation->goal) {
+                    broadcast(new GoalUpdated($donation->goal));
+                }
             }
 
             if (! $donation->streamer->queue_paused) {

@@ -2,11 +2,12 @@
 
 namespace App\Http\Routing;
 
+use Closure;
 use Illuminate\Support\Facades\Route;
 
 class Localized
 {
-    public static function group(callable $routes): void
+    public static function group(Closure $routes): void
     {
         // Default routes (pt) - no prefix
         Route::group([], $routes);

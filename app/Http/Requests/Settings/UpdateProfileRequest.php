@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Settings;
 
+use App\Support\AuthenticatedUser;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,9 +15,11 @@ class UpdateProfileRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user = app(AuthenticatedUser::class)->get();
+
         return [
             'display_name' => ['required', 'string', 'max:255'],
-            'handle' => ['required', 'string', 'max:30', 'regex:/^[a-zA-Z0-9_.-]+$/', 'unique:users,handle,'.$this->user()->id],
+            'handle' => ['required', 'string', 'max:30', 'regex:/^[a-zA-Z0-9_.-]+$/', 'unique:users,handle,'.$user->id],
             'background_image' => ['nullable', 'image', 'max:5120'],
             'background_color' => ['nullable', 'string', 'regex:/^#[0-9A-F]{6}$/i'],
         ];

@@ -18,12 +18,10 @@ return [
 
     // Minimum amounts per content type
     'donation_min_amount_text' => 1,
-    'donation_min_amount_text_to_speech' => 3,
     'donation_min_amount_audio' => 1,
 
     // Maximum characters per content type
     'donation_max_characters_text' => 400,
-    'donation_max_characters_text_to_speech' => 200,
 
     // Maximum audio duration in seconds
     'donation_max_audio_duration' => 60, // 1 min

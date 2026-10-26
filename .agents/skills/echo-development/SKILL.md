@@ -1,6 +1,6 @@
 ---
 name: echo-development
-description: "Develops real-time broadcasting with Laravel Echo. Activates when setting up broadcasting (Reverb, Pusher, Ably); creating ShouldBroadcast events; defining broadcast channels (public, private, presence, encrypted); authorizing channels; configuring Echo; listening for events; implementing client events (whisper); setting up model broadcasting; broadcasting notifications; or when the user mentions broadcasting, Echo, WebSockets, real-time events, Reverb, or presence channels."
+description: "Develops real-time broadcasting with Laravel Echo. Activates when setting up broadcasting (Reverb, Pusher); creating ShouldBroadcast events; defining broadcast channels (public, private, presence, encrypted); authorizing channels; configuring Echo; listening for events; implementing client events (whisper); setting up model broadcasting; broadcasting notifications; or when the user mentions broadcasting, Echo, WebSockets, real-time events, Reverb, or presence channels."
 license: MIT
 metadata:
   author: laravel
@@ -12,7 +12,7 @@ metadata:
 
 Activate this skill when:
 
-- Installing or configuring Laravel broadcasting (Reverb, Pusher, Ably)
+- Installing or configuring Laravel broadcasting (Reverb, Pusher)
 - Creating events that implement `ShouldBroadcast`
 - Defining broadcast channels and authorization
 - Setting up Laravel Echo on the client side
@@ -32,7 +32,7 @@ Use `search-docs` for detailed broadcasting patterns and documentation.
 php artisan install:broadcasting
 ```
 
-Use flags for specific drivers: `--reverb`, `--pusher`, `--ably`. This creates `config/broadcasting.php` and `routes/channels.php`.
+Use flags for specific drivers: `--reverb`, `--pusher`. This creates `config/broadcasting.php` and `routes/channels.php`.
 
 ### Creating a Broadcast Event
 
@@ -103,7 +103,7 @@ php artisan channel:list
 Install Echo and Pusher JS:
 
 ```bash
-npm install --save-dev laravel-echo pusher-js
+bun add --dev laravel-echo pusher-js
 ```
 
 <!-- Echo Client Configuration -->
@@ -137,9 +137,7 @@ Echo.private(`orders.${orderId}`)
 
 ```bash
 php artisan queue:work    # Required for ShouldBroadcast events
-
 php artisan reverb:start  # Required for Reverb driver
-
 ```
 
 ## What's Possible
@@ -152,7 +150,7 @@ Use `search-docs` to find detailed code examples and configuration for each of t
 - Private (`new PrivateChannel`) — requires authorization. Use for user-specific data like orders, messages, or account updates.
 - Presence (`new PresenceChannel`) — authorized + tracks who's online. Use for chat rooms, collaborative editing, "who's viewing this" features, or typing indicators.
 - EncryptedPrivate — end-to-end encryption, Pusher/Reverb only. Use when payload must be hidden from the broadcast server (e.g., sensitive financial data or private messages).
-- Drivers: `reverb` (self-hosted WebSocket server), `pusher` (managed service), `ably` (managed service), `log` (writes to Laravel log, use for debugging), `null` (no-op, use for testing)
+- Drivers: `reverb` (self-hosted WebSocket server), `pusher` (managed service), `log` (writes to Laravel log, use for debugging), `null` (no-op, use for testing)
 
 ### Event Customization
 

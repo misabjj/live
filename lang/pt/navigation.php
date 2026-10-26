@@ -6,8 +6,9 @@ return [
     'user' => 'Usuário',
     'logout' => 'Sair',
     'dashboard' => 'Visão geral',
+    'controls' => 'Controles',
     'donations' => 'Doações',
+    'goals' => 'Metas',
     'admin_panel' => 'Painel Admin',
-    'narrators' => 'Narradores',
     'streamer_panel' => 'Painel Streamer',
 ];

@@ -176,6 +176,37 @@ return [
     |
     */
 
+    'forms' => [
+        'goal' => [
+            'title' => ['required' => 'Título da meta é obrigatório.', 'min' => 'Título deve ter pelo menos 1 caractere.', 'max' => 'Título não pode exceder 255 caracteres.'],
+            'target_amount' => ['required' => 'Valor meta é obrigatório.', 'numeric' => 'Valor meta deve ser um número válido.', 'min' => 'Valor meta deve ser maior que 0.', 'decimal' => 'Valor meta deve ter no máximo 2 casas decimais.'],
+            'raised_amount' => ['numeric' => 'Valor arrecadado deve ser um número válido.', 'min' => 'Valor arrecadado deve ser maior ou igual a 0.', 'decimal' => 'Valor arrecadado deve ter no máximo 2 casas decimais.'],
+            'closes_at' => ['required' => 'Data de encerramento é obrigatória.', 'date' => 'Data de encerramento deve estar em formato válido.', 'after' => 'Data de encerramento deve ser no futuro.'],
+            'background_color' => ['required' => 'Cor de fundo é obrigatória.', 'regex' => 'Cor de fundo deve ser uma cor hexadecimal válida.'],
+            'progress_bar_color' => ['required' => 'Cor da barra é obrigatória.', 'regex' => 'Cor da barra deve ser uma cor hexadecimal válida.'],
+            'text_color' => ['required' => 'Cor do texto é obrigatório.', 'regex' => 'Cor do texto deve ser uma cor hexadecimal válida.'],
+            'show_profile_link' => ['boolean' => 'Mostrar link do perfil deve ser verdadeiro ou falso.'],
+        ],
+        'profile_qr_code' => [
+            'gradient_color_1' => ['required' => 'A primeira cor do gradiente é obrigatória.', 'regex' => 'A primeira cor do gradiente deve estar no formato hexadecimal (#RRGGBB).'],
+            'gradient_color_2' => ['required' => 'A segunda cor do gradiente é obrigatória.', 'regex' => 'A segunda cor do gradiente deve estar no formato hexadecimal (#RRGGBB).'],
+            'gradient_type' => ['required' => 'O tipo de gradiente é obrigatório.', 'enum' => 'O tipo de gradiente deve ser linear ou radial.'],
+            'gradient_rotation' => ['required' => 'A rotação do gradiente é obrigatória.', 'integer' => 'A rotação do gradiente deve ser um número inteiro.', 'min' => 'A rotação do gradiente deve ser no mínimo 0 graus.', 'max' => 'A rotação do gradiente deve ser no máximo 360 graus.'],
+            'dots_type' => ['required' => 'O tipo de pontos é obrigatório.', 'enum' => 'O tipo de pontos deve ser um dos valores válidos.'],
+            'text_color' => ['required' => 'A cor do texto é obrigatória.', 'regex' => 'A cor do texto deve estar no formato hexadecimal (#RRGGBB).'],
+            'background_color' => ['required' => 'A cor de fundo é obrigatória.', 'regex' => 'A cor de fundo deve estar no formato hexadecimal (#RRGGBB).'],
+            'message' => ['max' => 'A mensagem deve ter no máximo 64 caracteres.'],
+        ],
+        'payment_processor' => [
+            'processor' => ['required' => 'O processador de pagamento é obrigatório.', 'in' => 'O processador selecionado é inválido.', 'unique' => 'Este processador de pagamento já está configurado.'],
+            'access_token' => ['required' => 'O token de acesso do Mercado Pago é obrigatório.', 'string' => 'O token de acesso deve ser um texto válido.', 'regex' => 'O token deve ter o formato válido do Mercado Pago (APP_USR-...). Apenas tokens de produção são permitidos.', 'min' => 'O token de acesso deve ter pelo menos 44 caracteres.'],
+            'client_id' => ['required' => 'O ID do cliente EFI é obrigatório.'],
+            'client_secret' => ['required' => 'O segredo do cliente EFI é obrigatório.'],
+            'certificate' => ['required' => 'O certificado EFI é obrigatório.', 'mimes' => 'O certificado deve estar no formato P12 ou PEM.'],
+            'secret_key' => ['required' => 'A chave secreta do Stripe é obrigatória.', 'string' => 'A chave secreta deve ser um texto válido.', 'regex' => 'A chave secreta deve ter o formato válido do Stripe (sk_live_...). Apenas chaves de produção são permitidas.', 'min' => 'A chave secreta do Stripe deve ter pelo menos 107 caracteres.'],
+        ],
+    ],
+
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
@@ -205,13 +236,10 @@ return [
         'primary_color' => 'cor primária',
         'secondary_color' => 'cor secundária',
         'message_color' => 'cor da mensagem',
-        'accept_ai_audio' => 'aceitar áudio de IA',
         'accept_donor_audio' => 'aceitar áudio do doador',
         'min_amount_text' => 'valor mínimo para texto',
-        'min_amount_text_to_speech' => 'valor mínimo para TTS',
         'min_amount_audio' => 'valor mínimo para áudio',
         'max_characters_text' => 'máximo de caracteres para texto',
-        'max_characters_text_to_speech' => 'máximo de caracteres para TTS',
         'max_audio_duration' => 'duração máxima de áudio',
         'title' => 'título',
         'target_amount' => 'valor meta',
@@ -233,7 +261,6 @@ return [
         'content_text' => 'mensagem',
         'amount' => 'valor da doação',
         'audio_file' => 'arquivo de áudio',
-        'narrator_id' => 'narrador',
     ],
 
 ];

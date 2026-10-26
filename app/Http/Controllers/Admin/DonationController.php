@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Actions\Donations\BroadcastDonationAlert;
+use App\Actions\Donations\PlayAlert;
 use App\Http\Controllers\Controller;
 use App\Models\Donation;
 use App\Support\Toast;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class DonationController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
-        $donations = QueryBuilder::for(Donation::with('streamer'))
-            ->allowedFilters(
-                AllowedFilter::partial('donor_name'),
-                AllowedFilter::exact('streamer_id'),
-            )
+        $donations = QueryBuilder::for(Donation::query()->with('streamer'))
+            ->allowedFilters(AllowedFilter::partial('donor_name'), AllowedFilter::exact('streamer_id'))
             ->defaultSort('-created_at')
             ->paginate()
             ->withQueryString()
-            ->through(fn (Donation $donation) => [
+            ->through(fn (Donation $donation): array => [
                 'id' => $donation->id,
                 'donor_name' => $donation->donor_name,
                 'amount' => $donation->amount,
@@ -36,7 +36,7 @@ class DonationController extends Controller
                 ],
             ]);
 
-        return inertia('admin/donations/index', [
+        return Inertia::render('admin/donations/index', [
             'donations' => $donations,
             'filter' => [
                 'donor_name' => $request->query('filter.donor_name', ''),
@@ -48,20 +48,11 @@ class DonationController extends Controller
     /**
      * @throws \Throwable
      */
-    public function playDonationAlert(Donation $donation, BroadcastDonationAlert $broadcastDonationAlert)
+    public function playDonationAlert(Donation $donation, PlayAlert $playAlert): RedirectResponse
     {
-        if ($donation->streamer->queue_paused) {
-            if (! $donation->in_queue) {
-                $donation->update(['in_queue' => true]);
-            }
+        $wasBroadcast = $playAlert->handle($donation);
 
-            Toast::success('Adicionado à fila de alertas!');
-
-            return back();
-        }
-
-        $broadcastDonationAlert->handle($donation);
-        Toast::success('Alerta será reproduzido em breve!');
+        Toast::success($wasBroadcast ? __('toasts.donation_alert_queued') : __('toasts.donation_alert_added_to_queue'));
 
         return back();
     }

@@ -2,7 +2,6 @@
 
 namespace App\Events\Widgets;
 
-use App\Data\Events\DonationAlertConfigurationUpdatedEventData;
 use App\Enums\WidgetType;
 use App\Models\DonationAlertConfiguration;
 use App\Models\Widget;
@@ -36,12 +35,13 @@ class DonationAlertConfigurationUpdated implements ShouldBroadcast
         return 'DonationAlertConfigurationUpdated';
     }
 
+    /** @return array<string, mixed> */
     public function broadcastWith(): array
     {
-        return DonationAlertConfigurationUpdatedEventData::from([
+        return [
             'primary_color' => $this->configuration->primary_color,
             'secondary_color' => $this->configuration->secondary_color,
             'message_color' => $this->configuration->message_color,
-        ])->toArray();
+        ];
     }
 }

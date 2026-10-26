@@ -8,12 +8,13 @@
         "spatie/guidelines-skills"
     ],
     "skills": [
+        "infer-conventions",
         "laravel-best-practices",
+        "testing-best-practices",
         "configuring-horizon",
         "configure-nightwatch",
         "socialite-development",
         "wayfinder-development",
-        "pest-testing",
         "inertia-react-development",
         "tailwindcss-development",
         "echo-react-development",

@@ -63,9 +63,8 @@ export function OnboardingDialog() {
     return (
         <AriaDialogTrigger isOpen={isOpen} onOpenChange={(open) => !open && handleClose()}>
             <ModalOverlay isDismissable>
-                <Modal>
+                <Modal className="sm:max-w-120">
                     <Dialog>
-                        <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-120">
                             {/* Close Button */}
                             <CloseButton onClick={handleClose} theme="light" size="lg" className="absolute top-3 right-3 z-10" />
 
@@ -104,7 +103,6 @@ export function OnboardingDialog() {
                                     Começar
                                 </Button>
                             </div>
-                        </div>
                     </Dialog>
                 </Modal>
             </ModalOverlay>

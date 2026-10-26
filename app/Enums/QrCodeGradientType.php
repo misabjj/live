@@ -25,6 +25,6 @@ enum QrCodeGradientType: string
         return collect(self::cases())->map(fn (self $type) => [
             'value' => $type->value,
             'label' => $type->label(),
-        ])->toArray();
+        ])->all();
     }
 }

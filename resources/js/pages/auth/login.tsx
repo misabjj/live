@@ -6,7 +6,7 @@ import { SocialButton } from '@/components/untitled-ui/base/buttons/social-butto
 import { Checkbox } from '@/components/untitled-ui/base/checkbox/checkbox';
 import { Form } from '@/components/untitled-ui/base/form/form';
 import { Input } from '@/components/untitled-ui/base/input/input';
-import { PinInput } from '@/components/untitled-ui/base/pin-input/pin-input';
+import { PinInput } from '@/components/untitled-ui/base/input/pin-input';
 import { FeaturedIcon } from '@/components/untitled-ui/foundations/featured-icon/featured-icon';
 import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/background-patterns';
 import { Illustration } from '@/components/untitled-ui/shared-assets/illustrations';
@@ -165,9 +165,8 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                 {/* 2FA Dialog */}
                 {show2FADialog && (
                     <ModalOverlay isOpen={show2FADialog} onOpenChange={setShow2FADialog} isDismissable>
-                        <Modal>
+                        <Modal className="sm:max-w-100">
                             <Dialog>
-                                <div className="relative w-full overflow-hidden rounded-2xl bg-primary shadow-xl sm:max-w-100">
                                     <CloseButton
                                         onClick={() => {
                                             setShow2FADialog(false);
@@ -230,7 +229,6 @@ export default function Page({ status, two_factor_required }: LoginProps) {
                                             </Button>
                                         </div>
                                     </Form>
-                                </div>
                             </Dialog>
                         </Modal>
                     </ModalOverlay>
