@@ -52,7 +52,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://localhost'),
+
+    'trusted_proxies' => env('TRUSTED_PROXIES', '127.0.0.1,::1'),
 
     /*
     |--------------------------------------------------------------------------

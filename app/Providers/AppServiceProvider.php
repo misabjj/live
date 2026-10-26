@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
         CarbonImmutable::serializeUsing($serializeDate);
 
         URL::forceHttps(
-            $this->app->environment(['production', 'staging'])
+            $this->app->environment(['production', 'staging', 'local'])
         );
     }
 }

@@ -40,5 +40,11 @@ export const Modal = (props: AriaModalOverlayProps) => (
 );
 
 export const Dialog = (props: AriaDialogProps) => (
-    <AriaDialog {...props} className={cx('relative flex w-full items-center justify-center overflow-hidden rounded-2xl bg-primary shadow-xl outline-hidden', props.className)} />
+    <AriaDialog
+        {...props}
+        className={cx(
+            'relative flex max-h-full w-full max-w-full flex-col items-stretch justify-start overflow-y-auto rounded-2xl bg-primary shadow-xl outline-hidden sm:min-w-120',
+            props.className,
+        )}
+    />
 );

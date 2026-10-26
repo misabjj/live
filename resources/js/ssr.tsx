@@ -3,7 +3,7 @@ import createServer from '@inertiajs/react/server';
 import ReactDOMServer from 'react-dom/server';
 import { resolvePage } from './resolve-page';
 
-const appName = import.meta.env.VITE_APP_NAME || '';
+const appName = import.meta.env.VITE_APP_NAME;
 
 createServer((page) =>
     createInertiaApp({

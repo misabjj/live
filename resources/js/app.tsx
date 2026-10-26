@@ -6,19 +6,15 @@ import { initializeTheme } from './hooks/use-appearance';
 import { resolvePage } from './resolve-page';
 
 configureEcho({
-    broadcaster: import.meta.env.VITE_BROADCAST_CONNECTION || 'reverb',
+    broadcaster: import.meta.env.VITE_BROADCAST_CONNECTION,
 });
 
-const appName = import.meta.env.VITE_APP_NAME || '';
+const appName = import.meta.env.VITE_APP_NAME;
 
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     resolve: resolvePage,
     setup({ el, App, props }) {
-        if (!el) {
-            throw new Error('Inertia root element was not found.');
-        }
-
         const root = createRoot(el);
 
         root.render(
@@ -33,5 +29,4 @@ createInertiaApp({
     },
 });
 
-// This will set light / dark mode on load...
 initializeTheme();

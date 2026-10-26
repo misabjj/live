@@ -1,19 +1,10 @@
-import { Head, Link as InertiaLink, useForm } from '@inertiajs/react';
-import { FormEventHandler } from 'react';
+import { Head, Form as InertiaForm, Link as InertiaLink } from '@inertiajs/react';
 
 import { Button } from '@/components/untitled-ui/base/buttons/button';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
 
 export default function VerifyEmail({ status }: { status?: string }) {
-    const { submit: submitForm, processing } = useForm({});
-
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-
-        submitForm(send(), { preserveScroll: true });
-    };
-
     return (
         <div className="bg-background flex min-h-screen items-center justify-center px-4">
             <Head title="Email verification" />
@@ -33,17 +24,21 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         </div>
                     )}
 
-                    <form onSubmit={submit} className="space-y-4 text-center">
-                        <Button type="submit" color="primary" size="md" className="w-full" isDisabled={processing} isLoading={processing}>
-                            Resend verification email
-                        </Button>
+                    <InertiaForm {...send.form()} options={{ preserveScroll: true }} className="space-y-4 text-center">
+                        {({ processing }) => (
+                            <>
+                                <Button type="submit" color="primary" size="md" className="w-full" isDisabled={processing} isLoading={processing}>
+                                    Resend verification email
+                                </Button>
 
-                        <div className="text-sm">
-                            <InertiaLink href={logout()} as="button" className="font-medium text-primary hover:underline">
-                                Log out
-                            </InertiaLink>
-                        </div>
-                    </form>
+                                <div className="text-sm">
+                                    <InertiaLink href={logout()} as="button" className="font-medium text-primary hover:underline">
+                                        Log out
+                                    </InertiaLink>
+                                </div>
+                            </>
+                        )}
+                    </InertiaForm>
                 </div>
             </div>
         </div>

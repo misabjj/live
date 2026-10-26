@@ -4,6 +4,7 @@ use App\Http\Middleware\EnsureBrowserFingerprint;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\IsAdmin;
+use App\Http\Middleware\RedirectToHttps;
 use App\Http\Middleware\SetLocale;
 use App\Support\BrowserFingerprint;
 use Illuminate\Foundation\Application;
@@ -23,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies(at: env('TRUSTED_PROXIES', '127.0.0.1,::1'));
+        $middleware->append(RedirectToHttps::class);
+
         $middleware->encryptCookies(except: [
             'appearance',
             'sidebar_state',

@@ -71,7 +71,7 @@ const getIconComponent = (iconName: string): FC<{ className?: string }> => {
 // Transform backend navigation to sidebar format
 const transformNavigationItems = (items: BackendNavigationItem[]): NavItemType[] => {
     return items.map((item) => {
-        // For internal links, extract path from full URL (backend sends full URLs like http://localhost/dashboard)
+        // For internal links, extract path from full URL (backend sends full URLs like https://localhost/dashboard)
         // For external links (item.external), keep the full URL
         const url = item.href || item.url || '#';
         let href = url;

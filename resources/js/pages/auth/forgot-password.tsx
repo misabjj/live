@@ -1,3 +1,5 @@
+import { Head, Form as InertiaForm } from '@inertiajs/react';
+import { ArrowLeft, Key01 } from '@untitledui/icons';
 import { Button } from '@/components/untitled-ui/base/buttons/button';
 import { Input } from '@/components/untitled-ui/base/input/input';
 import { Label } from '@/components/untitled-ui/base/input/label';
@@ -6,9 +8,6 @@ import { BackgroundPattern } from '@/components/untitled-ui/shared-assets/backgr
 import { useLang } from '@/hooks/use-lang';
 import { login } from '@/routes';
 import { email } from '@/routes/password';
-import { Head, useForm } from '@inertiajs/react';
-import { ArrowLeft, Key01 } from '@untitledui/icons';
-import { FormEventHandler } from 'react';
 
 interface ForgotPasswordProps {
     status?: string;
@@ -16,21 +15,6 @@ interface ForgotPasswordProps {
 
 export default function Page({ status }: ForgotPasswordProps) {
     const { __ } = useLang();
-    const {
-        data,
-        setData,
-        submit: submitForm,
-        processing,
-        errors,
-    } = useForm({
-        email: '',
-    });
-
-    const submit: FormEventHandler = (e) => {
-        e.preventDefault();
-        submitForm(email(), { preserveScroll: true });
-    };
-
     return (
         <>
             <Head title={__('auth/forgot-password.title')} />
@@ -65,26 +49,23 @@ export default function Page({ status }: ForgotPasswordProps) {
                         </div>
                     )}
 
-                    <form onSubmit={submit} className="z-10 flex flex-col gap-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="email">{__('auth/forgot-password.fields.email.label')}</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                name="email"
-                                value={data.email}
-                                onChange={(value) => setData('email', value)}
-                                placeholder={__('auth/forgot-password.fields.email.placeholder')}
-                            />
-                            {errors.email && <p className="text-destructive text-sm font-medium">{errors.email}</p>}
-                        </div>
+                    <InertiaForm {...email.form()} options={{ preserveScroll: true }} className="z-10 flex flex-col gap-6">
+                        {({ errors, processing }) => (
+                            <>
+                                <div className="space-y-2">
+                                    <Label htmlFor="email">{__('auth/forgot-password.fields.email.label')}</Label>
+                                    <Input id="email" type="email" name="email" placeholder={__('auth/forgot-password.fields.email.placeholder')} />
+                                    {errors.email && <p className="text-destructive text-sm font-medium">{errors.email}</p>}
+                                </div>
 
-                        <div className="flex flex-col gap-4">
-                            <Button type="submit" size="md" isDisabled={processing} isLoading={processing}>
-                                {__('auth/forgot-password.buttons.reset')}
-                            </Button>
-                        </div>
-                    </form>
+                                <div className="flex flex-col gap-4">
+                                    <Button type="submit" size="md" isDisabled={processing} isLoading={processing}>
+                                        {__('auth/forgot-password.buttons.reset')}
+                                    </Button>
+                                </div>
+                            </>
+                        )}
+                    </InertiaForm>
 
                     <div className="z-10 flex justify-center gap-1 text-center">
                         <Button size="sm" color="tertiary" href={login.url()} className="mx-auto" iconLeading={ArrowLeft}>
