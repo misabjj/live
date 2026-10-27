@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/base/buttons/button';
 import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
 import { useClipboard } from '@/hooks/use-clipboard';
+import { useLang } from '@/hooks/use-lang';
 import { useToast } from '@/hooks/use-toast';
 import { regenerate } from '@/routes/settings/widgets';
 import { router } from '@inertiajs/react';
@@ -33,11 +34,12 @@ interface WidgetActionsDropdownProps {
 
 export function WidgetActionsDropdown({ widget, regenerateRoute, additionalActions = [] }: WidgetActionsDropdownProps) {
     const { copy } = useClipboard();
+    const { __ } = useLang();
     const toast = useToast();
 
     const handleCopy = async () => {
         await copy(widget.url);
-        toast.success('Link copiado com sucesso!');
+        toast.success(__('pages.widgets.actions.link_copied'));
     };
 
     const handleRegenerate = () => {
@@ -46,12 +48,12 @@ export function WidgetActionsDropdown({ widget, regenerateRoute, additionalActio
 
     const baseActions: DropdownMenuItem[] = [
         {
-            label: 'Copiar link',
+            label: __('pages.widgets.actions.copy_link'),
             icon: Copy01,
             onAction: handleCopy,
         },
         {
-            label: 'Regenerar link',
+            label: __('pages.widgets.actions.regenerate_link'),
             icon: RefreshCcw05,
             onAction: handleRegenerate,
         },
@@ -62,7 +64,7 @@ export function WidgetActionsDropdown({ widget, regenerateRoute, additionalActio
     return (
         <Dropdown.Root>
             <Button size="md" color="secondary" iconLeading={DotsVertical}>
-                Integração
+                {__('pages.widgets.actions.integration')}
             </Button>
             <Dropdown.Popover>
                 <Dropdown.Menu>

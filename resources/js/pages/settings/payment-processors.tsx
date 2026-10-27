@@ -325,10 +325,10 @@ function Page({ processors }: PageProps) {
                                     </div>
                                     <div className="flex flex-1 flex-col-reverse gap-3 p-4 *:grow sm:grid sm:grid-cols-2 sm:px-6 sm:pb-6">
                                         <Button type="button" color="secondary" size="lg" onClick={handleCloseSlideout}>
-                                            Cancelar
+                                            {__('pages.payment_processors.cancel')}
                                         </Button>
                                         <Button type="submit" color="primary" size="lg" isDisabled={stripeForm.processing}>
-                                            Salvar
+                                            {__('pages.payment_processors.save')}
                                         </Button>
                                     </div>
                                 </Form>
@@ -374,10 +374,10 @@ function Page({ processors }: PageProps) {
                                     </div>
                                     <div className="flex flex-1 flex-col-reverse gap-3 p-4 *:grow sm:grid sm:grid-cols-2 sm:px-6 sm:pb-6">
                                         <Button type="button" color="secondary" size="lg" onClick={handleCloseSlideout}>
-                                            Cancelar
+                                            {__('pages.payment_processors.cancel')}
                                         </Button>
                                         <Button type="submit" color="primary" size="lg" isDisabled={mercadoPagoForm.processing}>
-                                            Salvar
+                                            {__('pages.payment_processors.save')}
                                         </Button>
                                     </div>
                                 </Form>
@@ -437,6 +437,9 @@ function Page({ processors }: PageProps) {
                                                     onDropFiles={handleDropFiles}
                                                     accept=".p12"
                                                     hint={__('pages.payment_processors.certificate_hint')}
+                                                    uploadLabel={__('pages.payment_processors.upload_certificate')}
+                                                    mobileUploadLabel={__('pages.payment_processors.attach_files')}
+                                                    dragAndDropLabel={__('pages.payment_processors.drag_and_drop')}
                                                     allowsMultiple={false}
                                                 />
                                                 {uploadedFiles.length > 0 && (
@@ -459,10 +462,10 @@ function Page({ processors }: PageProps) {
                                     </div>
                                     <div className="flex flex-1 flex-col-reverse gap-3 p-4 *:grow sm:grid sm:grid-cols-2 sm:px-6 sm:pb-6">
                                         <Button type="button" color="secondary" size="lg" onClick={handleCloseSlideout}>
-                                            Cancelar
+                                            {__('pages.payment_processors.cancel')}
                                         </Button>
                                         <Button type="submit" color="primary" size="lg" isDisabled={efiBankForm.processing}>
-                                            Salvar
+                                            {__('pages.payment_processors.save')}
                                         </Button>
                                     </div>
                                 </Form>

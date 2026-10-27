@@ -31,6 +31,12 @@ interface FileUploadDropZoneProps {
      * A hint text explaining what files can be dropped.
      */
     hint?: string;
+    /** The label used to open the file picker. */
+    uploadLabel: string;
+    /** The optional label shown on small screens. */
+    mobileUploadLabel?: string;
+    /** The label describing drag and drop. */
+    dragAndDropLabel: string;
     /**
      * Disables dropping or uploading files.
      */
@@ -68,6 +74,9 @@ interface FileUploadDropZoneProps {
 export const FileUploadDropZone = ({
     className,
     hint,
+    uploadLabel,
+    mobileUploadLabel,
+    dragAndDropLabel,
     isDisabled,
     accept,
     allowsMultiple = true,
@@ -230,9 +239,9 @@ export const FileUploadDropZone = ({
                             inputRef.current?.click();
                         }}
                     >
-                        Clique para enviar <span className="md:hidden">e anexar arquivos</span>
+                        {uploadLabel}{mobileUploadLabel && <span className="md:hidden">{mobileUploadLabel}</span>}
                     </Button>
-                    <span className="text-sm max-md:hidden">ou arraste e solte</span>
+                    <span className="text-sm max-md:hidden">{dragAndDropLabel}</span>
                 </div>
                 <p className={cx('text-xs transition duration-100 ease-linear', isInvalid && 'text-error-primary')}>
                     {hint || 'SVG, PNG, JPG ou GIF (máx. 800x400px)'}

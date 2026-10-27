@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/base/buttons/button';
 import { Dropdown } from '@/components/ui/base/dropdown/dropdown';
 import { useClipboard } from '@/hooks/use-clipboard';
+import { useLang } from '@/hooks/use-lang';
 import { useToast } from '@/hooks/use-toast';
 import { profileQrCode } from '@/routes/settings';
 import { index, regenerate } from '@/routes/settings/widgets';
@@ -15,11 +16,12 @@ interface ProfileQrCodeWidgetActionsProps {
 
 export function ProfileQrCodeWidgetActions({ widgetId, widgetUrl, hidePersonalize = false }: ProfileQrCodeWidgetActionsProps) {
     const { copy } = useClipboard();
+    const { __ } = useLang();
     const toast = useToast();
 
     const handleCopy = async () => {
         await copy(widgetUrl);
-        toast.success('Link copiado com sucesso!');
+        toast.success(__('pages.widgets.actions.link_copied'));
     };
 
     const handleRegenerate = () => {
@@ -37,22 +39,22 @@ export function ProfileQrCodeWidgetActions({ widgetId, widgetUrl, hidePersonaliz
     return (
         <Dropdown.Root>
             <Button size="md" color="secondary" iconLeading={DotsVertical}>
-                Integração
+                {__('pages.widgets.actions.integration')}
             </Button>
             <Dropdown.Popover>
                 <Dropdown.Menu>
-                    <Dropdown.Item label="Copiar link" icon={Copy01} onAction={handleCopy} />
-                    <Dropdown.Item label="Regenerar link" icon={RefreshCcw05} onAction={handleRegenerate} />
+                    <Dropdown.Item label={__('pages.widgets.actions.copy_link')} icon={Copy01} onAction={handleCopy} />
+                    <Dropdown.Item label={__('pages.widgets.actions.regenerate_link')} icon={RefreshCcw05} onAction={handleRegenerate} />
                     {!hidePersonalize && (
                         <>
                             <Dropdown.Separator />
-                            <Dropdown.Item label="Personalizar" icon={Settings01} onAction={handlePersonalize} />
+                            <Dropdown.Item label={__('pages.widgets.actions.customize')} icon={Settings01} onAction={handlePersonalize} />
                         </>
                     )}
                     {hidePersonalize && (
                         <>
                             <Dropdown.Separator />
-                            <Dropdown.Item label="Widgets" icon={Settings01} onAction={handleWidgets} />
+                            <Dropdown.Item label={__('pages.widgets.actions.widgets')} icon={Settings01} onAction={handleWidgets} />
                         </>
                     )}
                 </Dropdown.Menu>

@@ -2,6 +2,7 @@ import { AvatarLabelGroup } from '@/components/ui/base/avatar/avatar-label-group
 import { useAppearance } from '@/hooks/use-appearance';
 import { useAuth } from '@/hooks/use-auth';
 import { useBreakpoint } from '@/hooks/use-breakpoint';
+import { useLang } from '@/hooks/use-lang';
 import { getInitials } from '@/lib/utils';
 import { logout } from '@/routes';
 import { toggleAcceptingDonations } from '@/routes/controls';
@@ -29,6 +30,7 @@ type NavAccountType = {
 export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialogProps & { className?: string; onClose?: () => void }) => {
     const { user } = useAuth();
     const { appearance, updateAppearance } = useAppearance();
+    const { __ } = useLang();
     const focusManager = useFocusManager();
     const dialogRef = useRef<HTMLDivElement>(null);
 
@@ -67,11 +69,19 @@ export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialo
         >
             <div className="rounded-t-xl bg-primary ring-1 ring-secondary">
                 <div className="flex flex-col gap-0.5 py-1.5">
-                    <NavAccountCardMenuItem label="Ver perfil" icon={User01} onClick={() => (window.location.href = profile.url())} />
+                    <NavAccountCardMenuItem
+                        label={__('navigation.view_profile')}
+                        icon={User01}
+                        onClick={() => (window.location.href = profile.url())}
+                    />
                     <NavAccountCardMenuItem
                         showDot
                         dotColor={user?.accepting_donations ? 'bg-fg-success-primary' : 'bg-fg-error-primary'}
-                        label={user?.accepting_donations ? 'Recebendo doações' : 'Não recebendo doações'}
+                        label={
+                            user?.accepting_donations
+                                ? __('navigation.accepting_donations')
+                                : __('navigation.not_accepting_donations')
+                        }
                         onClick={() => {
                             onClose?.();
                             router.post(
@@ -96,7 +106,7 @@ export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialo
                                 'flex flex-1 cursor-pointer items-center justify-center rounded-md p-2 text-fg-quaternary transition duration-100',
                                 appearance === 'light' ? 'bg-primary_hover text-fg-secondary' : 'hover:bg-primary_hover',
                             )}
-                            title="Light mode"
+                            title={__('navigation.light_mode')}
                         >
                             <Sun className="size-4" />
                         </button>
@@ -106,7 +116,7 @@ export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialo
                                 'flex flex-1 cursor-pointer items-center justify-center rounded-md p-2 text-fg-quaternary transition duration-100',
                                 appearance === 'dark' ? 'bg-primary_hover text-fg-secondary' : 'hover:bg-primary_hover',
                             )}
-                            title="Dark mode"
+                            title={__('navigation.dark_mode')}
                         >
                             <Moon01 className="size-4" />
                         </button>
@@ -116,7 +126,7 @@ export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialo
                                 'flex flex-1 cursor-pointer items-center justify-center rounded-md p-2 text-fg-quaternary transition duration-100',
                                 appearance === 'system' ? 'bg-primary_hover text-fg-secondary' : 'hover:bg-primary_hover',
                             )}
-                            title="System theme"
+                            title={__('navigation.system_theme')}
                         >
                             <Monitor01 className="size-4" />
                         </button>
@@ -126,7 +136,7 @@ export const NavAccountMenu = ({ className, onClose, ...dialogProps }: AriaDialo
 
             <div className="pt-1 pb-1.5">
                 <NavAccountCardMenuItem
-                    label="Sair"
+                    label={__('navigation.logout')}
                     icon={LogOut01}
                     onClick={() => {
                         onClose?.();

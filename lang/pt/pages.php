@@ -19,10 +19,24 @@ return [
         'client_secret' => 'Client Secret',
         'certificate' => 'Certificado',
         'certificate_hint' => 'Arquivo .p12',
+        'upload_certificate' => 'Clique para enviar',
+        'attach_files' => 'e anexar arquivos',
+        'drag_and_drop' => 'ou arraste e solte',
+        'cancel' => 'Cancelar',
+        'save' => 'Salvar',
     ],
     'widgets' => [
         'title' => 'Widgets',
         'subtitle' => 'Gerencie os links dos seus widgets para uso no OBS e em outras ferramentas.',
+        'actions' => [
+            'integration' => 'Integração',
+            'copy_link' => 'Copiar link',
+            'regenerate_link' => 'Regenerar link',
+            'customize' => 'Personalizar',
+            'widgets' => 'Widgets',
+            'test_alert' => 'Testar alerta',
+            'link_copied' => 'Link copiado com sucesso!',
+        ],
         'types' => [
             'profile_qr_code' => [
                 'label' => 'QR code do perfil',
