@@ -78,7 +78,6 @@ export default function Page({ status }: RegisterProps) {
                                         size="md"
                                         placeholder={__('auth.register.fields.password.placeholder')}
                                         minLength={8}
-                                        pattern='.*[!@#$%^&*\\(\\),.?":\\{\\}\\|<>].*'
                                         isInvalid={!!errors.password}
                                         hint={errors.password}
                                     />
