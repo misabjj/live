@@ -26,6 +26,7 @@ export default function ResetPassword({ token, email }: ResetPasswordProps) {
 
                     <InertiaForm
                         {...store.form()}
+                        noValidate
                         options={{ preserveScroll: true }}
                         resetOnSuccess={['password', 'password_confirmation']}
                         className="space-y-4"

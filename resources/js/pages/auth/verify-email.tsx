@@ -24,7 +24,7 @@ export default function VerifyEmail({ status }: { status?: string }) {
                         </div>
                     )}
 
-                    <InertiaForm {...send.form()} options={{ preserveScroll: true }} className="space-y-4 text-center">
+                    <InertiaForm {...send.form()} noValidate options={{ preserveScroll: true }} className="space-y-4 text-center">
                         {({ processing }) => (
                             <>
                                 <Button type="submit" color="primary" size="md" className="w-full" isDisabled={processing} isLoading={processing}>

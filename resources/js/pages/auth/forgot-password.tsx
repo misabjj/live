@@ -49,7 +49,7 @@ export default function Page({ status }: ForgotPasswordProps) {
                         </div>
                     )}
 
-                    <InertiaForm {...email.form()} options={{ preserveScroll: true }} className="z-10 flex flex-col gap-6">
+                    <InertiaForm {...email.form()} noValidate options={{ preserveScroll: true }} className="z-10 flex flex-col gap-6">
                         {({ errors, processing }) => (
                             <>
                                 <div className="space-y-2">

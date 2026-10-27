@@ -37,6 +37,7 @@ export default function Page({ status }: RegisterProps) {
 
                     <InertiaForm
                         {...submitRegistration.form()}
+                        noValidate
                         options={{ preserveScroll: true }}
                         resetOnSuccess={['password', 'password_confirmation']}
                         onSuccess={() => setPassword('')}

@@ -21,6 +21,7 @@ export default function ConfirmPassword() {
 
                     <InertiaForm
                         {...submitPasswordConfirmation.form()}
+                        noValidate
                         options={{ preserveScroll: true }}
                         resetOnSuccess={['password']}
                         className="space-y-4"
